@@ -47,6 +47,10 @@ app.use(express.static("dist"));
 app.use(express.json({ limit: "100mb" }));
 app.listen(website_port, () => {});
 
+// Cookie parser is used to read and write cookies (for the website)
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
 // Websocket, communication with game clients
 const WebSocket = require("ws");
 const wss = new WebSocket.Server({ port: game_port });
@@ -54,30 +58,60 @@ const wss = new WebSocket.Server({ port: game_port });
 // Nanoid for generating IDs and tokens for players (Replacing UUIDv4)
 const { nanoid } = require("nanoid");
 
+app.use((req, res, next) => {
+	req.loggedIn = false;
+	req.user = null;
+	if (req.cookies.cosmic_login_token) {
+		var token = db
+			.get("tokens")
+			.find({ token: req.cookies.cosmic_login_token })
+			.value();
+		if (token) {
+			req.user = getUserFromID(token.user);
+			if (req.user) req.loggedIn = true;
+		}
+	}
+	if (!req.loggedIn)
+		req.user = {
+			id: 0,
+		};
+	next();
+});
+
 // Website pages
-app.get("/", (req, res) => {
-	res.render("index", { page_name: "home" });
-});
+for (let page of ["home", "cards", "download", "source", "login"]) {
+	app.get(page == "home" ? "/" : "/" + page, (req, res) => {
+		res.render(page, {
+			page_name: page,
+			loggedIn: req.loggedIn,
+			user: req.user,
+		});
+	});
+}
 
-app.get("/cards", (req, res) => {
-	res.render("cards", { page_name: "cards" });
-});
-
-app.get("/download", (req, res) => {
-	res.render("download", { page_name: "download" });
-});
-
-app.get("/source", (req, res) => {
-	res.render("source", { page_name: "source" });
-});
-
-app.get("/login", (req, res) => {
-	res.render("login", { page_name: "" });
+app.get("/user/*", (req, res) => {
+	var pageUsername = req.path.substr(req.path.lastIndexOf("/") + 1);
+	var pageUser = getUser(pageUsername);
+	if (pageUser) {
+		res.render("user", {
+			pageUser,
+			loggedIn: req.loggedIn,
+			user: req.user,
+			pageUser,
+		});
+	} else {
+		res.send("User not found :(");
+	}
 });
 
 // Website REST API
+app.get("/api/cards", (req, res) => {
+	console.log("hi");
+	res.json(db.get("cards").value());
+});
+
 app.get("/api/user", (req, res) => {
-	let user = Object.assign({}, getUser(req.query.username));
+	let user = getUser(req.query.username);
 	if (user) {
 		delete user.password;
 		res.json(user);
@@ -86,15 +120,32 @@ app.get("/api/user", (req, res) => {
 	}
 });
 
-app.post("/api/login", (req, res) => {});
+app.post("/api/logout", (req, res) => {
+	res.cookie("cosmic_login_token", { expires: Date.now() });
+	res.end();
+});
+
+app.post("/api/login", (req, res) => {
+	var token = db.get("tokens").find({ token: req.body.token }).value();
+	if (token) {
+		var user = getUserFromID(token.user);
+		delete user.password;
+		res.json({ user });
+	} else {
+		res.end();
+	}
+});
 
 app.post("/api/loginPass", (req, res) => {
-	var user = getUser(req.body.username);
+	var user = getUserWithPassword(req.body.username);
 	if (user) {
 		comparePassword(req.body.password, user.password, (err, match) => {
-			console.log(user);
 			if (match) {
-				res.json({ success: true, token: createLoginToken(user.id) });
+				var token = createLoginToken(user.id);
+				res.cookie("cosmic_login_token", token, {
+					expires: new Date(253402300000000),
+				});
+				res.json({ success: true, token });
 			} else {
 				res.json({ success: false, reason: "Wrong password" });
 			}
@@ -136,10 +187,19 @@ app.post("/api/loginPass", (req, res) => {
 					level: 1,
 					xp: 0,
 					cards: [],
+					admin: false,
+					record: {
+						wins: 0,
+						losses: 0,
+					},
 				};
 
 				db.get("users").push(user).write();
-				res.json({ success: true, token: createLoginToken(user.id) });
+				var token = createLoginToken(user.id);
+				res.cookie("cosmic_login_token", token, {
+					expires: new Date(253402300000000),
+				});
+				res.json({ success: true, token });
 			});
 		}
 	}
@@ -178,11 +238,29 @@ db.defaults({
 	filtered_usernames: [],
 }).write();
 
-function getUser(username) {
-	console.log("List:", db.get("users").value());
+function getUserFromID(id) {
+	var userWithoutPass = clone(db.get("users").find({ id }).value());
+
+	delete userWithoutPass.password;
+	return userWithoutPass;
+}
+
+function getUserWithPassword(username) {
 	for (let user of db.get("users").value()) {
 		if (user.username.toLowerCase() == username.toLowerCase()) {
-			return user;
+			return clone(user);
 		}
+	}
+}
+
+function clone(obj) {
+	return Object.assign({}, obj);
+}
+
+function getUser(username) {
+	var userWithoutPass = getUserWithPassword(username);
+	if (userWithoutPass) {
+		delete userWithoutPass.password;
+		return userWithoutPass;
 	}
 }

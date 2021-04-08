@@ -1,4 +1,9 @@
 extends website.pug 
+block headerExtra
+    button.btn.header-button#new-card-button New card <svg class="icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
 block content 
-    | Cards: 23
-    button.btn#new-card-button Create <svg class="icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+    #cards
+
+block scripts
+    script(src="/js/random.js")
+    script(src="/js/cards.js")     

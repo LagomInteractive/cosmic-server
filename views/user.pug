@@ -1,0 +1,15 @@
+extends website 
+block content 
+    #user-page-header
+        img(class="profile-picture" src="/img/profile-pictures/example-profile-pic.png", alt="")
+        #profile-username #{pageUser.username}
+        #profile-stats
+            | Wins: #{pageUser.record.wins}<br>Losses: #{pageUser.record.losses}
+        
+        #player-level #{pageUser.level}
+        #xp-bar
+            #xp-filled(style="width:30%")
+
+    #profile-options 
+        if pageUser.id == user.id 
+            button.btn.header-button.profile-button(onclick="javascript:logout()") Logout
