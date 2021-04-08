@@ -1,0 +1,173 @@
+*:root {
+	--green: #0eee8c;
+	--red: #f00222;
+	--background: rgb(18, 18, 19);
+	--header: rgb(28, 28, 29);
+}
+
+img {
+	-webkit-user-drag: none;
+}
+
+button:focus {
+	outline: 0;
+}
+
+body {
+	background-color: var(--background);
+	color: white;
+	font-family: "Roboto", sans-serif;
+	min-width: 750px;
+}
+
+#header {
+	display: block;
+	width: 100%;
+	height: 80px;
+	background-color: var(--header);
+}
+
+#logo {
+	height: 60px;
+	top: 10px;
+
+	position: relative;
+	display: inline-block;
+}
+
+.btn {
+	display: inline-block;
+	border: none;
+
+	padding: 6px;
+	padding-left: 10px;
+	padding-right: 10px;
+	font-size: 20px;
+	border-radius: 5px;
+}
+
+.header-button {
+	position: relative;
+	top: 15px;
+	margin-right: 20px;
+}
+
+.btn-selected,
+.btn:hover {
+	background: rgba(255, 255, 255, 0.055);
+}
+
+#welcome-sign {
+	display: block;
+	text-align: center;
+	font-size: 30px;
+	margin: 50px;
+}
+
+#content {
+	display: block;
+	margin: 0 auto;
+}
+
+#new-card-button {
+	fill: rgb(0, 0, 0);
+	color: black;
+	margin: 15px;
+	background-color: var(--green);
+}
+
+.icon {
+	height: 25px;
+	margin-left: 5px;
+	position: relative;
+	top: -1px;
+	display: inline-block;
+}
+
+#login-header-button {
+	float: right;
+	top: 20px;
+}
+
+#login-window {
+	display: block;
+	width: 400px;
+	margin: 0 auto;
+	background-color: var(--header);
+	margin-top: 40px;
+	border-radius: 10px;
+	padding-bottom: 1px;
+}
+
+#login-logo {
+	width: 100%;
+	top: 20px;
+	position: relative;
+	margin-bottom: 30px;
+}
+
+.login-input {
+	width: calc(100% - 50px);
+	padding: 10px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	color: black;
+	border-radius: 5px;
+	font-size: 20px;
+	margin: 25px;
+	margin-bottom: 0px;
+	margin-top: 5px;
+	position: relative;
+}
+
+.tiny-title {
+	display: block;
+	font-size: 20px;
+	margin: 25px;
+	margin-bottom: 0px;
+	margin-top: 15px;
+}
+
+#login-button {
+	display: block;
+	margin: 0 auto;
+	width: calc(100% - 50px);
+	margin: 25px;
+	height: 70px;
+	border-radius: 10px;
+	font-weight: 500;
+	color: black;
+	background-color: var(--green);
+	box-shadow: 0px 5px 0px #0aa561;
+	position: relative;
+}
+
+#login-button:active {
+	top: 5px;
+	box-shadow: none;
+}
+
+#login-button:disabled {
+	background-color: rgb(177, 177, 177);
+	box-shadow: 0px 5px 0px rgb(134, 134, 134);
+	cursor: default;
+}
+
+#login-info {
+	margin: 25px;
+	display: block;
+	color: var(--red);
+}
+
+#eula-disclaimer {
+	display: block;
+	margin-left: 25px;
+	margin-right: 25px;
+	margin-top: 10px;
+	margin-bottom: -10px;
+	font-size: 13px;
+}
+
+#eula-link {
+	text-decoration: underline;
+}

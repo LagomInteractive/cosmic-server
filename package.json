@@ -1,0 +1,24 @@
+{
+	"name": "cosmic-server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "nodemon --watch index.js"
+	},
+	"author": "Olle Kaiser",
+	"license": "ISC",
+	"dependencies": {
+		"atob": "^2.1.2",
+		"bcrypt": "^5.0.1",
+		"express": "^4.17.1",
+		"file-system": "^2.2.2",
+		"http": "0.0.1-security",
+		"lowdb": "^1.0.0",
+		"nanoid": "^3.1.22",
+		"pug": "^3.0.2",
+		"uuid": "^8.3.2",
+		"ws": "^7.4.4"
+	}
+}
