@@ -1,6 +1,9 @@
 var token = localStorage.getItem("token");
+var me;
 if (token) {
-	axios.post("/api/login", { token }).then((res) => {});
+	axios.post("/api/login", { token }).then((res) => {
+		me = res.data.user;
+	});
 }
 
 function getUser(username, callback) {
@@ -14,4 +17,10 @@ function logout() {
 	axios.post("/api/logout").then((res) => {
 		location.reload();
 	});
+}
+
+function createElementFromHTML(htmlString) {
+	var div = document.createElement("div");
+	div.innerHTML = htmlString.trim();
+	return div.firstChild;
 }

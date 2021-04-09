@@ -3,6 +3,8 @@ block content
     #user-page-header
         img(class="profile-picture" src="/img/profile-pictures/example-profile-pic.png", alt="")
         #profile-username #{pageUser.username}
+        if pageUser.admin
+            #profile-tag ADMIN
         #profile-stats
             | Wins: #{pageUser.record.wins}<br>Losses: #{pageUser.record.losses}
         

@@ -11,6 +11,8 @@ const FileSync = require("lowdb/adapters/FileSync");
 const adapter = new FileSync("db.json");
 const db = low(adapter);
 
+const cards = low(new FileSync("cards.json"));
+
 // file-system, used to read and write files to disk
 const fs = require("file-system");
 const profanity_filter = JSON.parse(fs.readFileSync("profanity_filter.json"));
@@ -89,6 +91,24 @@ for (let page of ["home", "cards", "download", "source", "login"]) {
 	});
 }
 
+app.get("/cards/edit/*", (req, res) => {
+	res.render("edit", {
+		loggedIn: req.loggedIn,
+		user: req.user,
+	});
+});
+
+app.get("/new", (req, res) => {
+	if (req.loggedIn) {
+		if (req.user.admin) {
+			res.redirect("/cards/edit/" + cards.get("increment").value());
+			cards.update("increment", (n) => n + 1).write();
+			return;
+		}
+	}
+	res.redirect("/");
+});
+
 app.get("/user/*", (req, res) => {
 	var pageUsername = req.path.substr(req.path.lastIndexOf("/") + 1);
 	var pageUser = getUser(pageUsername);
@@ -106,8 +126,49 @@ app.get("/user/*", (req, res) => {
 
 // Website REST API
 app.get("/api/cards", (req, res) => {
-	console.log("hi");
-	res.json(db.get("cards").value());
+	res.json(cards.get("cards").value());
+});
+
+app.post("/api/delete", (req, res) => {
+	if (req.loggedIn && req.user.admin) {
+		cards
+			.get("cards")
+			.value()
+			.forEach((card, index) => {
+				if (card.id === req.body.id) {
+					cards.get("cards").splice(index, 1).write();
+				}
+			});
+	}
+	res.end();
+});
+
+app.post("/api/upload", (req, res) => {
+	if (req.loggedIn && req.user.admin) {
+		req.body.image = req.body.image.replace(/^data:image\/png;base64,/, "");
+		fs.writeFileSync(
+			`dist/img/card-images/${req.body.id}.png`,
+			req.body.image,
+			"base64"
+		);
+	}
+	res.end();
+});
+
+app.post("/api/card", (req, res) => {
+	if (req.loggedIn && req.user.admin) {
+		cards
+			.get("cards")
+			.value()
+			.forEach((card, index) => {
+				if (card.id === req.body.id) {
+					cards.get("cards").splice(index, 1).write();
+				}
+			});
+
+		cards.get("cards").push(req.body).write();
+	}
+	res.end();
 });
 
 app.get("/api/user", (req, res) => {
@@ -230,8 +291,9 @@ wss.on("connection", (ws) => {});
 console.log(`Website started on port ${website_port}
 Game started on port ${game_port}`);
 
+cards.defaults({ cards: [], increment: 0 }).write();
+
 db.defaults({
-	cards: [],
 	users: [],
 	games: [],
 	tokens: [],
