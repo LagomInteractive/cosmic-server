@@ -46,12 +46,65 @@ function drawCard(card, overwriteImage = false) {
 		// Hp
 		if (isMinion) ctx.fillText(card.hp, 220, 330);
 
-		ctx.textAlign = "left";
+		// Draw name
 		ctx.font = "20px Roboto";
-		ctx.fillText(card.name, 30, 220);
+		ctx.fillText(card.name, canvas.width / 2, 220);
 
+		// Draw description
+		let rows = card.description.split("\n");
+		let yPos = 255;
+		for (let row of rows) {
+			ctx.font = "15px Roboto";
+			ctx.textAlign = "left";
+
+			var cleanString = row.split("$B").join("").split("$I").join("");
+
+			let rowWidth = ctx.measureText(cleanString);
+
+			let code = false;
+			let bold = false;
+			let italic = false;
+
+			let xPos = canvas.width / 2 - rowWidth.actualBoundingBoxRight / 2;
+			for (let char of row) {
+				if (char == "$") code = true;
+				else if (!code) {
+					ctx.fillText(char, xPos, yPos);
+					xPos += ctx.measureText(char).actualBoundingBoxRight;
+				}
+
+				if (char.toUpperCase() == "B" && code) {
+					code = false;
+					bold = !bold;
+				}
+
+				if (char.toUpperCase() == "I" && code) {
+					code = false;
+					italic = !italic;
+				}
+
+				ctx.font = `${italic ? "italic" : ""} ${
+					bold ? "bold" : ""
+				} 15px Roboto`;
+
+				if (char == " ") xPos += 3;
+			}
+			console.log(rowWidth);
+			yPos += 20;
+		}
+
+		var elementColors = {
+			lunar: "rgb(0, 162, 255)",
+			solar: "rgb(255, 38, 0)",
+			zenith: "rgb(46, 255, 99)",
+			nova: "rgb(147, 40, 246)",
+		};
+
+		// Draw element
+		ctx.textAlign = "center";
+		ctx.fillStyle = elementColors[card.element];
 		ctx.font = "15px Roboto";
-		ctx.fillText(card.description, 30, 250);
+		ctx.fillText(card.element.toUpperCase(), canvas.width / 2, 32);
 
 		// 3D Effect
 		const height = canvas.clientHeight;

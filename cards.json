@@ -1,60 +1,6 @@
 {
   "cards": [
     {
-      "id": "17",
-      "type": "minion",
-      "name": "Test card",
-      "description": "Test description for a card",
-      "mana": "4",
-      "damage": "5",
-      "hp": "10",
-      "element": "zenith",
-      "isTaunt": true,
-      "isRush": false,
-      "events": {
-        "onPlayed": [
-          {
-            "func": "healEveryone",
-            "value": 1
-          }
-        ],
-        "everyRound": [],
-        "onDeath": [
-          {
-            "func": "healRandom",
-            "value": "8"
-          }
-        ],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Yogsther",
-        "date": 1617988371662
-      }
-    },
-    {
-      "id": "12",
-      "type": "minion",
-      "name": "Name",
-      "description": "Description",
-      "mana": "4",
-      "damage": "2",
-      "hp": "1",
-      "element": "lunar",
-      "isTaunt": false,
-      "isRush": true,
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Yogsther",
-        "date": 1617988386033
-      }
-    },
-    {
       "id": "18",
       "type": "aoeSpell",
       "name": "Spell card",
@@ -85,7 +31,61 @@
         "user": "Yogsther",
         "date": 1617988464906
       }
+    },
+    {
+      "id": "12",
+      "type": "minion",
+      "name": "Named3wasd",
+      "description": "Description",
+      "mana": "4",
+      "damage": "2",
+      "hp": "1",
+      "element": "lunar",
+      "isTaunt": false,
+      "isRush": true,
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Yogsther",
+        "date": 1618254684501
+      }
+    },
+    {
+      "id": "17",
+      "type": "minion",
+      "name": "Test card",
+      "description": "$BBold$B Normal\nEnter $IItalic$I",
+      "mana": "4",
+      "damage": "5",
+      "hp": "10",
+      "element": "zenith",
+      "isTaunt": true,
+      "isRush": false,
+      "events": {
+        "onPlayed": [
+          {
+            "func": "healEveryone",
+            "value": 1
+          }
+        ],
+        "everyRound": [],
+        "onDeath": [
+          {
+            "func": "healRandom",
+            "value": "8"
+          }
+        ],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Yogsther",
+        "date": 1618257717098
+      }
     }
   ],
-  "increment": 19
+  "increment": 20
 }
