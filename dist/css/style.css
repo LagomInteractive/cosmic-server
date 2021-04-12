@@ -374,7 +374,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 #card-preview {
-	display: inline-block;
+	display: block;
 	position: relative;
 	margin: 15px;
 }
@@ -563,4 +563,8 @@ input[type="number"]::-webkit-outer-spin-button {
 	font-size: 20px;
 	margin-bottom: 0px;
 	color: var(--red);
+}
+
+#formating-help {
+	display: block;
 }

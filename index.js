@@ -143,6 +143,10 @@ app.post("/api/delete", (req, res) => {
 	res.end();
 });
 
+app.get("/backup", (req, res) => {
+	res.download(__dirname + "/cards.json");
+});
+
 app.post("/api/upload", (req, res) => {
 	if (req.loggedIn && req.user.admin) {
 		req.body.image = req.body.image.replace(/^data:image\/png;base64,/, "");
