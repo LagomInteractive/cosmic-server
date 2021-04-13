@@ -129,6 +129,19 @@ app.get("/api/cards", (req, res) => {
 	res.json(cards.get("cards").value());
 });
 
+app.post("/api/give", (req, res) => {
+	if (req.loggedIn && req.user.admin) {
+		let allCards = cards.get("cards").value();
+		let username = req.body.username;
+		for (var i = 0; i < 10; i++) {
+			let card = allCards[Math.floor(Math.random() * allCards.length)];
+			db.get("users").find({ username }).value().cards.push(card.id);
+			db.write();
+		}
+	}
+	res.end();
+});
+
 app.post("/api/delete", (req, res) => {
 	if (req.loggedIn && req.user.admin) {
 		cards

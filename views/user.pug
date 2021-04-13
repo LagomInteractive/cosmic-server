@@ -1,7 +1,7 @@
 extends website 
 block content 
     #user-page-header
-        img(class="profile-picture" src="/img/profile-pictures/example-profile-pic.png", alt="")
+        img(class="profile-picture" src="/img/profile-pictures/default-profile-photo.png", alt="")
         #profile-username #{pageUser.username}
         if pageUser.admin
             #profile-tag ADMIN
@@ -13,5 +13,13 @@ block content
             #xp-filled(style="width:30%")
 
     #profile-options 
+        if user.admin
+            button.btn.header-button.profile-button(onclick="javascript:giveCards('" + pageUser.username + "')") Give 10 cards
         if pageUser.id == user.id 
             button.btn.header-button.profile-button(onclick="javascript:logout()") Logout
+
+    #pgae-title Inventory
+    #inventory
+
+block scripts 
+    script(src="/js/user.js") 

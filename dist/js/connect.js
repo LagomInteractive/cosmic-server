@@ -24,3 +24,13 @@ function createElementFromHTML(htmlString) {
 	div.innerHTML = htmlString.trim();
 	return div.firstChild;
 }
+
+function giveCards(username) {
+	axios
+		.post("/api/give", {
+			username,
+		})
+		.then((res) => {
+			location.reload();
+		});
+}
