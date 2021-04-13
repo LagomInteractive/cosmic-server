@@ -326,7 +326,7 @@ body {
 #cards-options {
 	display: block;
 	width: calc(100% - 15px);
-	height: 30px;
+	height: 60px;
 	margin: 15px;
 	margin-top: 0px;
 	align-items: top;
@@ -335,7 +335,7 @@ body {
 #cards {
 	display: block;
 	width: 100%;
-	height: calc(100% - 130px);
+	height: calc(100% - 160px);
 	overflow-y: auto;
 	text-align: center;
 }
