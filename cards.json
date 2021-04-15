@@ -581,28 +581,6 @@
       }
     },
     {
-      "id": "67",
-      "type": "minion",
-      "name": "Tomahawk",
-      "description": "$BDeals 8 Damage",
-      "mana": "8",
-      "damage": "8",
-      "hp": "0",
-      "element": "lunar",
-      "isTaunt": false,
-      "isRush": false,
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1618297933569
-      }
-    },
-    {
       "id": "71",
       "type": "targetSpell",
       "name": "Taunting Shield",
@@ -1033,7 +1011,29 @@
         "user": "Oliverp",
         "date": 1618298536602
       }
+    },
+    {
+      "id": "67",
+      "type": "minion",
+      "name": "Tomahawk",
+      "description": "$BDeals 8 Damage",
+      "mana": "8",
+      "damage": "8",
+      "hp": "",
+      "element": "lunar",
+      "isTaunt": false,
+      "isRush": false,
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Oliverp",
+        "date": 1618496521419
+      }
     }
   ],
-  "increment": 79
+  "increment": 83
 }

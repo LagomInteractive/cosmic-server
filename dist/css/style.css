@@ -75,12 +75,19 @@ body {
 	margin: 0 auto;
 }
 
-#new-card-button {
+#new-card-button, #download-assets-button {
 	fill: rgb(0, 0, 0);
 	color: black;
 	background-color: var(--green);
 	margin: 0px;
 	top: 0px;
+}
+
+#download-assets-button{
+    background-color: var(--header);
+    color: white;
+    fill: white;
+    margin-left: 15px;
 }
 
 #search-cards {
@@ -89,7 +96,7 @@ body {
 	border-radius: 5px;
 	margin: 15px;
 	margin-left: 0px;
-	height: 42px;
+	height: 45px;
 	position: relative;
 	width: 300px;
 	top: -2px;
@@ -602,6 +609,7 @@ input[type="number"]::-webkit-outer-spin-button {
 	margin: 0 auto;
 	border-radius: 10px;
 	margin-bottom: 15px;
+    padding-bottom: 55px;
 }
 
 #pgae-title {
@@ -618,6 +626,8 @@ input[type="number"]::-webkit-outer-spin-button {
 	margin: 0px;
 	width: 150px;
 	margin-right: -58.5px;
+    margin-top: -55px;
+    top: 55px;
 	position: relative;
 	transition: all 0.2s;
 }
