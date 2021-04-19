@@ -105,7 +105,7 @@ document.getElementById("image-upload-input").onchange = (e) => {
 
 function onChange() {
 	changesDone++;
-	if (changesDone > 1) uploadButton.removeAttribute("disabled");
+	if (changesDone > 2) uploadButton.removeAttribute("disabled");
 }
 
 onCardsReady = () => {
@@ -218,6 +218,7 @@ function loadEvents() {
 			) => {
 				card.events[event][i].value = e.srcElement.value;
 				onChange();
+				
 			};
 
 			functionElements.push(eventFunctionElement);
@@ -279,5 +280,5 @@ function updateCard() {
 	cardPreviewEl.innerHTML = "";
 	document
 		.getElementById("card-preview")
-		.appendChild(drawCard(card, imageUpload));
+		.appendChild(drawCard(card, imageUpload, true, false));
 }

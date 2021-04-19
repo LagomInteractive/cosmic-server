@@ -1,9 +1,15 @@
 var token = localStorage.getItem("token");
 var me;
+var onLogin = () => {}
+
 if (token) {
 	axios.post("/api/login", { token }).then((res) => {
 		me = res.data.user;
+		onLogin()
 	});
+} else {
+	me = {}
+	onLogin()
 }
 
 function getUser(username, callback) {

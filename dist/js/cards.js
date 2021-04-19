@@ -8,6 +8,7 @@ var onCardsReady = () => {};
 
 cardTemplate.onload = () => {
 	axios.get("/api/cards").then((res) => {
+
 		cards = res.data;
 		onCardsReady();
 
@@ -64,7 +65,7 @@ function getCard(id) {
 
 cardTemplate.src = "/img/card-template.png";
 
-function drawCard(card, overwriteImage = false, animated = true) {
+function drawCard(card, overwriteImage = false, animated = true, allowCache = true) {
 	var canvas = document.createElement("canvas");
 	canvas.classList.add("card");
 	canvas.width = 253;
@@ -72,9 +73,9 @@ function drawCard(card, overwriteImage = false, animated = true) {
 
 	var ctx = canvas.getContext("2d");
 
-	if (cachedCards[card.id] != null) {
+	if (allowCache && cachedCards[card.id] != null) {
 		let cachedImage = new Image();
-
+		console.log("Used cached image")
 		cachedImage.onload = () => ctx.drawImage(cachedImage, 0, 0);
 		cachedImage.src = cachedCards[card.id];
 		applyAnimation();
@@ -162,11 +163,12 @@ function drawCard(card, overwriteImage = false, animated = true) {
 			cachedCards[card.id] = canvas.toDataURL();
 		};
 
+
 		image.src = overwriteImage
 			? overwriteImage
 			: card.lastChange
 			? "/img/card-images/" + card.id + ".png"
-			: "https://via.placeholder.com/500x500";
+			: "/img/placeholder.png";
 	}
 
 	function applyAnimation() {

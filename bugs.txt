@@ -1,0 +1,6 @@
+[Website]
+[MAYBE FIXED]* Entering card editing the website thinks you have made a change even 
+when you haven't, prevents you from leaving without a prompt.
+
+[Game]
+* Cards can not load (corrupted_cards.json) 

@@ -11,6 +11,7 @@
 	--nova: rgb(147, 40, 246);
 }
 
+
 img {
 	-webkit-user-drag: none;
 }
@@ -602,7 +603,7 @@ input[type="number"]::-webkit-outer-spin-button {
 	display: block;
 }
 
-#inventory {
+#inventory , #decks {
 	display: block;
 	width: 700px;
 	background-color: var(--header);
@@ -612,7 +613,12 @@ input[type="number"]::-webkit-outer-spin-button {
     padding-bottom: 55px;
 }
 
-#pgae-title {
+#decks{
+	padding-bottom: 0px;
+}
+
+
+#page-title {
 	display: block;
 	position: relative;
 	margin: 0 auto;
@@ -635,4 +641,150 @@ input[type="number"]::-webkit-outer-spin-button {
 .inventory-card:hover {
 	transform: translateY(-25px);
 	z-index: 100;
+}
+
+#new-deck{
+	border-bottom: 2px solid white;
+	margin-left: 15px;
+	position: relative;
+}
+
+.deck-slot{
+	display: block;
+	width: 600px;
+	height: 80px;
+	background-color: var(--header);
+	margin: 0 auto;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border-radius: 10px;	
+	position: relative;
+	overflow: hidden;
+}
+
+.cover-image-gradient{
+	position: absolute;
+	right: 0px;
+	width: 50%;
+	height: 100%;
+	background: linear-gradient(90deg, var(--header),  rgba(0, 0, 0, 0.5) );
+
+	
+}
+
+.deck-slot-image{
+	position: absolute;
+	right: 0px;
+	right: 0px;
+	width: 50%;
+	top: -60px;
+}
+
+.amount{
+	display: block;
+	position: absolute;
+	right: 10px;
+	width: 180px;
+	top: 10px;
+	height: 60px;
+}
+img{
+	user-select: none;
+}
+.icon-btn{
+	display: inline-block;
+	width: 60px;
+	height: 60px;
+	background-color: rgba(0, 0, 0, 0.137);
+	border-radius: 10px;
+
+}
+
+.amount-number{
+	position: absolute;
+	width: 60px;
+	left: 60px;
+	top: 5px;
+	font-size: 30px;
+	text-align: center;
+}
+
+.slot-active{
+	box-shadow: 8px 0px 0px var(--green);
+}
+
+.card-name{
+	position: absolute;
+	width: 200px;
+	font-size: 23px;
+	top: 15px;
+	left: 75px;
+}
+
+.card-element{
+	position: absolute;
+	width: 200px;
+	font-size: 15px;
+	bottom: 15px;
+	left: 75px;
+	color: var(--lunar);
+}
+
+.deck-header {
+	display: block;
+	height: 60px;
+	width: 600px;
+
+	margin: 0 auto;
+	margin-top: 15px ;
+	position: relative;
+}
+
+#deck-title{
+	 background: none;
+	 color: white;
+	 border: none;
+	 font-size: 25px;
+	 width:500px;
+	 padding: 0px;
+	}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+
+.card-mana-cost{
+	position: absolute;
+	top: 15px;
+	left: 0px;
+	text-align: center;
+	width: 70px;
+	font-size: 30px;
+	color: rgb(31, 136, 255);
+}
+
+#deck-username{
+	color: gray;
+}
+
+#deck-owner{
+	display: block;
+}
+
+#delete-deck{
+	position: absolute;
+	right: 0px;
+	margin: 0;
+	display: none;
+}
+
+
+.deck-link{
+	display: inline-block;
+	margin: 5px;
+	padding: 5px;
+	padding-left: 15px;
+	padding-right: 15px;
+	background-color: var(--background);
+	border-radius: 5px;
 }

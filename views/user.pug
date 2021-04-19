@@ -18,7 +18,14 @@ block content
         if pageUser.id == user.id 
             button.btn.header-button.profile-button(onclick="javascript:logout()") Logout
 
-    #pgae-title Inventory
+    #page-title Decks 
+        if loggedIn && pageUser.id == user.id 
+            a#new-deck(href="/api/newdeck") New deck
+            
+    #decks
+        
+        
+    #page-title Inventory
     #inventory
 
 block scripts 

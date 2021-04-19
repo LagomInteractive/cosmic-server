@@ -126,10 +126,85 @@ app.get("/user/*", (req, res) => {
     }
 });
 
+app.get("/deck/*", (req, res) => {
+    res.render("deck", {
+        loggedIn: req.loggedIn,
+        user: req.user,
+    })
+})
+
 // Website REST API
 app.get("/api/cards", (req, res) => {
     res.json(cards.get("cards").value());
 });
+
+app.get("/api/deck", (req, res) => {
+    var deck = db.get("decks").value()[req.query.id]
+    if (deck) {
+        var owner = getUserFromID(deck.owner)
+        if (owner) {
+            deck.owner_username = owner.username
+            deck.id = req.query.id
+            res.json(deck)
+        }
+    }
+})
+
+app.post("/api/deleteDeck", (req, res) => {
+    var deck = db.get("decks").value()[req.body.id]
+    if(deck){
+        if(req.loggedIn && (req.user.id == deck.owner)){
+            delete db.get("decks").value()[deck.id]
+            db.write()
+        }
+    }
+    res.end()
+})
+
+app.post("/api/deck", (req, res) => {
+
+    var requestDeck = req.body.deck
+    if (!requestDeck || !req.loggedIn) return
+
+    var dbDeck = db.get("decks").value()[requestDeck.id]
+    if (!dbDeck) return
+
+    if(dbDeck.owner == req.user.id){
+        if(requestDeck.title.length <= 30 && requestDeck.title.trim().length > 0){
+
+            for(let id in requestDeck.cards){
+                // Make sure the user has enough cards in their inventory
+                if(req.user.cards[id] < requestDeck.cards[id]) return
+                // Make sure every card amount is between 0-2
+                if(requestDeck.cards[id] > 2 || requestDeck.cards[id] < 0) return
+                
+                // Deck is accepted, replacing the old deck
+                dbDeck.title = requestDeck.title
+                dbDeck.cards = requestDeck.cards
+                db.write()
+            }
+        }
+    }
+
+    res.end()
+
+
+})
+
+app.get("/api/newdeck", (req, res) => {
+    if (req.loggedIn) {
+        let id = nanoid()
+        db.get("decks").value()[id] = {
+            title: "Untitled deck",
+            cards: {},
+            owner: req.user.id
+        }
+        db.write()
+        res.redirect(`/deck/${id}`)
+    } else {
+        res.send("You have to be logged in to do this.")
+    }
+})
 
 app.post("/api/give", (req, res) => {
     if (req.loggedIn && req.user.admin) {
@@ -137,12 +212,26 @@ app.post("/api/give", (req, res) => {
         let username = req.body.username;
         for (var i = 0; i < 10; i++) {
             let card = allCards[Math.floor(Math.random() * allCards.length)];
-            db.get("users").find({ username }).value().cards.push(card.id);
-            db.write();
+            giveCard(getUser(username).id, card.id)
+            //db.get("users").find({ username }).value().cards.push();
+            //db.write();
         }
     }
     res.end();
 });
+
+function giveCard(user, card) {
+    var inventory = db.get("users").find({ id: user }).value().cards
+    if (inventory[card]) inventory[card]++
+    else inventory[card] = 1
+    db.write()
+}
+
+function removeCard(user, card) {
+    var inventory = db.get("users").find({ id: user }).value().cards
+    if (inventory[card] && inventory[card] > 0) inventory[card]--;
+    db.write()
+}
 
 app.post("/api/delete", (req, res) => {
     if (req.loggedIn && req.user.admin) {
@@ -194,6 +283,14 @@ app.get("/api/user", (req, res) => {
     let user = getUser(req.query.username);
     if (user) {
         delete user.password;
+        user.decks = []
+        for(let id in db.get("decks").value()){
+            let deck = clone(db.get("decks").value()[id])
+            if(deck.owner == user.id){
+                deck.id = id;
+                user.decks.push(deck)
+            }
+        }
         res.json(user);
     } else {
         res.json(null);
@@ -420,7 +517,7 @@ wss.on("connection", (ws) => {
                         password: nanoid(),
                         level: 1,
                         xp: 0,
-                        cards: [],
+                        cards: {},
                         admin: false,
                         record: {
                             wins: 0,
@@ -459,6 +556,7 @@ function getUnityCards() {
         for (var i = 0; i < description.length; i++) {
             let char = description[i]
             let next = description[i + 1]
+            if (!next) next = ""
             if (next) next = next.toUpperCase()
             if (char == "$") {
                 i++; // Skip the next character
@@ -493,6 +591,7 @@ db.defaults({
     users: [],
     games: [],
     tokens: [],
+    decks: {},
     filtered_usernames: [],
 }).write();
 
