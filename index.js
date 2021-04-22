@@ -152,8 +152,8 @@ app.get("/api/deck", (req, res) => {
 
 app.post("/api/deleteDeck", (req, res) => {
     var deck = db.get("decks").value()[req.body.id]
-    if(deck){
-        if(req.loggedIn && (req.user.id == deck.owner)){
+    if (deck) {
+        if (req.loggedIn && (req.user.id == deck.owner)) {
             delete db.get("decks").value()[deck.id]
             db.write()
         }
@@ -169,20 +169,20 @@ app.post("/api/deck", (req, res) => {
     var dbDeck = db.get("decks").value()[requestDeck.id]
     if (!dbDeck) return
 
-    if(dbDeck.owner == req.user.id){
-        if(requestDeck.title.length <= 30 && requestDeck.title.trim().length > 0){
+    if (dbDeck.owner == req.user.id) {
+        if (requestDeck.title.length <= 30 && requestDeck.title.trim().length > 0) {
 
-            for(let id in requestDeck.cards){
+            for (let id in requestDeck.cards) {
                 // Make sure the user has enough cards in their inventory
-                if(req.user.cards[id] < requestDeck.cards[id]) return
+                if (req.user.cards[id] < requestDeck.cards[id]) return
                 // Make sure every card amount is between 0-2
-                if(requestDeck.cards[id] > 2 || requestDeck.cards[id] < 0) return
-                
-                // Deck is accepted, replacing the old deck
-                dbDeck.title = requestDeck.title
-                dbDeck.cards = requestDeck.cards
-                db.write()
+                if (requestDeck.cards[id] > 2 || requestDeck.cards[id] < 0) return
             }
+
+            // Deck is accepted, replacing the old deck
+            dbDeck.title = requestDeck.title
+            dbDeck.cards = requestDeck.cards
+            db.write()
         }
     }
 
@@ -284,9 +284,9 @@ app.get("/api/user", (req, res) => {
     if (user) {
         delete user.password;
         user.decks = []
-        for(let id in db.get("decks").value()){
+        for (let id in db.get("decks").value()) {
             let deck = clone(db.get("decks").value()[id])
-            if(deck.owner == user.id){
+            if (deck.owner == user.id) {
                 deck.id = id;
                 user.decks.push(deck)
             }
@@ -466,7 +466,7 @@ function startGame(id) {
 }
 
 function emitToPlayers(g) {
-    return
+
     var game = clone(g)
     for (let player of game.players) {
         delete player.socket
@@ -500,10 +500,10 @@ wss.on("connection", (ws) => {
         var package = JSON.parse(message)
         switch (package.identifier) {
             case "start_test":
-                /* createNewGame({
+                createNewGame({
                     profile: getUserFromToken(package.token),
                     socket: ws
-                }, false) */
+                }, false)
                 break;
             case "login":
                 var existingToken = db.get("tokens").find({ token: package.token }).value()
@@ -536,6 +536,9 @@ wss.on("connection", (ws) => {
     })
 
     ws.send(Pack("cards", getUnityCards()))
+    /* for (var card of getUnityCards()) {
+        ws.send(Pack("cards", JSON.stringify(card)))
+    } */
 });
 
 
@@ -572,6 +575,8 @@ function getUnityCards() {
 
         card.description = result
     }
+    /* return (unityCards) */
+
     return JSON.stringify(unityCards)
 }
 
