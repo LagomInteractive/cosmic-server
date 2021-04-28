@@ -59,8 +59,10 @@ const wss = new WebSocket.Server({ port: game_port });
 
 // Nanoid for generating IDs and tokens for players (Replacing UUIDv4)
 const { nanoid } = require("nanoid");
-const { exit } = require("process");
-const { FORMERR } = require("dns");
+
+
+var onlinePings = {}
+
 
 app.use((req, res, next) => {
     req.loggedIn = false;
@@ -163,6 +165,7 @@ app.post("/api/deleteDeck", (req, res) => {
 
 app.post("/api/deck", (req, res) => {
 
+    var maxDeckSize = 30;
     var requestDeck = req.body.deck
     if (!requestDeck || !req.loggedIn) return
 
@@ -171,24 +174,24 @@ app.post("/api/deck", (req, res) => {
 
     if (dbDeck.owner == req.user.id) {
         if (requestDeck.title.length <= 30 && requestDeck.title.trim().length > 0) {
-
+            var totalCards = 0;
             for (let id in requestDeck.cards) {
                 // Make sure the user has enough cards in their inventory
                 if (req.user.cards[id] < requestDeck.cards[id]) return
                 // Make sure every card amount is between 0-2
                 if (requestDeck.cards[id] > 2 || requestDeck.cards[id] < 0) return
+                totalCards += Number(requestDeck.cards[id])
             }
-
-            // Deck is accepted, replacing the old deck
-            dbDeck.title = requestDeck.title
-            dbDeck.cards = requestDeck.cards
-            db.write()
+            if (totalCards <= maxDeckSize) {
+                // Deck is accepted, replacing the old deck
+                dbDeck.title = requestDeck.title
+                dbDeck.cards = requestDeck.cards
+                db.write()
+            }
         }
     }
 
     res.end()
-
-
 })
 
 app.get("/api/newdeck", (req, res) => {
@@ -279,6 +282,27 @@ app.post("/api/card", (req, res) => {
     res.end();
 });
 
+app.get("/api/users", (req, res) => {
+    var users = db.get("users").value()
+    var send = []
+    clearPings()
+    for (let user of users) {
+        send.push({
+            status: onlinePings[user.id] ? onlinePings[user.id].status : "offline",
+            username: user.username,
+        })
+    }
+
+    send.sort((a, b) => {
+        if (PING_PRIORITY.indexOf(a.status) - PING_PRIORITY.indexOf(b.status) != 0) return PING_PRIORITY.indexOf(a.status) - PING_PRIORITY.indexOf(b.status)
+        if (a.username > b.username) return 1;
+        if (a.username < b.username) return -1
+        return 0
+    })
+
+    res.json(send)
+})
+
 app.get("/api/user", (req, res) => {
     let user = getUser(req.query.username);
     if (user) {
@@ -306,6 +330,7 @@ app.post("/api/login", (req, res) => {
     var token = db.get("tokens").find({ token: req.body.token }).value();
     if (token) {
         var user = getUserFromID(token.user);
+        pingUser(user.id, "website")
         delete user.password;
         res.json({ user });
     } else {
@@ -320,6 +345,33 @@ app.get("/api/assets", (req, res) => {
     }
     res.send(commands)
 })
+
+app.post("/api/ping", (req, res) => {
+    res.end()
+    if (req.loggedIn) pingUser(req.user.id, "website")
+})
+
+const PING_PRIORITY = ["game", "website", "offline"]
+
+function pingUser(id, status) {
+    // Clear all pings that would be considered offline now (3 > seconds old)
+    clearPings()
+    // Only replace online status if the priority is higher (replace website online if also online in game 
+    if (onlinePings[id] && PING_PRIORITY.indexOf(onlinePings[id].status) < PING_PRIORITY.indexOf(status)) return
+    onlinePings[id] = {
+        date: Math.round(Date.now() / 1000),
+        status: status
+    }
+}
+
+// Clear all pings that would be considered offline now (3 > seconds old)
+function clearPings() {
+    for (let key in onlinePings) {
+        if (onlinePings[key].status != "game" && (Date.now() / 1000) - onlinePings[key].date > 3)
+            // Not pinged for more than 3 seconds
+            delete onlinePings[key];
+    }
+}
 
 app.post("/api/loginPass", (req, res) => {
     var user = getUserWithPassword(req.body.username);
@@ -413,6 +465,8 @@ var games = [
 
 ]
 
+var roundCountdowns = {}
+
 const GAME = {
     id: nanoid(),
     players: [],
@@ -420,6 +474,8 @@ const GAME = {
     roundStarted: 0,
     roundLength: 60,
     round: 0,
+    turn: 0,
+    events: []
 }
 
 const PLAYER = {
@@ -428,26 +484,48 @@ const PLAYER = {
     name: "Test",
     hp: 0,
     cards: [],
+    deck: [],
     minions: [],
     buff: {
         sacrifices: 0,
         element: null
     },
+    isAttacking: false,
     hasAttacked: false,
     hasBeenAttacked: false,
     manaLeft: 0,
     totalMana: 0,
     isBot: false,
-    profile: null
+    profile: null,
+    turn: false,
 }
 
+const MINION = {
+    id: nanoid(),
+    hp: 0,
+    isAttacking: false,
+    hasAttacked: false,
+    hasBeenAttacked: false,
+    buff: null,
+    origin: null,
+    spawnRound: 0,
+    canSacrifice: false,
+    owner: null,
+}
+
+// Create a new online or bot game
 function createNewGame(user1, user2 = false) {
 
     var game = clone(GAME)
 
+    game.id = nanoid()
+
     var player1 = createPlayer(user1)
 
     var player2 = clone(PLAYER)
+    // Player 1 will be attacking first.
+    // When the round start, the attacking player is flipped
+    player2.turn = true;
     player2.isBot = true;
     player2.name = "Bot"
     player2.id = nanoid()
@@ -455,26 +533,205 @@ function createNewGame(user1, user2 = false) {
     game.players = [player1, player2]
     game.gameStarted = Date.now()
 
-    games.push(game)
+    var deckID = "nZ4PTjcdSBf5AIMX3n0fi"
+    var deck = db.get("decks").find({ id: deckID }).value()
 
+    for (let key in deck.cards) {
+        for (let i = 0; i < Number(deck.cards[key]); i++) {
+            for (let player of game.players) {
+                player.deck.push(Number(key))
+            }
+
+        }
+    }
+
+    for (let player of game.players) {
+        player.deck = shuffle(player.deck)
+    }
+
+    games.push(game)
     startGame(game.id)
 }
 
-function startGame(id) {
+function terminateGame(id) {
     var game = getGame(id)
-    emitToPlayers(game)
+    if (roundCountdowns[id]) {
+        clearTimeout(roundCountdowns[id])
+        delete roundCountdowns[id]
+    }
+
+
+    for (let i = 0; i < games.length; i++) {
+        if (games[i].id == id) {
+            games.splice(i, 1)
+            break;
+        }
+    }
+
+    console.log("Terminating game " + id)
 }
 
-function emitToPlayers(g) {
 
-    var game = clone(g)
+function startGame(id) {
+    var game = getGame(id)
+    game.gameStarted = Date.now()
+    addEvent(game, "game_start")
+
     for (let player of game.players) {
-        delete player.socket
+        dealCards(id, player.id, 5);
+        player.hp = 30;
     }
+
+    console.log("Starting game with " + game.players[0].name + " and " + game.players[1].name)
+    emitGameUpdate(game)
+
+    setTimeout(() => {
+        nextTurn(id)
+    }, 500)
+}
+
+function runBot(gameid) {
+    var game = getGame(gameid);
+    for (var player of game.players) {
+        if (player.turn && player.isBot) {
+
+            // Check if bot can play any cards
+            for (var i = 0; i < player.cards.length; i++) {
+                console.log("CARDS")
+                var card = getCard(player.cards[i]);
+                if (card.mana <= player.manaLeft && card.type == "minion") {
+                    console.log("BOT PLAYED A MINION!!! " + card.name + " COST: " + card.mana)
+                    playMinion(gameid, player.id, i)
+                    return
+                }
+            }
+        }
+    }
+
+    nextTurn(gameid)
+    console.log("Nothing to do with the bot.. terminating")
+}
+
+function nextTurn(id) {
+
+    if (roundCountdowns[id]) clearTimeout(roundCountdowns[id])
+    var game = getGame(id)
+
+    if (game.turn % 2 == 0) game.round++;
+    game.turn++;
+    game.roundStarted = Date.now()
+
+    // Change turn
+    var attackingPlayer = ""
+    var attackingPlayerIsBot = false;
+    for (let player of game.players) {
+        player.turn = !player.turn
+        if (player.turn) {
+            if (player.isBot) attackingPlayerIsBot = true;
+            attackingPlayer = player.id;
+            // Give the attacking player a new card at the start of the round
+            dealCards(id, player.id)
+            player.totalMana = game.round
+            player.manaLeft = game.round > 10 ? 10 : game.round
+        }
+
+        player.isAttacking = player.turn
+        for (let minion of player.minions) {
+            minion.isAttacking = player.turn;
+            minion.hasAttacked = false;
+            minion.hasBeenAttacked = false;
+        }
+    }
+
+    addEvent(game, "next_turn", {
+        "attacking_player": attackingPlayer
+    })
+
+    emitGameUpdate(game)
+
+    if (attackingPlayerIsBot) {
+        let botRound = game.round;
+        let botRunner = setInterval(() => {
+            console.log("RUNNING BOT")
+            game = getGame(game.id)
+            for (let player of game.players) {
+                if (player.isBot && player.turn && botRound == game.round) {
+                    runBot(game.id)
+                    return
+                }
+            }
+            // Stop the bot because its done.
+            clearInterval(botRunner)
+            console.log("STOPPED RUNNING BOT")
+        }, 800)
+    }
+
+    roundCountdowns[id] = setTimeout(() => {
+        nextTurn(game.id)
+    }, game.roundLength * 1000)
+    console.log("New round started")
+}
+
+// Deals one or more cards to a player in the game
+function dealCards(game_id, player_id, amount = 1) {
+    var game = getGame(game_id)
+    for (let player of game.players) {
+        if (player.id == player_id) {
+            for (let i = 0; i < amount; i++) {
+                // Get the card to deal to the player
+                if (player.deck.length > 0) {
+                    var card = player.deck[0]
+                    if (player.cards.length < 8) {
+                        player.cards.push(card)
+                        addEvent(game, "player_deal_card", {
+                            player: player.id,
+                            card
+                        })
+                    }
+                    // Delete the card from the players deck
+                    player.deck.splice(0, 1)
+                } else {
+                    console.log("PLAYER HAS RUN OUT OF CARDS!")
+                }
+            }
+        }
+    }
+
+}
+
+function addEvent(game, identifier, values = {}) {
+    game.events.push({
+        identifier,
+        values
+    })
+}
+
+// Emit the entire game info to all players in the game
+function emitGameUpdate(g) {
 
     for (let player of g.players) {
+
+        // Dont send updates to bots
+        if (player.isBot) continue;
+
+        let game = clone(g)
+        for (let playerCopy of game.players) {
+            delete playerCopy.socket
+            if (player.id != playerCopy.id) {
+                // Clear enemy player deck and cards so that you cannot
+                // cheat.
+                for (let i = 0; i < playerCopy.deck; i++) {
+                    playerCopy.deck[i] = 0
+                }
+                for (let i = 0; i < playerCopy.cards; i++) {
+                    playerCopy.cards[i] = 0
+                }
+            }
+        }
         player.socket.send(Pack("game_update", JSON.stringify(game)))
     }
+
+    g.events = []
 }
 
 function getGame(id) {
@@ -484,31 +741,153 @@ function getGame(id) {
     return null;
 }
 
+function getGameIdFromUserId(user_id) {
+    for (let game of games) {
+        for (let player of game.players) {
+            if (player.id == user_id) {
+                return game.id
+            }
+        }
+    }
+    return null
+}
+
 function createPlayer(user) {
+
     var player = clone(PLAYER)
+
     player.name = user.profile.username
     player.id = user.profile.id
     player.profile = user.profile
-    player.socket = user.profile.socket
+
+    let playerCards = []
+    for (let key in player.profile.cards) {
+        for (let i = 0; i < Number(player.profile.cards[key]); i++) {
+            playerCards.push(Number(key));
+        }
+    }
+
+    player.profile.cards = playerCards;
+
+    player.socket = user.socket
     return player
 }
 
+function getCard(cardId) {
+    return cards.get("cards").find({ id: String(cardId) }).value()
+}
+
+function playMinion(gameId, userId, cardIndex) {
+    var game = getGame(gameId)
+
+    for (let player of game.players) {
+        if (player.id == userId) {
+            var card = getCard(player.cards[Number(cardIndex)])
+
+            if (card.type == "minion") {
+
+                console.log("Minion played")
+                // Player has card in their hand
+                if (player.manaLeft >= card.mana) {
+
+                    player.manaLeft = Number(player.manaLeft) - Number(card.mana);
+                    player.cards.splice(cardIndex, 1)
+                    var minion = clone(MINION)
+
+                    minion.id = nanoid()
+                    minion.owner = player.id
+                    minion.hp = card.hp
+                    minion.damage = card.damage
+                    minion.isAttacking = false
+                    minion.hasAttacked = false
+                    minion.hasBeenAttacked = false;
+                    minion.spawnRound = game.round;
+                    minion.origin = card.id
+                    minion.canSacrifice = false;
+
+                    player.minions.push(minion)
+                    addEvent(game, "card_used", {
+                        player: player.id,
+                        index: cardIndex
+                    })
+                    addEvent(game, "minion_spawned", {
+                        id: minion.id
+                    })
+                }
+
+            }
+        }
+    }
+
+    emitGameUpdate(game)
+}
+
+var unityClients = {}
 
 // Game server
-wss.on("connection", (ws) => {
+wss.on("connection", (ws, req) => {
+    ws.id = req.headers['sec-websocket-key'];
+    ws.on("close", () => {
+        if (unityClients[ws.id]) {
+            let gameId = getGameIdFromUserId(unityClients[ws.id])
+            if (gameId) {
+                terminateGame(gameId);
+            }
+            delete onlinePings[unityClients[ws.id]]
+        }
+    })
+
     ws.on("message", (message) => {
         var package = JSON.parse(message)
+        var userId = null;
+        if (package.token) {
+            let userToken = db.get("tokens").find({ token: package.token }).value()
+            if (userToken) userId = userToken.user
+        }
+
+        var gameId = getGameIdFromUserId(userId)
+
         switch (package.identifier) {
+            case "ping":
+                ws.send(Pack("ping"))
+                break;
+            case "play_minion":
+                if (gameId) playMinion(gameId, userId, package.packet)
+                break;
+            case "end_turn":
+                if (gameId) {
+                    var game = getGame(gameId)
+                    for (let player of game.players) if (player.id == userId && player.turn) nextTurn(gameId)
+                }
+                break;
             case "start_test":
+                console.log("Start test called")
                 createNewGame({
                     profile: getUserFromToken(package.token),
                     socket: ws
                 }, false)
                 break;
             case "login":
+                var user = getUserWithPassword(package.packet);
+                if (user) {
+                    comparePassword(package.token, user.password, (err, match) => {
+                        if (match) {
+                            var token = createLoginToken(user.id);
+                            ws.send(Pack("new_token", token))
+                        } else {
+                            ws.send(Pack("login_fail"))
+                        }
+                    })
+                }
+                break;
+            case "login_with_token":
                 var existingToken = db.get("tokens").find({ token: package.token }).value()
                 if (existingToken) {
-                    ws.send(Pack("user", JSON.stringify(getUserFromID(existingToken.user))))
+                    let user = getUserFromID(existingToken.user)
+                    if (unityClients[ws.id]) delete onlinePings[unityClients[ws.id]]
+                    unityClients[ws.id] = user.id
+                    pingUser(user.id, "game")
+                    ws.send(Pack("user", JSON.stringify(userToUnity(user))))
                 } else {
                     let id = nanoid()
                     let user = {
@@ -525,11 +904,16 @@ wss.on("connection", (ws) => {
                         },
                     };
 
+                    for (let card of cards.get("cards").value()) {
+                        user.cards[card.id] = 10;
+                    }
+
                     db.get("users").push(user).write();
                     var token = createLoginToken(user.id);
                     ws.send(Pack("new_token", token))
                 }
                 break;
+
 
         }
 
@@ -540,6 +924,7 @@ wss.on("connection", (ws) => {
         ws.send(Pack("cards", JSON.stringify(card)))
     } */
 });
+
 
 
 /* Gets all cards but in the format for Unity
@@ -620,6 +1005,18 @@ function getUserFromID(id) {
     return userWithoutPass;
 }
 
+function userToUnity(user) {
+    let userCards = []
+    for (let id in user.cards) {
+        for (let i = 0; i < user.cards[id]; i++) {
+            userCards.push(id)
+        }
+    }
+    user.cards = userCards;
+    return user;
+
+}
+
 function getUserWithPassword(username) {
     for (let user of db.get("users").value()) {
         if (user.username.toLowerCase() == username.toLowerCase()) {
@@ -638,4 +1035,21 @@ function getUser(username) {
         delete userWithoutPass.password;
         return userWithoutPass;
     }
+}
+
+function shuffle(arr) {
+    var len = arr.length;
+    var d = len;
+    var array = [];
+    var k, i;
+    for (i = 0; i < d; i++) {
+        k = Math.floor(Math.random() * len);
+        array.push(arr[k]);
+        arr.splice(k, 1);
+        len = arr.length;
+    }
+    for (i = 0; i < d; i++) {
+        arr[i] = array[i];
+    }
+    return arr;
 }

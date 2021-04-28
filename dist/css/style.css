@@ -1,90 +1,95 @@
 *:root {
-	--green: #0eee8c;
-	--dark-green: #0cbe71;
-	--red: #f00222;
-	--dark-red: #be0019;
-	--background: rgb(18, 18, 19);
-	--header: rgb(28, 28, 29);
-	--lunar: rgb(0, 162, 255);
-	--solar: rgb(255, 38, 0);
-	--zenith: rgb(46, 255, 99);
-	--nova: rgb(147, 40, 246);
+    --green: #0eee8c;
+    --dark-green: #0cbe71;
+    --red: #f00222;
+    --dark-red: #be0019;
+    --background: rgb(18, 18, 19);
+    --header: rgb(28, 28, 29);
+    --lunar: rgb(0, 162, 255);
+    --solar: rgb(255, 38, 0);
+    --zenith: rgb(46, 255, 99);
+    --nova: rgb(147, 40, 246);
+    --taunt: rgb(230, 230, 230);
+    --rush: rgb(22, 22, 22);
 }
 
+@font-face {
+    font-family: 'Cosmic';
+    src: url('MaiandraGD.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    url('MaiandraGD.ttf') format('truetype');
+    /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
 
 img {
-	-webkit-user-drag: none;
+    -webkit-user-drag: none;
 }
 
 button:focus {
-	outline: 0;
+    outline: 0;
 }
 
 body {
-	background-color: var(--background);
-	color: white;
-	font-family: "Roboto", sans-serif;
-	min-width: 1000px;
+    background-color: var(--background);
+    color: white;
+    font-family: "Roboto", sans-serif;
+    min-width: 1000px;
 }
 
 #header {
-	display: block;
-	width: 100%;
-	height: 80px;
-	background-color: var(--header);
+    display: block;
+    width: 100%;
+    height: 80px;
+    background-color: var(--header);
 }
 
 #logo {
-	height: 60px;
-	top: 10px;
-
-	position: relative;
-	display: inline-block;
+    height: 60px;
+    top: 10px;
+    position: relative;
+    display: inline-block;
 }
 
 .btn {
-	display: inline-block;
-	border: none;
-
-	padding: 6px;
-	padding-left: 10px;
-	padding-right: 10px;
-	font-size: 20px;
-	border-radius: 5px;
+    display: inline-block;
+    border: none;
+    padding: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 20px;
+    border-radius: 5px;
 }
 
 .header-button {
-	position: relative;
-	top: 15px;
-	margin-right: 20px;
+    position: relative;
+    top: 15px;
+    margin-right: 20px;
 }
 
-.btn-selected,
-.btn:hover {
-	background: rgba(255, 255, 255, 0.055);
+.btn-selected, .btn:hover {
+    background: rgba(255, 255, 255, 0.055);
 }
 
 #welcome-sign {
-	display: block;
-	text-align: center;
-	font-size: 30px;
-	margin: 50px;
+    display: block;
+    text-align: center;
+    font-size: 30px;
+    margin: 50px;
 }
 
 #content {
-	display: block;
-	margin: 0 auto;
+    display: block;
+    margin: 0 auto;
 }
 
 #new-card-button, #download-assets-button {
-	fill: rgb(0, 0, 0);
-	color: black;
-	background-color: var(--green);
-	margin: 0px;
-	top: 0px;
+    fill: rgb(0, 0, 0);
+    color: black;
+    background-color: var(--green);
+    margin: 0px;
+    top: 0px;
 }
 
-#download-assets-button{
+#download-assets-button {
     background-color: var(--header);
     color: white;
     fill: white;
@@ -92,699 +97,860 @@ body {
 }
 
 #search-cards {
-	display: inline-block;
-	padding: 10px;
-	border-radius: 5px;
-	margin: 15px;
-	margin-left: 0px;
-	height: 45px;
-	position: relative;
-	width: 300px;
-	top: -2px;
-	background-color: var(--header);
-	color: white;
+    display: inline-block;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 15px;
+    margin-left: 0px;
+    height: 45px;
+    position: relative;
+    width: 300px;
+    top: -2px;
+    background-color: var(--header);
+    color: white;
 }
 
 .icon {
-	height: 25px;
-	margin-left: 5px;
-	position: relative;
-	top: -1px;
-	display: inline-block;
+    height: 25px;
+    margin-left: 5px;
+    position: relative;
+    top: -1px;
+    display: inline-block;
 }
 
 #login-header-button {
-	float: right;
-	top: 20px;
+    float: right;
+    top: 20px;
 }
 
 #login-window {
-	display: block;
-	width: 400px;
-	margin: 0 auto;
-	background-color: var(--header);
-	margin-top: 40px;
-	border-radius: 10px;
-	padding-bottom: 1px;
+    display: block;
+    width: 400px;
+    margin: 0 auto;
+    background-color: var(--header);
+    margin-top: 40px;
+    border-radius: 10px;
+    padding-bottom: 1px;
 }
 
 #login-logo {
-	width: 100%;
-	top: 20px;
-	position: relative;
-	margin-bottom: 30px;
+    width: 100%;
+    top: 20px;
+    position: relative;
+    margin-bottom: 30px;
 }
 
 .login-input {
-	width: calc(100% - 50px);
-	padding: 10px;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	color: black;
-	border-radius: 5px;
-	font-size: 20px;
-	margin: 25px;
-	margin-bottom: 0px;
-	margin-top: 5px;
-	position: relative;
+    width: calc(100% - 50px);
+    padding: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    color: black;
+    border-radius: 5px;
+    font-size: 20px;
+    margin: 25px;
+    margin-bottom: 0px;
+    margin-top: 5px;
+    position: relative;
 }
 
 .tiny-title {
-	display: block;
-	font-size: 20px;
-	margin: 25px;
-	margin-bottom: 0px;
-	margin-top: 15px;
+    display: block;
+    font-size: 20px;
+    margin: 25px;
+    margin-bottom: 0px;
+    margin-top: 15px;
 }
 
 #login-button {
-	display: block;
-	margin: 0 auto;
-	width: calc(100% - 50px);
-	margin: 25px;
-	height: 70px;
-	border-radius: 10px;
-	font-weight: 500;
-	color: black;
-	background-color: var(--green);
-	box-shadow: 0px 5px 0px #0aa561;
-	position: relative;
+    display: block;
+    margin: 0 auto;
+    width: calc(100% - 50px);
+    margin: 25px;
+    height: 70px;
+    border-radius: 10px;
+    font-weight: 500;
+    color: black;
+    background-color: var(--green);
+    box-shadow: 0px 5px 0px #0aa561;
+    position: relative;
 }
 
 #login-button:active {
-	top: 5px;
-	box-shadow: none;
+    top: 5px;
+    box-shadow: none;
 }
 
 #login-button:disabled {
-	background-color: rgb(177, 177, 177);
-	box-shadow: 0px 5px 0px rgb(134, 134, 134);
-	cursor: default;
+    background-color: rgb(177, 177, 177);
+    box-shadow: 0px 5px 0px rgb(134, 134, 134);
+    cursor: default;
 }
 
 #login-info {
-	margin: 25px;
-	display: block;
-	color: var(--red);
+    margin: 25px;
+    display: block;
+    color: var(--red);
 }
 
 #eula-disclaimer {
-	display: block;
-	margin-left: 25px;
-	margin-right: 25px;
-	margin-top: 10px;
-	margin-bottom: -10px;
-	font-size: 13px;
+    display: block;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 10px;
+    margin-bottom: -10px;
+    font-size: 13px;
 }
 
 #eula-link {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 #logged-in-status {
-	float: right;
-	top: 20px;
-	position: relative;
+    float: right;
+    top: 20px;
+    position: relative;
 }
 
 #logged-in-symbol {
-	display: inline-block;
-	width: 10px;
-	height: 10px;
-	border-radius: 100px;
-	margin-left: 10px;
-	position: relative;
-	top: -3px;
-	background: var(--green);
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 100px;
+    margin-left: 10px;
+    position: relative;
+    top: -3px;
+    background: var(--green);
 }
 
 #user-page-header {
-	display: block;
-	margin: 0 auto;
-	width: 700px;
-	height: 200px;
-	border-radius: 25px;
-	background: var(--header);
-	margin-top: 25px;
-	position: relative;
+    display: block;
+    margin: 0 auto;
+    width: 700px;
+    height: 200px;
+    border-radius: 25px;
+    background: var(--header);
+    margin-top: 25px;
+    position: relative;
 }
 
 .profile-picture {
-	position: relative;
-	margin: 25px;
-	top: 25px;
-	width: 130px;
-	border-radius: 1000px;
+    position: relative;
+    margin: 25px;
+    top: 25px;
+    width: 130px;
+    border-radius: 1000px;
 }
 
 #profile-username {
-	position: absolute;
-	font-size: 35px;
-	top: 10px;
-	left: 180px;
+    position: absolute;
+    font-size: 35px;
+    top: 10px;
+    left: 180px;
 }
 
 #profile-stats {
-	display: block;
-	position: absolute;
-	left: 180px;
-	top: 65px;
-	color: grey;
+    display: block;
+    position: absolute;
+    left: 180px;
+    top: 65px;
+    color: grey;
 }
 
 #xp-bar {
-	display: block;
-	width: calc(100% - 40px);
-	height: 8px;
-	background: var(--background);
-
-	left: 20px;
-	bottom: 20px;
-	position: absolute;
-	overflow: hidden;
-	border-radius: 50px;
+    display: block;
+    width: calc(100% - 40px);
+    height: 8px;
+    background: var(--background);
+    left: 20px;
+    bottom: 20px;
+    position: absolute;
+    overflow: hidden;
+    border-radius: 50px;
 }
 
 #xp-filled {
-	width: 33%;
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	height: 100%;
-	background: rgb(243, 24, 115);
-	background-size: 400% 400%;
-	animation: gradient 5s ease infinite;
-	border-radius: 50px;
+    width: 33%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    background: rgb(243, 24, 115);
+    background-size: 400% 400%;
+    animation: gradient 5s ease infinite;
+    border-radius: 50px;
 }
 
 #player-level {
-	display: block;
-	position: absolute;
-	left: calc(50% - 20px);
-	height: 40px;
-	color: rgb(243, 24, 115);
-	text-shadow: 0px 0px 20px rgb(243, 24, 115);
-	background: var(--background);
-	text-align: center;
-	padding-left: 20px;
-	padding-right: 20px;
-	font-size: 25px;
-	line-height: 40px;
-	z-index: 100;
-	border-radius: 10px;
-
-	user-select: none;
+    display: block;
+    position: absolute;
+    left: calc(50% - 20px);
+    height: 40px;
+    color: rgb(243, 24, 115);
+    text-shadow: 0px 0px 20px rgb(243, 24, 115);
+    background: var(--background);
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 25px;
+    line-height: 40px;
+    z-index: 100;
+    border-radius: 10px;
+    user-select: none;
 }
 
 #profile-options {
-	position: relative;
-	width: 700px;
-
-	height: 50px;
-	margin: 0 auto;
-	display: block;
+    position: relative;
+    width: 700px;
+    height: 50px;
+    margin: 0 auto;
+    display: block;
 }
 
 .profile-button {
-	background: var(--header);
-	margin-right: 15px;
+    background: var(--header);
+    margin-right: 15px;
 }
 
 #gradient-bar {
-	display: block;
-	width: 100%;
-	height: 5px;
-	background: linear-gradient(-45deg, #ee7752, #e73c7e, #ff2a7c, #a318ff);
-	background-size: 400% 400%;
-	animation: gradient 5s ease infinite;
+    display: block;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #ff2a7c, #a318ff);
+    background-size: 400% 400%;
+    animation: gradient 5s ease infinite;
 }
 
 @keyframes gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 #cards-options {
-	display: block;
-	width: calc(100% - 15px);
-	height: 60px;
-	margin: 15px;
-	margin-top: 0px;
-	align-items: top;
+    display: block;
+    width: calc(100% - 15px);
+    height: 60px;
+    margin: 15px;
+    margin-top: 0px;
+    align-items: top;
 }
 
 #cards {
-	display: block;
-	width: 100%;
-	height: calc(100% - 160px);
-	overflow-y: auto;
-	text-align: center;
+    display: block;
+    width: 100%;
+    height: calc(100% - 160px);
+    overflow-y: auto;
+    text-align: center;
+    overflow-x: none;
 }
 
 .card {
-	display: inline-block;
-	margin: 15px;
-	cursor: pointer;
+    display: inline-block;
+    margin: 15px;
+    cursor: pointer;
+    width: 300px;
 }
 
 .card-editor {
-	display: inline-block;
-	position: relative;
-	margin: 0 auto;
-	padding-bottom: 1px;
-	min-width: 390px;
-	width: 390px;
-	background-color: var(--header);
-	margin-top: 50px;
-	border-radius: 15px;
-	padding-top: 15px;
-	margin: 15px;
-	margin-right: 0px;
+    display: inline-block;
+    position: relative;
+    margin: 0 auto;
+    padding-bottom: 1px;
+    min-width: 390px;
+    width: 390px;
+    background-color: var(--header);
+    margin-top: 50px;
+    border-radius: 15px;
+    padding-top: 15px;
+    margin: 15px;
+    margin-right: 0px;
 }
 
 #card-editor-wrap {
-	display: flex;
-	align-items: top;
+    display: flex;
+    align-items: top;
 }
 
 .edit-input {
-	margin: 15px;
-	padding: 10px;
-	width: 360px;
-	border-radius: 5px;
-	color: black;
+    margin: 15px;
+    padding: 10px;
+    width: 360px;
+    border-radius: 5px;
+    color: black;
 }
 
 .edit-title {
-	font-size: 15px;
-	margin-left: 15px;
-	margin-bottom: -10px;
-	display: block;
+    font-size: 15px;
+    margin-left: 15px;
+    margin-bottom: -10px;
+    display: block;
 }
 
 input {
-	color: black;
+    color: black;
 }
 
 .stats-input {
-	text-align: center;
-	padding: 10px;
-	font-size: 25px;
-	width: 100px;
-	border-radius: 5px;
-	margin: 15px;
+    text-align: center;
+    padding: 10px;
+    font-size: 25px;
+    width: 100px;
+    border-radius: 5px;
+    margin: 15px;
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-	opacity: 1;
+input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
 }
 
 #card-preview {
-	display: block;
-	position: relative;
-	margin: 15px;
+    display: block;
+    position: relative;
+    margin: 15px;
 }
 
 .color-indecator {
-	display: inline-block;
-	width: 10px;
-	height: 10px;
-	background-color: rgb(0, 195, 255);
-	margin-left: 15px;
-	border-radius: 100px;
-	margin-right: -5px;
-	top: 0px;
-	position: relative;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: rgb(0, 195, 255);
+    margin-left: 15px;
+    border-radius: 100px;
+    margin-right: -5px;
+    top: 0px;
+    position: relative;
 }
 
 .edit-title-stats {
-	font-size: 15px;
-	margin-left: 15px;
-	margin-bottom: -10px;
-	margin-right: 15px;
-	width: 80px;
-	display: inline-block;
+    font-size: 15px;
+    margin-left: 15px;
+    margin-bottom: -10px;
+    margin-right: 15px;
+    width: 80px;
+    display: inline-block;
 }
 
-#taunt-input,
-#rush-input {
-	display: inline-block;
-	margin: 10px;
-	margin-top: 10px;
-	margin-bottom: 20px;
-	position: relative;
-	top: 3px;
-	transform: scale(1.5);
+#taunt-input, #rush-input {
+    display: inline-block;
+    margin: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    position: relative;
+    top: 3px;
+    transform: scale(1.5);
 }
 
 .event-window {
-	display: block;
-	width: calc(100% - 30px);
-	margin: 15px;
-	background-color: var(--background);
-	padding-bottom: 10px;
-	border-radius: 10px;
-	position: relative;
+    display: block;
+    width: calc(100% - 30px);
+    margin: 15px;
+    background-color: var(--background);
+    padding-bottom: 10px;
+    border-radius: 10px;
+    position: relative;
 }
 
 .evenet-title {
-	display: block;
-	margin: 15px;
-	top: 10px;
-	font-size: 20px;
-	position: relative;
+    display: block;
+    margin: 15px;
+    top: 10px;
+    font-size: 20px;
+    position: relative;
 }
 
 .add-event-function {
-	display: block;
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	width: 200px;
-	height: 30px;
-	padding: 0px;
-	margin: 10px;
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 200px;
+    height: 30px;
+    padding: 0px;
+    margin: 10px;
 }
 
 .event-function {
-	background-color: rgb(41, 41, 41);
-	padding: 10px;
-	border-radius: 5px;
-	display: block;
-	width: calc(100% - 30px);
-	margin: 0 auto;
-	margin-top: 15px;
-	top: 15px;
-	height: 50px;
-	position: relative;
-	line-height: 30px;
-	margin-bottom: 30px;
-	margin-top: -15px;
-	top: 25px;
+    background-color: rgb(41, 41, 41);
+    padding: 10px;
+    border-radius: 5px;
+    display: block;
+    width: calc(100% - 30px);
+    margin: 0 auto;
+    margin-top: 15px;
+    top: 15px;
+    height: 50px;
+    position: relative;
+    line-height: 30px;
+    margin-bottom: 30px;
+    margin-top: -15px;
+    top: 25px;
 }
 
 .function-input {
-	position: absolute;
-	width: 50px;
-	text-align: center;
-	border-radius: 5px;
-	height: 30px;
-	top: 10px;
-	right: 50px;
+    position: absolute;
+    width: 50px;
+    text-align: center;
+    border-radius: 5px;
+    height: 30px;
+    top: 10px;
+    right: 50px;
 }
 
 .delete-function-button {
-	position: absolute;
-	height: 30px;
-	right: 10px;
-	top: 10px;
-	fill: var(--red);
-	cursor: pointer;
+    position: absolute;
+    height: 30px;
+    right: 10px;
+    top: 10px;
+    fill: var(--red);
+    cursor: pointer;
 }
 
 #image-upload-input {
-	color: white;
-	margin: 15px;
-	position: relative;
-	display: block;
+    color: white;
+    margin: 15px;
+    position: relative;
+    display: block;
 }
 
 #file-upload-preview {
-	display: block;
-	width: calc(100% - 30px);
-	margin: 15px;
-	cursor: pointer;
+    display: block;
+    width: calc(100% - 30px);
+    margin: 15px;
+    cursor: pointer;
 }
 
 .card-buttons {
-	display: block;
-	height: 50px;
-	margin-left: 15px;
-	margin-bottom: 15px;
-	position: relative;
-	width: calc(100% - 30px);
-	padding: 0px;
+    display: block;
+    height: 50px;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    width: calc(100% - 30px);
+    padding: 0px;
 }
 
 .card-edit-button {
-	background-color: var(--green);
-	color: black;
-	cursor: pointer;
-	max-height: 42px;
-	margin-right: 15px;
+    background-color: var(--green);
+    color: black;
+    cursor: pointer;
+    max-height: 42px;
+    margin-right: 15px;
 }
 
 .card-edit-button:hover {
-	background-color: var(--dark-green);
+    background-color: var(--dark-green);
 }
 
 .card-edit-button:disabled {
-	background-color: gray;
-	cursor: not-allowed;
+    background-color: gray;
+    cursor: not-allowed;
 }
 
 .btn-icon {
-	display: inline-block;
-	position: relative;
-	/* margin: 5px; */
-	width: 30px;
-	margin-left: 5px;
-	margin-top: -3px;
+    display: inline-block;
+    position: relative;
+    /* margin: 5px; */
+    width: 30px;
+    margin-left: 5px;
+    margin-top: -3px;
 }
 
 .delete {
-	background-color: var(--red);
+    background-color: var(--red);
 }
 
 .delete:hover {
-	background-color: var(--dark-red);
+    background-color: var(--dark-red);
 }
 
 #last-edited {
-	display: inline-block;
-	margin-left: 10px;
-	top: 12px;
-	position: relative;
+    display: inline-block;
+    margin-left: 10px;
+    top: 12px;
+    position: relative;
 }
 
 #profile-tag {
-	display: block;
-	position: absolute;
-	right: 20px;
-	top: 20px;
-	border-radius: 10px;
-	width: 100px;
-	height: 40px;
-	background-color: var(--background);
-	color: var(--red);
-	text-align: center;
-	font-weight: 500;
-	font-size: 20px;
-	line-height: 40px;
+    display: block;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    border-radius: 7px;
+    height: 40px;
+    width: 110px;
+    border: solid 1px var(--green);
+    color: var(--green);
+    text-align: center;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 36px;
 }
 
 #warning-message {
-	display: block;
-	margin: 15px;
-	font-size: 20px;
-	margin-bottom: 0px;
-	color: var(--red);
+    display: block;
+    margin: 15px;
+    font-size: 20px;
+    margin-bottom: 0px;
+    color: var(--red);
 }
 
 #formating-help {
-	display: block;
+    display: block;
 }
 
-#inventory , #decks {
-	display: block;
-	width: 700px;
-	background-color: var(--header);
-	margin: 0 auto;
-	border-radius: 10px;
-	margin-bottom: 15px;
+#inventory, #decks {
+    display: block;
+    width: 700px;
+    background-color: var(--header);
+    margin: 0 auto;
+    border-radius: 10px;
+    margin-bottom: 15px;
     padding-bottom: 55px;
 }
 
-#decks{
-	padding-bottom: 0px;
+#decks {
+    padding-bottom: 0px;
 }
 
-
 #page-title {
-	display: block;
-	position: relative;
-	margin: 0 auto;
-	width: 700px;
-	margin-top: 30px;
-	margin-bottom: 10px;
+    display: block;
+    position: relative;
+    margin: 0 auto;
+    width: 700px;
+    margin-top: 30px;
+    margin-bottom: 10px;
 }
 
 .inventory-card {
-	display: inline-block;
-	margin: 0px;
-	width: 150px;
-	margin-right: -58.5px;
+    display: inline-block;
+    margin: 0px;
+    width: 150px;
+    margin-right: -58.5px;
     margin-top: -55px;
     top: 55px;
-	position: relative;
-	transition: all 0.2s;
+    position: relative;
+    transition: all 0.2s;
 }
 
 .inventory-card:hover {
-	transform: translateY(-25px);
-	z-index: 100;
+    transform: translateY(-25px);
+    z-index: 100;
 }
 
-#new-deck{
-	border-bottom: 2px solid white;
-	margin-left: 15px;
-	position: relative;
+#new-deck {
+    border-bottom: 2px solid white;
+    margin-left: 15px;
+    position: relative;
 }
 
-.deck-slot{
-	display: block;
-	width: 600px;
-	height: 80px;
-	background-color: var(--header);
-	margin: 0 auto;
-	margin-top: 15px;
-	margin-bottom: 15px;
-	border-radius: 10px;	
-	position: relative;
-	overflow: hidden;
+.deck-slot {
+    display: block;
+    width: 600px;
+    height: 80px;
+    background-color: var(--header);
+    margin: 0 auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
 }
 
-.cover-image-gradient{
-	position: absolute;
-	right: 0px;
-	width: 50%;
-	height: 100%;
-	background: linear-gradient(90deg, var(--header),  rgba(0, 0, 0, 0.5) );
-
-	
+.cover-image-gradient {
+    position: absolute;
+    right: 0px;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--header), rgba(0, 0, 0, 0.5));
 }
 
-.deck-slot-image{
-	position: absolute;
-	right: 0px;
-	right: 0px;
-	width: 50%;
-	top: -60px;
+.deck-slot-image {
+    position: absolute;
+    right: 0px;
+    right: 0px;
+    width: 50%;
+    top: -60px;
 }
 
-.amount{
-	display: block;
-	position: absolute;
-	right: 10px;
-	width: 180px;
-	top: 10px;
-	height: 60px;
-}
-img{
-	user-select: none;
-}
-.icon-btn{
-	display: inline-block;
-	width: 60px;
-	height: 60px;
-	background-color: rgba(0, 0, 0, 0.137);
-	border-radius: 10px;
-
+.amount {
+    display: block;
+    position: absolute;
+    right: 10px;
+    width: 180px;
+    top: 10px;
+    height: 60px;
 }
 
-.amount-number{
-	position: absolute;
-	width: 60px;
-	left: 60px;
-	top: 5px;
-	font-size: 30px;
-	text-align: center;
+img {
+    user-select: none;
 }
 
-.slot-active{
-	box-shadow: 8px 0px 0px var(--green);
+.icon-btn {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.137);
+    border-radius: 10px;
 }
 
-.card-name{
-	position: absolute;
-	width: 300px;
-	font-size: 23px;
-	top: 15px;
-	left: 75px;
+.amount-number {
+    position: absolute;
+    width: 60px;
+    left: 60px;
+    top: 5px;
+    font-size: 30px;
+    text-align: center;
 }
 
-.card-element{
-	position: absolute;
-	width: 200px;
-	font-size: 15px;
-	bottom: 15px;
-	left: 75px;
-	color: var(--lunar);
+.slot-active {
+    box-shadow: 8px 0px 0px var(--green);
+}
+
+.card-name {
+    position: absolute;
+    width: 300px;
+    font-size: 23px;
+    top: 15px;
+    left: 75px;
+}
+
+.card-element {
+    position: absolute;
+    width: 200px;
+    font-size: 15px;
+    bottom: 15px;
+    left: 75px;
+    color: var(--lunar);
 }
 
 .deck-header {
-	display: block;
-	height: 60px;
-	width: 600px;
-
-	margin: 0 auto;
-	margin-top: 15px ;
-	position: relative;
+    display: block;
+    height: 60px;
+    width: 600px;
+    margin: 0 auto;
+    margin-top: 15px;
+    position: relative;
 }
 
-#deck-title{
-	 background: none;
-	 color: white;
-	 border: none;
-	 font-size: 25px;
-	 width:500px;
-	 padding: 0px;
-	}
+#deck-title {
+    background: none;
+    color: white;
+    border: none;
+    font-size: 25px;
+    width: 500px;
+    padding: 0px;
+}
 
-textarea:focus, input:focus{
+textarea:focus, input:focus {
     outline: none;
 }
 
-.card-mana-cost{
-	position: absolute;
-	top: 15px;
-	left: 3px;
-	text-align: center;
-	width: 70px;
-	font-size: 30px;
-	color: rgb(31, 136, 255);
+.card-mana-cost {
+    position: absolute;
+    top: 15px;
+    left: 3px;
+    text-align: center;
+    width: 70px;
+    font-size: 30px;
+    color: rgb(31, 136, 255);
 }
 
-#deck-username{
-	color: gray;
+#deck-username {
+    color: gray;
 }
 
-#deck-owner{
-	display: block;
+#deck-owner {
+    display: block;
 }
 
-#delete-deck{
-	position: absolute;
-	right: 0px;
-	margin: 0;
-	display: none;
+#delete-deck {
+    position: absolute;
+    right: 0px;
+    margin: 0;
+    display: none;
 }
 
+.deck-link {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: var(--background);
+    border-radius: 5px;
+}
 
-.deck-link{
-	display: inline-block;
-	margin: 5px;
-	padding: 5px;
-	padding-left: 15px;
-	padding-right: 15px;
-	background-color: var(--background);
-	border-radius: 5px;
+.source-link {
+    display: block;
+    width: 600px;
+    height: 120px;
+    border-radius: 15px;
+    background: var(--header);
+    margin: 0 auto;
+    margin-top: 20px;
+    position: relative;
+}
+
+.source-title {
+    display: block;
+    margin: 15px;
+    font-size: 25px;
+    margin-left: 130px;
+    top: 15px;
+    position: relative;
+}
+
+.source-icon {
+    border-radius: 10px;
+    height: calc(100% - 30px);
+    margin: 15px;
+    position: absolute;
+}
+
+.source-description {
+    display: block;
+    position: relative;
+    margin-left: 130px;
+}
+
+.source-href {
+    margin-left: 130px;
+    position: relative;
+    padding-bottom: 2px;
+    border-bottom: solid 1px white;
+}
+
+#download-missing-temp {
+    display: block;
+    margin: 0 auto;
+    width: 200px;
+    height: 200px;
+    fill: white;
+    margin-top: 100px;
+}
+
+#download-coming-soon-message {
+    display: block;
+    width: 300px;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 20px;
+}
+
+#wrap {
+    display: block;
+    width: 900px;
+    height: 200px;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+#news {
+    width: calc(600px - 30px);
+}
+
+#users-panel {
+    float: right;
+    width: 300px;
+    padding-right: 5px;
+    background: var(--header);
+}
+
+#users-panel, #news {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#users-list {
+    overflow: auto;
+    height: 500px;
+    display: block;
+    border-radius: 5px;
+}
+
+.page-icon {
+    display: inline-block;
+    width: 25px;
+    fill: white;
+    position: relative;
+    top: -2px;
+}
+
+#waiting {
+    display: block;
+    margin: 0 auto;
+    margin-top: 50px;
+    border-radius: 3px;
+}
+
+#coming-soon-text-news {
+    display: block;
+    margin: 0 auto;
+    width: 200px;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 20px;
+}
+
+*::-webkit-scrollbar {
+    width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgb(19, 19, 19);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: rgb(65, 65, 65);
+    border-radius: 20px;
+}
+
+.user-list-entry {
+    display: block;
+    margin-top: 5px;
+    height: 50px;
+    background: var(--background);
+    border-radius: 5px;
+    position: relative;
+    user-select: none;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    overflow: hidden;
+}
+
+.online-status {
+    width: 10px;
+    height: 10px;
+    border-radius: 100px;
+    background: var(--green);
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.user-list-username {
+    position: absolute;
+    top: 10px;
+    left: 45px;
+    font-size: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    /* width: 150px; */
+}
+
+.in-game-icon {
+    display: block;
+    position: absolute;
+    height: 20px;
+    left: 15px;
+    top: 15px;
+    fill: var(--green);
 }

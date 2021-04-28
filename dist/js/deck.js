@@ -9,10 +9,10 @@
 var deck_id = location.href.substr(location.href.lastIndexOf("/") + 1)
 
 var deck;
-var isDeckOwner
+var isDeckOwner = false
 var entriesEl = document.getElementById("deck-entries")
 var entries = {}
-var maxDeckSize = 20;
+var maxDeckSize = 30;
 
 var everythingLoaded = false;
 
@@ -34,7 +34,7 @@ onLogin = loadStep;
 function loadDeck() {
 
 
-    isDeckOwner = deck.owner == me.id
+    isDeckOwner = (deck.owner == me.id)
     var cardEntries = Object.keys(isDeckOwner ? me.cards : deck.cards)
 
 
@@ -42,7 +42,6 @@ function loadDeck() {
         if (getCard(b).element < getCard(a).element) return -1
         if (getCard(b).element > getCard(a).element) return 1
         return getCard(a).mana - getCard(b).mana
-
     })
 
 
@@ -54,9 +53,12 @@ function loadDeck() {
         uploadChanges()
     }
 
+    if (!isDeckOwner) document.getElementById("deck-title").setAttribute("disabled", "disabled")
+
     for (let id of cardEntries) {
 
         if (!isDeckOwner && deck.cards[id] == 0) continue;
+
         let card = getCard(id)
         var cardEntry = createElementFromHTML(`<div class="deck-slot"><img class="deck-slot-image" src="/img/card-images/${id}.png" alt="">
         <div class="cover-image-gradient"></div>
@@ -87,8 +89,6 @@ function loadDeck() {
             }
 
             document.getElementById("delete-deck").style.display = "block"
-        } else {
-            document.getElementById("deck-title").setAttribute("disabled", "disabled")
         }
 
         entries[id] = cardEntry
