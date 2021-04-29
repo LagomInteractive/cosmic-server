@@ -62,6 +62,7 @@ const { nanoid } = require("nanoid");
 
 
 var onlinePings = {}
+var matchmaking = {}
 
 
 app.use((req, res, next) => {
@@ -388,59 +389,66 @@ app.post("/api/loginPass", (req, res) => {
             }
         });
     } else {
-        if (req.body.username.length > 12) {
-            res.json({
-                success: false,
-                reason: "Username is too long (Needs to be < 12)",
+        var account = createUser(req.body.username, req.body.password)
+        if (account.success) {
+            res.cookie("cosmic_login_token", account.token, {
+                expires: new Date(253402300000000),
             });
-        } else if (req.body.username.length < 3) {
-            res.json({
-                success: false,
-                reason: "Username has to be 3 characters or longer",
-            });
-        } else if (req.body.username.replace(/\W/g, "") !== req.body.username) {
-            res.json({
-                success: false,
-                reason: "Username contains illigal characters",
-            });
-        } else if (!filterUsername(req.body.username)) {
-            res.json({
-                success: false,
-                reason:
-                    "A bad word was found in your username, please reconsider.",
-            });
-        } else if (req.body.password.length < 5) {
-            res.json({
-                success: false,
-                reason: "Please use a longer password (At least 5 characters)",
-            });
-        } else {
-            // User passed all tests and account can be created
-            cryptPassword(req.body.password, (err, hash) => {
-                let user = {
-                    id: nanoid(),
-                    username: req.body.username,
-                    password: hash,
-                    level: 1,
-                    xp: 0,
-                    cards: [],
-                    admin: false,
-                    record: {
-                        wins: 0,
-                        losses: 0,
-                    },
-                };
-
-                db.get("users").push(user).write();
-                var token = createLoginToken(user.id);
-                res.cookie("cosmic_login_token", token, {
-                    expires: new Date(253402300000000),
-                });
-                res.json({ success: true, token });
-            });
-        }
+        } else res.json(accountCreation);
     }
 });
+
+function createUser(username, password) {
+    if (username.length > 12) {
+        return {
+            success: false,
+            reason: "Username is too long (Needs to be < 12)",
+        }
+    } else if (username.length < 3) {
+        return {
+            success: false,
+            reason: "Username has to be 3 characters or longer",
+        }
+    } else if (username.replace(/\W/g, "") !== username) {
+        return {
+            success: false,
+            reason: "Username contains illigal characters",
+        }
+    } else if (!filterUsername(username)) {
+        return {
+            success: false,
+            reason:
+                "A bad word was found in your username, please reconsider.",
+        }
+    } else if (password.length < 5) {
+        return {
+            success: false,
+            reason: "Please use a longer password (At least 5 characters)",
+        }
+    } else {
+        // User passed all tests and account can be created
+        cryptPassword(password, (err, hash) => {
+            let user = {
+                id: nanoid(),
+                username: username,
+                password: hash,
+                level: 1,
+                xp: 0,
+                cards: [],
+                admin: false,
+                record: {
+                    wins: 0,
+                    losses: 0,
+                },
+                joined: Date.now()
+            };
+
+            db.get("users").push(user).write();
+            var token = createLoginToken(user.id);
+            return { success: true, token };
+        });
+    }
+}
 
 function filterUsername(username) {
     username = username.toLowerCase();
@@ -513,22 +521,27 @@ const MINION = {
     owner: null,
 }
 
+// DELETE GUESTS
+/* for (let i = 0; i < db.get("users").value().length; i++) {
+    if (db.get("users").value()[i].username.indexOf("Guest_") != -1) {
+        db.get("users").value().splice(i, 1)
+        db.write()
+        console.log("Deleted")
+    }
+}
+*/
+
+
 // Create a new online or bot game
 function createNewGame(user1, user2 = false) {
 
     var game = clone(GAME)
-
     game.id = nanoid()
 
     var player1 = createPlayer(user1)
+    var player2 = user2 ? createPlayer(user2) : createBot();
 
-    var player2 = clone(PLAYER)
-    // Player 1 will be attacking first.
-    // When the round start, the attacking player is flipped
     player2.turn = true;
-    player2.isBot = true;
-    player2.name = "Bot"
-    player2.id = nanoid()
 
     game.players = [player1, player2]
     game.gameStarted = Date.now()
@@ -553,13 +566,19 @@ function createNewGame(user1, user2 = false) {
     startGame(game.id)
 }
 
-function terminateGame(id) {
+function terminateGame(id, loserId) {
     var game = getGame(id)
+    if (!game) return
     if (roundCountdowns[id]) {
         clearTimeout(roundCountdowns[id])
         delete roundCountdowns[id]
     }
-
+    var winner;
+    for (let player of game.players) {
+        if (player.id != loserId) winner = player.id
+    }
+    addEvent(game, "game_over", { winner })
+    emitGameUpdate(game)
 
     for (let i = 0; i < games.length; i++) {
         if (games[i].id == id) {
@@ -568,7 +587,7 @@ function terminateGame(id) {
         }
     }
 
-    console.log("Terminating game " + id)
+    console.log("Terminating game " + id + " total active games: " + games.length)
 }
 
 
@@ -597,25 +616,57 @@ function runBot(gameid) {
 
             // Check if bot can play any cards
             for (var i = 0; i < player.cards.length; i++) {
-                console.log("CARDS")
                 var card = getCard(player.cards[i]);
                 if (card.mana <= player.manaLeft && card.type == "minion") {
-                    console.log("BOT PLAYED A MINION!!! " + card.name + " COST: " + card.mana)
                     playMinion(gameid, player.id, i)
                     return
                 }
             }
+
+            var attacker;
+            var target;
+            for (let minion of player.minions) {
+                if (!minion.hasAttacked && (minion.spawnRound != game.round || minion.element == "rush")) {
+                    attacker = minion;
+                    break;
+                }
+            }
+
+            if (attacker) {
+                for (let opponent of game.players) {
+                    if (opponent.id != player.id) {
+                        // Is opponent
+                        var opponentHasTaunt = false;
+                        for (let minion of opponent.minions) if (minion.element == "taunt") opponentHasTaunt = true;
+
+                        for (let minion of opponent.minions) {
+
+                            if (!opponentHasTaunt || minion.element == "taunt") {
+                                target = minion;
+                                break;
+                            }
+                        }
+
+                        if (target == null) target = opponent
+                    }
+
+                    attack(game.id, player.id, attacker.id, target.id)
+                    return
+                }
+            }
+
+
         }
     }
 
     nextTurn(gameid)
-    console.log("Nothing to do with the bot.. terminating")
 }
 
 function nextTurn(id) {
 
     if (roundCountdowns[id]) clearTimeout(roundCountdowns[id])
     var game = getGame(id)
+    if (!game) return
 
     if (game.turn % 2 == 0) game.round++;
     game.turn++;
@@ -652,24 +703,24 @@ function nextTurn(id) {
     if (attackingPlayerIsBot) {
         let botRound = game.round;
         let botRunner = setInterval(() => {
-            console.log("RUNNING BOT")
+
             game = getGame(game.id)
-            for (let player of game.players) {
-                if (player.isBot && player.turn && botRound == game.round) {
-                    runBot(game.id)
-                    return
+            if (game) {
+                for (let player of game.players) {
+                    if (player.isBot && player.turn && botRound == game.round) {
+                        runBot(game.id)
+                        return
+                    }
                 }
             }
             // Stop the bot because its done.
             clearInterval(botRunner)
-            console.log("STOPPED RUNNING BOT")
         }, 800)
     }
 
     roundCountdowns[id] = setTimeout(() => {
         nextTurn(game.id)
     }, game.roundLength * 1000)
-    console.log("New round started")
 }
 
 // Deals one or more cards to a player in the game
@@ -752,6 +803,16 @@ function getGameIdFromUserId(user_id) {
     return null
 }
 
+function createBot() {
+    var bot = clone(PLAYER)
+    // Player 1 will be attacking first.
+    // When the round start, the attacking player is flipped
+    bot.isBot = true;
+    bot.name = "Bot"
+    bot.id = nanoid()
+    return bot;
+}
+
 function createPlayer(user) {
 
     var player = clone(PLAYER)
@@ -786,7 +847,6 @@ function playMinion(gameId, userId, cardIndex) {
 
             if (card.type == "minion") {
 
-                console.log("Minion played")
                 // Player has card in their hand
                 if (player.manaLeft >= card.mana) {
 
@@ -803,6 +863,7 @@ function playMinion(gameId, userId, cardIndex) {
                     minion.hasBeenAttacked = false;
                     minion.spawnRound = game.round;
                     minion.origin = card.id
+                    minion.element = card.element
                     minion.canSacrifice = false;
 
                     player.minions.push(minion)
@@ -824,10 +885,94 @@ function playMinion(gameId, userId, cardIndex) {
 
 var unityClients = {}
 
+function attack(gameId, playerId, minionId, targetId) {
+    var game = getGame(gameId)
+    if (!game) return
+    var attacker;
+    var target;
+    for (let player of game.players) {
+        if (player.id == targetId) target = player;
+
+        for (let minion of player.minions) {
+            if (minion.id == targetId) target = minion
+            if (minion.id == minionId) attacker = minion
+        }
+    }
+
+    var hasTaunt = false;
+    for (let player of game.players) {
+        if (player.id == target.id || player.id == target.owner) {
+            for (let minion of player.minions) {
+                if (minion.element == "taunt") hasTaunt = true;
+            }
+        }
+    }
+
+    if (attacker.owner == playerId) {
+        if (!hasTaunt || target.element == "taunt") {
+            if (!attacker.hasAttacked && (attacker.spawnRound != game.round || attacker.element == "rush")) {
+                target.hp -= attacker.damage;
+                if (target.damage) attacker.hp -= target.damage;
+                attacker.hasAttacked = true;
+            }
+        }
+    }
+
+    endOfAction(gameId)
+}
+
+function endOfAction(gameId) {
+    var game = getGame(gameId)
+
+    for (var player of game.players) {
+        for (let i = 0; i < player.minions.length; i++) {
+            var minion = player.minions[i]
+            if (minion.hp <= 0) {
+                addEvent(game, "minion_death", {
+                    minion: minion.id
+                })
+                player.minions.splice(i, 1)
+            }
+        }
+        if (player.hp <= 0) {
+            terminateGame(gameId, player.id)
+        }
+    }
+
+    emitGameUpdate(game)
+}
+
+function matchmake() {
+
+    var player1 = null;
+    for (let key in matchmaking) {
+        if (!player1) player1 = {
+            profile: getUserFromID(matchmaking[key].id),
+            socket: matchmaking[key].ws,
+            socketid: key
+        }
+        else {
+
+            var player2 = {
+                profile: getUserFromID(matchmaking[key].id),
+                socket: matchmaking[key].ws
+            }
+
+            createNewGame(player1, player2)
+
+            delete matchmaking[key]
+            delete matchmaking[player1.key]
+        }
+    }
+}
+
 // Game server
 wss.on("connection", (ws, req) => {
     ws.id = req.headers['sec-websocket-key'];
     ws.on("close", () => {
+        if (matchmaking[ws.id]) {
+            delete matchmaking[ws.id]
+        }
         if (unityClients[ws.id]) {
             let gameId = getGameIdFromUserId(unityClients[ws.id])
             if (gameId) {
@@ -836,6 +981,7 @@ wss.on("connection", (ws, req) => {
             delete onlinePings[unityClients[ws.id]]
         }
     })
+
 
     ws.on("message", (message) => {
         var package = JSON.parse(message)
@@ -848,8 +994,23 @@ wss.on("connection", (ws, req) => {
         var gameId = getGameIdFromUserId(userId)
 
         switch (package.identifier) {
+            case "start_matchmaking":
+                matchmaking[ws.id] = {
+                    ws, id: userId
+                }
+                matchmake();
+                console.log("Matchmaking pool size " + Object.keys(matchmaking).length)
+                break;
+            case "stop_matchmaking":
+                if (matchmaking[ws.id]) delete matchmaking[ws.id]
+                console.log("Matchmaking pool size " + Object.keys(matchmaking).length)
+                break;
             case "ping":
                 ws.send(Pack("ping"))
+                break;
+            case "attack":
+                package.packet = JSON.parse(package.packet)
+                attack(gameId, userId, package.packet.attacker, package.packet.target)
                 break;
             case "play_minion":
                 if (gameId) playMinion(gameId, userId, package.packet)
@@ -861,11 +1022,13 @@ wss.on("connection", (ws, req) => {
                 }
                 break;
             case "start_test":
-                console.log("Start test called")
                 createNewGame({
                     profile: getUserFromToken(package.token),
                     socket: ws
                 }, false)
+                break;
+            case "concede":
+                terminateGame(gameId, userId)
                 break;
             case "login":
                 var user = getUserWithPassword(package.packet);

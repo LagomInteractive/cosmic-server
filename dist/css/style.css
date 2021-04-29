@@ -11,6 +11,7 @@
     --nova: rgb(147, 40, 246);
     --taunt: rgb(230, 230, 230);
     --rush: rgb(22, 22, 22);
+    --neutral: white;
 }
 
 @font-face {
@@ -43,6 +44,8 @@ body {
 }
 
 #logo {
+    margin-left: 15px;
+    margin-right: 15px;
     height: 60px;
     top: 10px;
     position: relative;
@@ -137,7 +140,8 @@ body {
     width: 100%;
     top: 20px;
     position: relative;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    left: 10px;
 }
 
 .login-input {
@@ -953,4 +957,43 @@ textarea:focus, input:focus {
     left: 15px;
     top: 15px;
     fill: var(--green);
+}
+
+.patch-note {
+    display: block;
+    width: 100%;
+    background-color: var(--header);
+    border-radius: 5px;
+    margin-top: 15px;
+    padding-bottom: 0.1px;
+}
+
+.note-title {
+    font-size: 20px;
+    display: block;
+    top: 10px;
+    margin: 15px;
+    position: relative;
+    font-weight: 500;
+}
+
+.note-date {
+    display: block;
+    font-size: 15px;
+    color: gray;
+    margin-left: 15px;
+    margin-bottom: -10px;
+    margin-top: -5px;
+}
+
+.note-body {
+    display: block;
+    margin: 15px;
+    position: relative;
+}
+
+.video-embed {
+    width: 100%;
+    display: block;
+    border-radius: 5px;
 }

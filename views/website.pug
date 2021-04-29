@@ -6,12 +6,13 @@ head
     link(rel="stylesheet", href="/css/style.css")
     script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js") 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    link(rel="shortcut icon", href="/img/favicon.png", type="image/x-icon")
 
 body 
     #gradient-bar
     #header
         a(href="/")
-            img(src="/img/logo-plain.svg", alt="Logo", id="logo")
+            img(src="/img/outlaws-header.png", alt="Logo", id="logo")
         - var pages = ['Home', 'Cards', 'Download', 'Source']
         each page in pages
             a(href=page==="Home" ? "/" : "/"+page.toLowerCase() class="btn header-button " + (page_name === page.toLowerCase() ? "btn-selected" : "")) #{page}

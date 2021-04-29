@@ -256,9 +256,11 @@ function updateCardFromInput() {
         document.getElementById("file-upload-preview").src =
             "/img/card-images/" + card.id + ".png";
 
+    var element = card.element;
+    if (element == "rush" || element == "taunt") element = "neutral"
     document.getElementById(
         "color-indecator"
-    ).style.background = `var(--${card.element})`;
+    ).style.background = `var(--${element})`;
 
     document.getElementById("last-edited").innerText =
         "Last edited: " +

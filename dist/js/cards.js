@@ -132,6 +132,10 @@ function drawCard(card, overwriteImage = false, animated = true) {
         : card.lastChange
             ? " /img/card-images/" + card.id + ".png" : "/img/placeholder.png"
     var isMinion = card.type == "minion"
+
+    var element = card.element;
+    if (card.element == "rush" || card.element == "taunt") element = "neutral"
+
     var svg = createElementFromHTML(`
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
     viewBox="0 0 595.28 841.89" style="enable-background:new 0 0 595.28 841.89;" xml:space="preserve">
@@ -167,8 +171,8 @@ function drawCard(card, overwriteImage = false, animated = true) {
         <image style="overflow:visible;" width="677" height="948" xlink:href="/img/${card.type == "minion" ? 'minion'
             : 'spell'}-card.png" transform="matrix(0.8173 0 0 0.8173 20.9887 33.5545)">
         </image>
-SPELL</tspan>	</textPath>
 </text>
+SPELL</tspan>	</textPath>
 
         <text transform="matrix(1 0 0 1 68.4662 112.9744)"
             style="fill:#FFFFFF; font-family:'Cosmic'; font-size:50.4159px;" x="15"
@@ -205,8 +209,8 @@ SPELL</tspan>	</textPath>
             x="45" text-anchor="middle">${result[3]}</text>
         <rect x="195.08" y="727.07" style="fill:none;" width="215.45" height="35.9" />
         <text transform="matrix(1 0 0 1 265.0035 756.149)"
-            style="fill:var(--${card.element}); font-family:'Cosmic'; font-size:31px;">${card.element[0].toUpperCase() +
-        card.element.substr(1)}</text>
+            style="fill:var(--${element}); font-family:'Cosmic'; font-size:31px;">${element[0].toUpperCase() +
+        element.substr(1)}</text>
     </g>
     <g id="Layer_2">
     </g>
