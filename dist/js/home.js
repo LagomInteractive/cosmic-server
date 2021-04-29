@@ -6,8 +6,6 @@ setInterval(() => {
     updateUsersList()
 }, 4000)
 
-const waiting_gifs = ["waiting.gif", "waiting-2.gif", "waiting-3.gif"]
-document.getElementById("waiting").src = "/img/" + waiting_gifs[Math.floor(Math.random() * waiting_gifs.length)]
 
 function updateUsersList() {
 

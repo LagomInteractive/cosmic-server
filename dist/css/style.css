@@ -805,9 +805,10 @@ textarea:focus, input:focus {
 .source-title {
     display: block;
     margin: 15px;
-    font-size: 25px;
+    margin-bottom: 10px;
+    font-size: 28px;
     margin-left: 130px;
-    top: 15px;
+    top: 10px;
     position: relative;
 }
 

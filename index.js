@@ -389,42 +389,45 @@ app.post("/api/loginPass", (req, res) => {
             }
         });
     } else {
-        var account = createUser(req.body.username, req.body.password)
-        if (account.success) {
-            res.cookie("cosmic_login_token", account.token, {
-                expires: new Date(253402300000000),
-            });
-        } else res.json(accountCreation);
+        createUser(req.body.username, req.body.password, result => {
+            if (result.success) {
+                res.cookie("cosmic_login_token", result.token, {
+                    expires: new Date(253402300000000),
+                });
+            }
+            res.json(result);
+        })
+
     }
 });
 
-function createUser(username, password) {
+function createUser(username, password, callback) {
     if (username.length > 12) {
-        return {
+        callback({
             success: false,
             reason: "Username is too long (Needs to be < 12)",
-        }
+        })
     } else if (username.length < 3) {
-        return {
+        callback({
             success: false,
             reason: "Username has to be 3 characters or longer",
-        }
+        })
     } else if (username.replace(/\W/g, "") !== username) {
-        return {
+        callback({
             success: false,
             reason: "Username contains illigal characters",
-        }
+        })
     } else if (!filterUsername(username)) {
-        return {
+        callback({
             success: false,
             reason:
                 "A bad word was found in your username, please reconsider.",
-        }
+        })
     } else if (password.length < 5) {
-        return {
+        callback({
             success: false,
             reason: "Please use a longer password (At least 5 characters)",
-        }
+        })
     } else {
         // User passed all tests and account can be created
         cryptPassword(password, (err, hash) => {
@@ -445,7 +448,7 @@ function createUser(username, password) {
 
             db.get("users").push(user).write();
             var token = createLoginToken(user.id);
-            return { success: true, token };
+            callback({ success: true, token });
         });
     }
 }
