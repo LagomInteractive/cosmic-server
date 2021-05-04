@@ -1,13 +1,783 @@
 {
   "cards": [
     {
-      "id": "34",
+      "id": "28",
+      "type": "targetSpell",
+      "name": "Star in a Bottle",
+      "description": "Gain $B+2 Star Fragments$B\nthis turn only",
+      "mana": "0",
+      "damage": "0",
+      "hp": "0",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619716920775
+      }
+    },
+    {
+      "id": "38",
       "type": "minion",
-      "name": "Void Harvester",
-      "description": "",
-      "mana": "3",
-      "damage": "4",
+      "name": "Angler",
+      "description": "$B$IRush$I$B",
+      "mana": "1",
+      "damage": "1",
+      "hp": "1",
+      "element": "rush",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619985373407
+      }
+    },
+    {
+      "id": "56",
+      "type": "minion",
+      "name": "*Deafening Scream",
+      "description": "$I$BTaunt$I$B",
+      "mana": "9",
+      "damage": "2",
+      "hp": "12",
+      "element": "taunt",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619985783628
+      }
+    },
+    {
+      "id": "46",
+      "type": "minion",
+      "name": "*King Crab",
+      "description": "$B$ITaunt$I$B",
+      "mana": "1",
+      "damage": "1",
       "hp": "2",
+      "element": "taunt",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619985808103
+      }
+    },
+    {
+      "id": "23",
+      "type": "minion",
+      "name": "*Nox",
+      "description": "$I$BRush$B$I",
+      "mana": "5",
+      "damage": "5",
+      "hp": "2",
+      "element": "rush",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619990493434
+      }
+    },
+    {
+      "id": "94",
+      "type": "minion",
+      "name": "*Ashura",
+      "description": "$I$BRush$I$B",
+      "mana": "8",
+      "damage": "8",
+      "hp": "3",
+      "element": "rush",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619990590118
+      }
+    },
+    {
+      "id": "76",
+      "type": "targetSpell",
+      "name": "Pipe of Wisdom",
+      "description": "Gain $B+1 Star Fragment$B\nevery turn",
+      "mana": "2",
+      "damage": "0",
+      "hp": "0",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619993688840
+      }
+    },
+    {
+      "id": "134",
+      "type": "targetSpell",
+      "name": "Vile Concoction",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619994927406
+      }
+    },
+    {
+      "id": "123",
+      "type": "targetSpell",
+      "name": "Shatter",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619994947316
+      }
+    },
+    {
+      "id": "121",
+      "type": "targetSpell",
+      "name": "Flurry",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619995085964
+      }
+    },
+    {
+      "id": "138",
+      "type": "aoeSpell",
+      "name": "Eruption",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619995133572
+      }
+    },
+    {
+      "id": "124",
+      "type": "targetSpell",
+      "name": "Feral Bite",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619995286924
+      }
+    },
+    {
+      "id": "133",
+      "type": "targetSpell",
+      "name": "*INFEEERNOOOO",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619995430537
+      }
+    },
+    {
+      "id": "128",
+      "type": "targetSpell",
+      "name": "Dancing Light",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619995637955
+      }
+    },
+    {
+      "id": "114",
+      "type": "targetSpell",
+      "name": "Blitz",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619995712599
+      }
+    },
+    {
+      "id": "120",
+      "type": "aoeSpell",
+      "name": "Tempest",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619995985865
+      }
+    },
+    {
+      "id": "139",
+      "type": "aoeSpell",
+      "name": "Judgement",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619996062415
+      }
+    },
+    {
+      "id": "135",
+      "type": "aoeSpell",
+      "name": "Sovereignty",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619996098183
+      }
+    },
+    {
+      "id": "136",
+      "type": "aoeSpell",
+      "name": "Torch",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619996213703
+      }
+    },
+    {
+      "id": "131",
+      "type": "aoeSpell",
+      "name": "Brimstone",
+      "description": "*Description*",
+      "mana": "3",
+      "damage": "0",
+      "hp": "0",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619996271333
+      }
+    },
+    {
+      "id": "21",
+      "type": "targetSpell",
+      "name": "Conviction",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619996458389
+      }
+    },
+    {
+      "id": "113",
+      "type": "targetSpell",
+      "name": "Discharge",
+      "description": "*Description*",
+      "mana": "3",
+      "damage": "0",
+      "hp": "0",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619996480394
+      }
+    },
+    {
+      "id": "140",
+      "type": "aoeSpell",
+      "name": "Pyre",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619996653724
+      }
+    },
+    {
+      "id": "112",
+      "type": "targetSpell",
+      "name": "Ignite",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619996682588
+      }
+    },
+    {
+      "id": "122",
+      "type": "targetSpell",
+      "name": "Rejuvenate",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619996806746
+      }
+    },
+    {
+      "id": "129",
+      "type": "targetSpell",
+      "name": "Scorching Mortar",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619996903147
+      }
+    },
+    {
+      "id": "132",
+      "type": "targetSpell",
+      "name": "Combust",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619997020833
+      }
+    },
+    {
+      "id": "125",
+      "type": "aoeSpell",
+      "name": "Glazed Flares",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619997123363
+      }
+    },
+    {
+      "id": "119",
+      "type": "targetSpell",
+      "name": "Brittle Barrage",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619997296803
+      }
+    },
+    {
+      "id": "92",
+      "type": "targetSpell",
+      "name": "Penumbra",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619997467904
+      }
+    },
+    {
+      "id": "115",
+      "type": "targetSpell",
+      "name": "Viral Surge",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619997584515
+      }
+    },
+    {
+      "id": "126",
+      "type": "targetSpell",
+      "name": "Anima",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619997793985
+      }
+    },
+    {
+      "id": "118",
+      "type": "targetSpell",
+      "name": "Turmoil",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619997919595
+      }
+    },
+    {
+      "id": "91",
+      "type": "targetSpell",
+      "name": "Monarchy",
+      "description": "*Description*",
+      "mana": "3",
+      "damage": "0",
+      "hp": "0",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1619997965759
+      }
+    },
+    {
+      "id": "35",
+      "type": "minion",
+      "name": "Bison Hut",
+      "description": "$I$BTaunt$B$I",
+      "mana": "5",
+      "damage": "1",
+      "hp": "7",
+      "element": "taunt",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620022182888
+      }
+    },
+    {
+      "id": "22",
+      "type": "minion",
+      "name": "*Volatile Juggernaut",
+      "description": "$B$ITaunt$I$B",
+      "mana": "5",
+      "damage": "5",
+      "hp": "3",
+      "element": "taunt",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620024731506
+      }
+    },
+    {
+      "id": "143",
+      "type": "minion",
+      "name": "Erikas \"RyuYol\"",
+      "description": "$I$BRush$I$B\n\n$IJust a terrible nuisance...$I",
+      "mana": "1",
+      "damage": "0",
+      "hp": "4",
+      "element": "rush",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620025703010
+      }
+    },
+    {
+      "id": "61",
+      "type": "minion",
+      "name": "*Confused Yeti",
+      "description": "$I$BRush$I$B",
+      "mana": "1",
+      "damage": "0",
+      "hp": "4",
+      "element": "rush",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620026759000
+      }
+    },
+    {
+      "id": "60",
+      "type": "targetSpell",
+      "name": "Bone Sickle",
+      "description": "*Give a Unit:\n\n$B$IDeathrattle:$I$B\n$ISummon a 1/1 Taunt$I",
+      "mana": "2",
+      "damage": "0",
+      "hp": "0",
+      "element": "lunar",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620030795675
+      }
+    },
+    {
+      "id": "36",
+      "type": "minion",
+      "name": "Gremlun",
+      "description": "",
+      "mana": "0",
+      "damage": "1",
+      "hp": "1",
+      "element": "lunar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032170157
+      }
+    },
+    {
+      "id": "72",
+      "type": "minion",
+      "name": "Orb of Lun",
+      "description": "",
+      "mana": "1",
+      "damage": "2",
+      "hp": "1",
+      "element": "lunar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032176069
+      }
+    },
+    {
+      "id": "47",
+      "type": "minion",
+      "name": "*Lunanthrope",
+      "description": "",
+      "mana": "2",
+      "damage": "2",
+      "hp": "3",
+      "element": "lunar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032181865
+      }
+    },
+    {
+      "id": "37",
+      "type": "minion",
+      "name": "*Otolun",
+      "description": "",
+      "mana": "5",
+      "damage": "6",
+      "hp": "5",
+      "element": "lunar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032195648
+      }
+    },
+    {
+      "id": "85",
+      "type": "minion",
+      "name": "Orb of Zen",
+      "description": "",
+      "mana": "2",
+      "damage": "3",
+      "hp": "3",
       "element": "zenith",
       "events": {
         "onPlayed": [],
@@ -16,19 +786,199 @@
         "onAttacked": []
       },
       "lastChange": {
-        "user": "Oliverp",
-        "date": 1619094978525
+        "user": "Erikas",
+        "date": 1620032207291
+      }
+    },
+    {
+      "id": "84",
+      "type": "minion",
+      "name": "Orb of Sol",
+      "description": "",
+      "mana": "2",
+      "damage": "1",
+      "hp": "4",
+      "element": "solar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032341316
+      }
+    },
+    {
+      "id": "52",
+      "type": "minion",
+      "name": "Lunaga",
+      "description": "",
+      "mana": "6",
+      "damage": "7",
+      "hp": "6",
+      "element": "lunar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032355506
+      }
+    },
+    {
+      "id": "102",
+      "type": "minion",
+      "name": "Lunaiah",
+      "description": "",
+      "mana": "12",
+      "damage": "25",
+      "hp": "10",
+      "element": "lunar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032363420
+      }
+    },
+    {
+      "id": "86",
+      "type": "minion",
+      "name": "Orb of Nov",
+      "description": "",
+      "mana": "2",
+      "damage": "4",
+      "hp": "1",
+      "element": "nova",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032378257
+      }
+    },
+    {
+      "id": "106",
+      "type": "minion",
+      "name": "*Forsaken Emissary",
+      "description": "*Description*",
+      "mana": "0",
+      "damage": "0",
+      "hp": "0",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032439271
+      }
+    },
+    {
+      "id": "101",
+      "type": "minion",
+      "name": "*Valorian Fighter",
+      "description": "*Description*",
+      "mana": "0",
+      "damage": "0",
+      "hp": "0",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032445221
+      }
+    },
+    {
+      "id": "97",
+      "type": "minion",
+      "name": "*Searing Wraith",
+      "description": "*Description*",
+      "mana": "0",
+      "damage": "0",
+      "hp": "0",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032457866
+      }
+    },
+    {
+      "id": "98",
+      "type": "minion",
+      "name": "*Valeera",
+      "description": "*Description*",
+      "mana": "0",
+      "damage": "0",
+      "hp": "0",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032470187
+      }
+    },
+    {
+      "id": "96",
+      "type": "minion",
+      "name": "*Adept",
+      "description": "*Description*",
+      "mana": "0",
+      "damage": "0",
+      "hp": "0",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032477169
       }
     },
     {
       "id": "43",
       "type": "minion",
-      "name": "Spiked Shelly",
-      "description": "When Attacked \nDeal $B1 Damage$B to \nAll enemies",
+      "name": "Shelly",
+      "description": "$B$IDeathrattle:$B$I\n\nDeal $B1 Damage$B to \nAll Enemy Units",
       "mana": "2",
       "damage": "1",
-      "hp": "2",
-      "element": "solar",
+      "hp": "1",
+      "element": "neutral",
       "events": {
         "onPlayed": [],
         "everyRound": [],
@@ -41,562 +991,23 @@
         ]
       },
       "lastChange": {
-        "user": "Oliverp",
-        "date": 1619095127726
+        "user": "Erikas",
+        "date": 1620032504770
       }
     },
     {
-      "id": "24",
+      "id": "42",
       "type": "minion",
-      "name": "Undead Soldier",
-      "description": "",
-      "mana": "1",
-      "damage": "2",
-      "hp": "1",
-      "element": "nova",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619095209109
-      }
-    },
-    {
-      "id": "36",
-      "type": "minion",
-      "name": "Star Eater",
-      "description": "",
-      "mana": "1",
-      "damage": "2",
-      "hp": "1",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619095342884
-      }
-    },
-    {
-      "id": "32",
-      "type": "minion",
-      "name": "Voided Exectioner",
-      "description": "",
-      "mana": "4",
-      "damage": "2",
-      "hp": "5",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619095473272
-      }
-    },
-    {
-      "id": "40",
-      "type": "minion",
-      "name": "Gang of toads",
-      "description": "Spawns two $B3/3 units",
-      "mana": "8",
-      "damage": "5",
-      "hp": "4",
-      "element": "lunar",
+      "name": "Hatchling",
+      "description": "$I$BBattlecry:$I$B\n\nDeal $B1 Damage$B\nto a Selected Enemy Unit",
+      "mana": "3",
+      "damage": "3",
+      "hp": "2",
+      "element": "neutral",
       "events": {
         "onPlayed": [
           {
-            "func": "spawn",
-            "value": "2"
-          }
-        ],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619095761732
-      }
-    },
-    {
-      "id": "21",
-      "type": "targetSpell",
-      "name": "Hood Of Silence",
-      "description": "$BSilence $Ba unit",
-      "mana": "3",
-      "damage": "0",
-      "hp": "0",
-      "element": "zenith",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619095834840
-      }
-    },
-    {
-      "id": "63",
-      "type": "targetSpell",
-      "name": "Zenith Cave",
-      "description": "$BDraw 2 cards",
-      "mana": "3",
-      "damage": "0",
-      "hp": "0",
-      "element": "zenith",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619096007604
-      }
-    },
-    {
-      "id": "75",
-      "type": "minion",
-      "name": "Void Scarab",
-      "description": "$B$IDeathrattle: $ISummon four \n$B1/1 Locusts",
-      "mana": "8",
-      "damage": "5",
-      "hp": "5",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619163681067
-      }
-    },
-    {
-      "id": "52",
-      "type": "minion",
-      "name": "Lunar Naga",
-      "description": "",
-      "mana": "8",
-      "damage": "10",
-      "hp": "7",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619165419610
-      }
-    },
-    {
-      "id": "47",
-      "type": "minion",
-      "name": "Lunar Hound",
-      "description": "",
-      "mana": "6",
-      "damage": "6",
-      "hp": "5",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619166461648
-      }
-    },
-    {
-      "id": "48",
-      "type": "minion",
-      "name": "Solar Hound",
-      "description": "",
-      "mana": "6",
-      "damage": "6",
-      "hp": "5",
-      "element": "solar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619167404133
-      }
-    },
-    {
-      "id": "53",
-      "type": "minion",
-      "name": "Nova Naga",
-      "description": "",
-      "mana": "8",
-      "damage": "10",
-      "hp": "7",
-      "element": "nova",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619167690175
-      }
-    },
-    {
-      "id": "51",
-      "type": "minion",
-      "name": "Solar Naga",
-      "description": "",
-      "mana": "8",
-      "damage": "10",
-      "hp": "7",
-      "element": "solar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619169016484
-      }
-    },
-    {
-      "id": "56",
-      "type": "minion",
-      "name": "Deafening Scream",
-      "description": "$bSilence $bAll Enemy Units",
-      "mana": "7",
-      "damage": "5",
-      "hp": "5",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619173046178
-      }
-    },
-    {
-      "id": "72",
-      "type": "minion",
-      "name": "Lunar Elemental",
-      "description": "",
-      "mana": "2",
-      "damage": "5",
-      "hp": "1",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619419200331
-      }
-    },
-    {
-      "id": "86",
-      "type": "minion",
-      "name": "Nova Elemental",
-      "description": "",
-      "mana": "2",
-      "damage": "5",
-      "hp": "1",
-      "element": "nova",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619419215604
-      }
-    },
-    {
-      "id": "84",
-      "type": "minion",
-      "name": "Solar Elemental",
-      "description": "",
-      "mana": "2",
-      "damage": "5",
-      "hp": "1",
-      "element": "solar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619419230283
-      }
-    },
-    {
-      "id": "85",
-      "type": "minion",
-      "name": "Zenith Elemental",
-      "description": "",
-      "mana": "2",
-      "damage": "5",
-      "hp": "1",
-      "element": "zenith",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619419252376
-      }
-    },
-    {
-      "id": "100",
-      "type": "minion",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619421136562
-      }
-    },
-    {
-      "id": "103",
-      "type": "minion",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619421210788
-      }
-    },
-    {
-      "id": "104",
-      "type": "minion",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619421224326
-      }
-    },
-    {
-      "id": "89",
-      "type": "minion",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619421366471
-      }
-    },
-    {
-      "id": "90",
-      "type": "minion",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619421860807
-      }
-    },
-    {
-      "id": "70",
-      "type": "minion",
-      "name": "De-motivator",
-      "description": "$BLowers All Enemy Units \n$BAttack by 1 ",
-      "mana": "7",
-      "damage": "6",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619425069863
-      }
-    },
-    {
-      "id": "57",
-      "type": "minion",
-      "name": "Wandering Knight",
-      "description": "Give All Friendly Units $B+1/+1",
-      "mana": "7",
-      "damage": "3",
-      "hp": "6",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619425089983
-      }
-    },
-    {
-      "id": "62",
-      "type": "minion",
-      "name": "Necro Lord",
-      "description": "Deathrattle: Summon \ntwo $B4/4 Skeletons ",
-      "mana": "10",
-      "damage": "5",
-      "hp": "5",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619425192965
-      }
-    },
-    {
-      "id": "59",
-      "type": "minion",
-      "name": "Prehistoric Frog thing",
-      "description": "Buffs All Friendly \nUnits $B+2 Attack this turn",
-      "mana": "6",
-      "damage": "4",
-      "hp": "4",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619425221202
-      }
-    },
-    {
-      "id": "55",
-      "type": "minion",
-      "name": "Void Terror",
-      "description": "",
-      "mana": "10",
-      "damage": "12",
-      "hp": "12",
-      "element": "nova",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619425264045
-      }
-    },
-    {
-      "id": "33",
-      "type": "minion",
-      "name": "Void Bloom",
-      "description": "Spawns two $B1/1 units $Bon play",
-      "mana": "3",
-      "damage": "1",
-      "hp": "1",
-      "element": "nova",
-      "events": {
-        "onPlayed": [
-          {
-            "func": "spawn",
+            "func": "damageRandom",
             "value": "2"
           }
         ],
@@ -606,35 +1017,58 @@
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619425387484
+        "date": 1620032519155
       }
     },
     {
-      "id": "30",
-      "type": "targetSpell",
-      "name": "Cosmic arrow",
-      "description": "$BDeals 4 Damage\nto an enemy unit",
-      "mana": "2",
-      "damage": "4",
-      "hp": "0",
-      "element": "nova",
+      "id": "31",
+      "type": "minion",
+      "name": "Camazots",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "neutral",
       "events": {
-        "action": []
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619425456373
+        "date": 1620032532431
+      }
+    },
+    {
+      "id": "34",
+      "type": "minion",
+      "name": "Harvester",
+      "description": "3",
+      "mana": "3",
+      "damage": "3",
+      "hp": "3",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032538519
       }
     },
     {
       "id": "49",
       "type": "minion",
-      "name": "Winged Devourer",
-      "description": "",
-      "mana": "2",
+      "name": "Devourer",
+      "description": "3",
+      "mana": "3",
       "damage": "3",
-      "hp": "2",
-      "element": "zenith",
+      "hp": "3",
+      "element": "neutral",
       "events": {
         "onPlayed": [],
         "everyRound": [],
@@ -643,375 +1077,18 @@
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619425688000
+        "date": 1620032576648
       }
     },
     {
-      "id": "112",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619434853750
-      }
-    },
-    {
-      "id": "118",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619441557601
-      }
-    },
-    {
-      "id": "119",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619443143767
-      }
-    },
-    {
-      "id": "121",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619509741076
-      }
-    },
-    {
-      "id": "122",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619510295275
-      }
-    },
-    {
-      "id": "123",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619511073576
-      }
-    },
-    {
-      "id": "124",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619512081059
-      }
-    },
-    {
-      "id": "125",
-      "type": "aoeSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619513764472
-      }
-    },
-    {
-      "id": "126",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619514755458
-      }
-    },
-    {
-      "id": "127",
-      "type": "aoeSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619517624503
-      }
-    },
-    {
-      "id": "115",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619517677680
-      }
-    },
-    {
-      "id": "120",
-      "type": "aoeSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619517723428
-      }
-    },
-    {
-      "id": "114",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619517740306
-      }
-    },
-    {
-      "id": "128",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619529542958
-      }
-    },
-    {
-      "id": "92",
-      "type": "targetSpell",
-      "name": "2",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619609103105
-      }
-    },
-    {
-      "id": "129",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619678513902
-      }
-    },
-    {
-      "id": "132",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619682685159
-      }
-    },
-    {
-      "id": "133",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619684894615
-      }
-    },
-    {
-      "id": "134",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619687923173
-      }
-    },
-    {
-      "id": "135",
-      "type": "aoeSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619689079973
-      }
-    },
-    {
-      "id": "136",
-      "type": "aoeSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619689756629
-      }
-    },
-    {
-      "id": "93",
+      "id": "100",
       "type": "minion",
-      "name": "*NAME*",
-      "description": "*Desc*",
-      "mana": "4",
+      "name": "*Masquerade",
+      "description": "3",
+      "mana": "3",
       "damage": "3",
-      "hp": "7",
-      "element": "solar",
+      "hp": "3",
+      "element": "neutral",
       "events": {
         "onPlayed": [],
         "everyRound": [],
@@ -1020,86 +1097,18 @@
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619691195192
+        "date": 1620032587177
       }
     },
     {
-      "id": "137",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619691185027
-      }
-    },
-    {
-      "id": "138",
-      "type": "aoeSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619701369271
-      }
-    },
-    {
-      "id": "139",
-      "type": "aoeSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619702758100
-      }
-    },
-    {
-      "id": "140",
-      "type": "aoeSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "3",
-      "hp": "3",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Oliverp",
-        "date": 1619704442355
-      }
-    },
-    {
-      "id": "54",
+      "id": "89",
       "type": "minion",
-      "name": "3",
+      "name": "*Acolyte",
       "description": "3",
       "mana": "3",
       "damage": "3",
       "hp": "3",
-      "element": "lunar",
+      "element": "neutral",
       "events": {
         "onPlayed": [],
         "everyRound": [],
@@ -1108,57 +1117,18 @@
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619704578815
-      }
-    },
-    {
-      "id": "76",
-      "type": "targetSpell",
-      "name": "Pipe of Wisdom",
-      "description": "3",
-      "mana": "3",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619704689209
-      }
-    },
-    {
-      "id": "25",
-      "type": "targetSpell",
-      "name": "Dark cleave",
-      "description": "Deals $B2 Damage to\n$B3 random enemy units",
-      "mana": "3",
-      "damage": "0",
-      "hp": "0",
-      "element": "nova",
-      "events": {
-        "action": [
-          {
-            "func": "damageEveryone",
-            "value": "2"
-          }
-        ]
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619705178188
+        "date": 1620032593696
       }
     },
     {
       "id": "39",
       "type": "minion",
-      "name": "Siphoning Skull",
-      "description": "$BEvery Round:\n$BDeal 1 Damage$B to All \nunits and $BHeal$B all allies\nby $B1 Health",
+      "name": "Siphon",
+      "description": "*$I$BBattlecry:$I$B\n\nDeal $B1 Damage$B to All Units,\n$BSet Health$B to $BDamage Dealt",
       "mana": "3",
-      "damage": "0",
-      "hp": "3",
-      "element": "solar",
+      "damage": "1",
+      "hp": "0",
+      "element": "neutral",
       "events": {
         "onPlayed": [],
         "everyRound": [
@@ -1176,43 +1146,18 @@
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619705633096
+        "date": 1620032602123
       }
     },
     {
-      "id": "42",
+      "id": "32",
       "type": "minion",
-      "name": "Lunar Hatchling",
-      "description": "Deal $B1 Damage$B to\n a Selected Enemy Unit",
+      "name": "Exectioner",
+      "description": "*$I$BBattlecry:$B$I\n\nDestroy all units with\n$B0 Attack$B",
       "mana": "3",
-      "damage": "3",
+      "damage": "2",
       "hp": "2",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [
-          {
-            "func": "damageRandom",
-            "value": "2"
-          }
-        ],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619705912611
-      }
-    },
-    {
-      "id": "38",
-      "type": "minion",
-      "name": "Angler Fisherman",
-      "description": "$B$IRush$I$B",
-      "mana": "1",
-      "damage": "1",
-      "hp": "1",
-      "element": "rush",
+      "element": "neutral",
       "events": {
         "onPlayed": [],
         "everyRound": [],
@@ -1221,72 +1166,18 @@
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619706758437
-      }
-    },
-    {
-      "id": "73",
-      "type": "minion",
-      "name": "Thracian",
-      "description": "$B$ITaunt$I$B\n",
-      "mana": "9",
-      "damage": "7",
-      "hp": "8",
-      "element": "taunt",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619706819798
-      }
-    },
-    {
-      "id": "71",
-      "type": "targetSpell",
-      "name": "3",
-      "description": "3",
-      "mana": "3",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619706971420
-      }
-    },
-    {
-      "id": "69",
-      "type": "targetSpell",
-      "name": "Elixir of Life",
-      "description": "Deal $B 5 Damage$B to anything\nthen $BHeal 10$B",
-      "mana": "5",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619707112781
+        "date": 1620032611481
       }
     },
     {
       "id": "45",
       "type": "minion",
-      "name": "Confused Phoenix",
-      "description": "$I$BBattlecry:$B$I\nDeal $B2 Damage$B to\nall Enemy Units, $I$BDeathrattle:$B$I\nall Units get $BHealed by 2$B",
+      "name": "*Confused Phoenix",
+      "description": "$I$BBattlecry:$B$I\nDeal $B2 Damage$B to all Units,\n$I$BDeathrattle:$B$I\nAll Units get $BHealed by 2$B",
       "mana": "4",
       "damage": "2",
       "hp": "4",
-      "element": "lunar",
+      "element": "neutral",
       "events": {
         "onPlayed": [
           {
@@ -1305,18 +1196,18 @@
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619707208232
+        "date": 1620032622496
       }
     },
     {
-      "id": "46",
+      "id": "54",
       "type": "minion",
-      "name": "King Crab",
-      "description": "$B$ITaunt$I$B",
-      "mana": "1",
-      "damage": "1",
+      "name": "Devotion",
+      "description": "$I$BDeathrattle:$I$B\n\nReduce cost of cards\nin  hand by $B1 Mana$B",
+      "mana": "4",
+      "damage": "2",
       "hp": "2",
-      "element": "taunt",
+      "element": "neutral",
       "events": {
         "onPlayed": [],
         "everyRound": [],
@@ -1325,89 +1216,212 @@
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619707305260
+        "date": 1620032643884
       }
     },
     {
-      "id": "67",
-      "type": "targetSpell",
-      "name": "Tomahawk",
-      "description": "Deal $B5 Damage$B to anything",
-      "mana": "5",
-      "damage": "8",
-      "hp": "2",
-      "element": "lunar",
+      "id": "59",
+      "type": "minion",
+      "name": "*Prehistoric Frog thing",
+      "description": "$B$IBattlecry:$B$I\n\nAll Friendly Units\ngain $B+2/0$B this turn",
+      "mana": "6",
+      "damage": "4",
+      "hp": "4",
+      "element": "neutral",
       "events": {
-        "action": []
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619707360293
+        "date": 1620032650061
       }
     },
     {
-      "id": "60",
+      "id": "70",
+      "type": "minion",
+      "name": "*De-motivator",
+      "description": "$B$IBooster:$B$I\n\nGive All Enemy Units $B-1/0$B",
+      "mana": "7",
+      "damage": "6",
+      "hp": "3",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032672252
+      }
+    },
+    {
+      "id": "40",
+      "type": "minion",
+      "name": "Gang of Toads",
+      "description": "$I$BDeathrattle:$I$B\n\nSummons two $I2/2 Units $I",
+      "mana": "8",
+      "damage": "6",
+      "hp": "6",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [
+          {
+            "func": "spawn",
+            "value": "2"
+          }
+        ],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620032702795
+      }
+    },
+    {
+      "id": "150",
+      "type": "minion",
+      "name": "Pang-OLI-n",
+      "description": "Tough, Gentle but Shy",
+      "mana": "7",
+      "damage": "5",
+      "hp": "99",
+      "element": "lunar",
+      "events": {
+        "onPlayedTarget": [],
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Oliverp",
+        "date": 1620110104596
+      }
+    },
+    {
+      "id": "145",
+      "type": "minion",
+      "name": "Cecilia \"Camuii\"",
+      "description": "Purple power ",
+      "mana": "10",
+      "damage": "50",
+      "hp": "200",
+      "element": "lunar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Camuii",
+        "date": 1620115686410
+      }
+    },
+    {
+      "id": "99",
+      "type": "minion",
+      "name": "*Behemoth",
+      "description": "*Description*",
+      "mana": "0",
+      "damage": "0",
+      "hp": "5",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Olle",
+        "date": 1620122492928
+      }
+    },
+    {
+      "id": "69",
       "type": "targetSpell",
-      "name": "Bone Sickle",
-      "description": "Give a Unit:\n\n$B$IDeathrattle:$I$B\n$ISummon a 1/1 Taunt$I",
-      "mana": "2",
+      "name": "Elixir of Life",
+      "description": "Deal $B 5 Damage$B to anything\nthen $BHeal 10$B to them",
+      "mana": "5",
       "damage": "0",
       "hp": "0",
       "element": "lunar",
       "events": {
-        "action": []
+        "action": [
+          {
+            "func": "damageTarget",
+            "value": 5
+          },
+          {
+            "func": "healTarget",
+            "value": 10
+          }
+        ]
+      },
+      "lastChange": {
+        "user": "Olle",
+        "date": 1620123261137
+      }
+    },
+    {
+      "id": "63",
+      "type": "aoeSpell",
+      "name": "Cave of Zen",
+      "description": "$BDraw 2 cards$B",
+      "mana": "3",
+      "damage": "0",
+      "hp": "0",
+      "element": "zenith",
+      "events": {
+        "action": [
+          {
+            "func": "drawAmountCards",
+            "value": "2"
+          }
+        ]
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619707390834
+        "date": 1620127653316
       }
     },
     {
       "id": "77",
       "type": "minion",
-      "name": "Grown Sporeling",
-      "description": "$I$BBattlecry:$B$I\nDestroy a $BDamaged Unit",
-      "mana": "6",
-      "damage": "4",
-      "hp": "4",
-      "element": "lunar",
+      "name": "Sporelings",
+      "description": "",
+      "mana": "0",
+      "damage": "1",
+      "hp": "1",
+      "element": "neutral",
       "events": {
         "onPlayed": [],
         "everyRound": [],
         "onDeath": [],
-        "onAttacked": []
+        "onAttacked": [],
+        "onPlayedTarget": []
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619707530746
-      }
-    },
-    {
-      "id": "144",
-      "type": "minion",
-      "name": "Robin \"Bastard\"",
-      "description": "Did somebody say burgers?",
-      "mana": "1",
-      "damage": "0",
-      "hp": "1337",
-      "element": "solar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "RobinK",
-        "date": 1619710539392
+        "date": 1620129276627
       }
     },
     {
       "id": "142",
       "type": "minion",
-      "name": "Olle aka Yogsther",
-      "description": "$BBrogrammer",
-      "mana": "12",
+      "name": "Olle \"Yogsther\"",
+      "description": "$BBrogrammer$B\n$BBattlecry:$B Offer 2+ Attack",
+      "mana": "4",
       "damage": "25",
       "hp": "10",
       "element": "lunar",
@@ -1415,465 +1429,603 @@
         "onPlayed": [],
         "everyRound": [],
         "onDeath": [],
-        "onAttacked": []
+        "onAttacked": [],
+        "onPlayedTarget": [
+          {
+            "func": "increaseTargetAttack",
+            "value": 2
+          }
+        ]
       },
       "lastChange": {
         "user": "Olle",
-        "date": 1619710802199
+        "date": 1620132219112
       }
     },
     {
-      "id": "22",
+      "id": "33",
       "type": "minion",
-      "name": "Volatile Juggernaut",
-      "description": "$B$ITaunt$I$B",
-      "mana": "5",
-      "damage": "5",
-      "hp": "3",
-      "element": "taunt",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619716612559
-      }
-    },
-    {
-      "id": "23",
-      "type": "minion",
-      "name": "Space Hound",
-      "description": "$I$BRush$B$I",
-      "mana": "5",
-      "damage": "5",
+      "name": "Voided Bloom",
+      "description": "$I$BBattlecry:$I$B\n\nSpawn two $BSporelings$B",
+      "mana": "3",
+      "damage": "2",
       "hp": "2",
-      "element": "rush",
+      "element": "neutral",
       "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619716650467
-      }
-    },
-    {
-      "id": "143",
-      "type": "minion",
-      "name": "Erikas \"RyuYol\"",
-      "description": "$I$BRush$I$B\n\n$IJust a terrible nuisance...$I",
-      "mana": "0",
-      "damage": "-1",
-      "hp": "5",
-      "element": "rush",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619716711093
-      }
-    },
-    {
-      "id": "94",
-      "type": "minion",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619716873133
-      }
-    },
-    {
-      "id": "96",
-      "type": "minion",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619716893643
-      }
-    },
-    {
-      "id": "97",
-      "type": "minion",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619716908139
-      }
-    },
-    {
-      "id": "28",
-      "type": "targetSpell",
-      "name": "Star in a Bottle",
-      "description": "Gain $B+2 Star Fragments$B\nthis turn only",
-      "mana": "0",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
-      "events": {
-        "action": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619716920775
-      }
-    },
-    {
-      "id": "98",
-      "type": "minion",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619716959995
-      }
-    },
-    {
-      "id": "37",
-      "type": "minion",
-      "name": "Lunar Shark",
-      "description": "",
-      "mana": "4",
-      "damage": "3",
-      "hp": "4",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619716997077
-      }
-    },
-    {
-      "id": "50",
-      "type": "minion",
-      "name": "Zenith Naga",
-      "description": "",
-      "mana": "8",
-      "damage": "8",
-      "hp": "5",
-      "element": "zenith",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619717020013
-      }
-    },
-    {
-      "id": "61",
-      "type": "minion",
-      "name": "Confused Yeti",
-      "description": "",
-      "mana": "9",
-      "damage": "8",
-      "hp": "8",
-      "element": "zenith",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [
+        "onPlayed": [
           {
-            "func": "damageRandom",
-            "value": "8"
+            "func": "spawnMinion",
+            "value": "77"
+          },
+          {
+            "func": "spawnMinion",
+            "value": "77"
           }
         ],
+        "everyRound": [],
         "onDeath": [],
-        "onAttacked": []
+        "onAttacked": [],
+        "onPlayedTarget": []
       },
       "lastChange": {
-        "user": "Erikas",
-        "date": 1619717071601
+        "user": "Olle",
+        "date": 1620132610631
       }
     },
     {
-      "id": "35",
-      "type": "minion",
-      "name": "Hoth Bison",
-      "description": "$B$ITaunt$B$I",
+      "id": "117",
+      "type": "aoeSpell",
+      "name": "Ascend",
+      "description": "Give all ally units $B0/+3$B",
       "mana": "5",
-      "damage": "1",
-      "hp": "7",
-      "element": "taunt",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619717160855
-      }
-    },
-    {
-      "id": "99",
-      "type": "minion",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
       "damage": "0",
       "hp": "0",
-      "element": "lunar",
+      "element": "solar",
       "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
+        "action": [
+          {
+            "func": "healEveryAlly",
+            "value": "3"
+          }
+        ]
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619717182590
+        "date": 1620139743679
       }
     },
     {
-      "id": "106",
-      "type": "minion",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
-      "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
-      },
-      "lastChange": {
-        "user": "Erikas",
-        "date": 1619717196937
-      }
-    },
-    {
-      "id": "91",
+      "id": "71",
       "type": "targetSpell",
       "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
+      "description": "Give a unit $B0/+3$B",
+      "mana": "2",
       "damage": "0",
       "hp": "0",
-      "element": "lunar",
+      "element": "solar",
       "events": {
         "action": []
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619717210317
+        "date": 1620140431191
       }
     },
     {
-      "id": "131",
+      "id": "127",
       "type": "aoeSpell",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
+      "name": "Hail Mary",
+      "description": "***Deal $B2 damage$B\nto 5 random targets\n",
+      "mana": "4",
       "damage": "0",
       "hp": "0",
-      "element": "lunar",
+      "element": "nova",
       "events": {
         "action": []
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619717222714
+        "date": 1620141089873
+      }
+    },
+    {
+      "id": "25",
+      "type": "targetSpell",
+      "name": "Capn's Cutlass",
+      "description": "***Deals $B2 Damage$B to\n$B3 Random$B Enemy Units",
+      "mana": "3",
+      "damage": "0",
+      "hp": "0",
+      "element": "nova",
+      "events": {
+        "action": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620141129758
+      }
+    },
+    {
+      "id": "152",
+      "type": "minion",
+      "name": "OmegalulGamer",
+      "description": "$I$BBattlecry:$I$B\n\nSummon four \n$BShieeeeesh Lords$B",
+      "mana": "8",
+      "damage": "2",
+      "hp": "6",
+      "element": "neutral",
+      "events": {
+        "onPlayedTarget": [],
+        "onPlayed": [
+          {
+            "func": "spawnMinion",
+            "value": "33"
+          },
+          {
+            "func": "spawnMinion",
+            "value": "33"
+          },
+          {
+            "func": "spawnMinion",
+            "value": "33"
+          },
+          {
+            "func": "spawnMinion",
+            "value": "33"
+          }
+        ],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620141641706
+      }
+    },
+    {
+      "id": "75",
+      "type": "minion",
+      "name": "*Void Scarab",
+      "description": "$B$IBattlecry:$B$I\n\nSummon four $BSporelings$B",
+      "mana": "7",
+      "damage": "3",
+      "hp": "6",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620141922483
+      }
+    },
+    {
+      "id": "24",
+      "type": "minion",
+      "name": "Novenant",
+      "description": "",
+      "mana": "1",
+      "damage": "2",
+      "hp": "1",
+      "element": "nova",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620142120391
+      }
+    },
+    {
+      "id": "57",
+      "type": "minion",
+      "name": "Oathless",
+      "description": "",
+      "mana": "3",
+      "damage": "3",
+      "hp": "4",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620142472902
+      }
+    },
+    {
+      "id": "62",
+      "type": "minion",
+      "name": "*Necro Lord",
+      "description": "$I$BDeathrattle:$I$B\n\nSummon two $BOathless$B",
+      "mana": "9",
+      "damage": "8",
+      "hp": "4",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [
+          {
+            "func": "spawnMinion",
+            "value": "57"
+          },
+          {
+            "func": "spawnMinion",
+            "value": "57"
+          }
+        ],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620142565209
       }
     },
     {
       "id": "108",
       "type": "minion",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
+      "name": "*Stalagzenite",
+      "description": "",
+      "mana": "4",
+      "damage": "5",
+      "hp": "6",
+      "element": "zenith",
       "events": {
         "onPlayed": [],
         "everyRound": [],
         "onDeath": [],
-        "onAttacked": []
+        "onAttacked": [],
+        "onPlayedTarget": []
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619717234661
+        "date": 1620143351763
       }
     },
     {
-      "id": "101",
+      "id": "50",
       "type": "minion",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
+      "name": "Zenaga",
+      "description": "",
+      "mana": "7",
+      "damage": "9",
+      "hp": "9",
+      "element": "zenith",
       "events": {
         "onPlayed": [],
         "everyRound": [],
         "onDeath": [],
-        "onAttacked": []
+        "onAttacked": [],
+        "onPlayedTarget": []
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619717246011
+        "date": 1620143431571
       }
     },
     {
-      "id": "102",
+      "id": "90",
       "type": "minion",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
+      "name": "Amonov",
+      "description": "",
+      "mana": "8",
+      "damage": "13",
+      "hp": "7",
+      "element": "nova",
       "events": {
         "onPlayed": [],
         "everyRound": [],
         "onDeath": [],
-        "onAttacked": []
+        "onAttacked": [],
+        "onPlayedTarget": []
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619717259769
+        "date": 1620143459947
       }
     },
     {
-      "id": "117",
-      "type": "targetSpell",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
+      "id": "55",
+      "type": "minion",
+      "name": "*Solgon / Solagoon",
+      "description": "",
+      "mana": "8",
+      "damage": "7",
+      "hp": "13",
+      "element": "solar",
       "events": {
-        "action": []
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619717271401
+        "date": 1620143468211
       }
     },
     {
-      "id": "113",
-      "type": "targetSpell",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
-      "damage": "0",
-      "hp": "0",
-      "element": "lunar",
+      "id": "73",
+      "type": "minion",
+      "name": "Thracia",
+      "description": "$B$ITaunt$I$B\n",
+      "mana": "9",
+      "damage": "8",
+      "hp": "8",
+      "element": "taunt",
       "events": {
-        "action": []
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619717285023
+        "date": 1620143484545
+      }
+    },
+    {
+      "id": "53",
+      "type": "minion",
+      "name": "Novaga",
+      "description": "",
+      "mana": "7",
+      "damage": "10",
+      "hp": "6",
+      "element": "nova",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620143549682
+      }
+    },
+    {
+      "id": "51",
+      "type": "minion",
+      "name": "Solaga",
+      "description": "",
+      "mana": "7",
+      "damage": "6",
+      "hp": "10",
+      "element": "solar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620143556244
       }
     },
     {
       "id": "105",
       "type": "minion",
-      "name": "*Name*",
-      "description": "*Description*",
-      "mana": "0",
+      "name": "Wight",
+      "description": "$I$BDeathrattle:$I$B\n\nSummon this minion again",
+      "mana": "3",
+      "damage": "2",
+      "hp": "1",
+      "element": "neutral",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [
+          {
+            "func": "spawnMinion",
+            "value": "105"
+          }
+        ],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620143788722
+      }
+    },
+    {
+      "id": "30",
+      "type": "targetSpell",
+      "name": "*Cosmic arrow",
+      "description": "$BDeal 4 Damage$B",
+      "mana": "2",
+      "damage": "4",
+      "hp": "0",
+      "element": "nova",
+      "events": {
+        "action": [
+          {
+            "func": "damageTarget",
+            "value": "4"
+          }
+        ]
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620144182993
+      }
+    },
+    {
+      "id": "67",
+      "type": "targetSpell",
+      "name": "Tomahawk",
+      "description": "$BDeal 2 Damage$B\nMake a copy of this card\nin your hand",
+      "mana": "4",
       "damage": "0",
       "hp": "0",
       "element": "lunar",
       "events": {
-        "onPlayed": [],
-        "everyRound": [],
-        "onDeath": [],
-        "onAttacked": []
+        "action": [
+          {
+            "func": "damageTarget",
+            "value": "2"
+          },
+          {
+            "func": "drawCard",
+            "value": "67"
+          }
+        ]
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619717304779
+        "date": 1620144460492
       }
     },
     {
-      "id": "31",
+      "id": "104",
       "type": "minion",
-      "name": "Void Bat",
+      "name": "*Big Sol",
       "description": "",
       "mana": "3",
-      "damage": "2",
-      "hp": "3",
-      "element": "lunar",
+      "damage": "1",
+      "hp": "10",
+      "element": "solar",
       "events": {
         "onPlayed": [],
         "everyRound": [],
         "onDeath": [],
-        "onAttacked": []
+        "onAttacked": [],
+        "onPlayedTarget": []
       },
       "lastChange": {
         "user": "Erikas",
-        "date": 1619717393383
+        "date": 1620144654751
+      }
+    },
+    {
+      "id": "144",
+      "type": "minion",
+      "name": "Robin \"Bastard\"",
+      "description": "$BDid somebody say burgers?$B",
+      "mana": "3",
+      "damage": "1",
+      "hp": "10",
+      "element": "solar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620144790328
+      }
+    },
+    {
+      "id": "103",
+      "type": "minion",
+      "name": "Briganov",
+      "description": "",
+      "mana": "3",
+      "damage": "6",
+      "hp": "3",
+      "element": "nova",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620144939143
+      }
+    },
+    {
+      "id": "93",
+      "type": "minion",
+      "name": "Soldat",
+      "description": "",
+      "mana": "4",
+      "damage": "3",
+      "hp": "8",
+      "element": "solar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620144981933
+      }
+    },
+    {
+      "id": "48",
+      "type": "minion",
+      "name": "*Soltanhrope",
+      "description": "",
+      "mana": "4",
+      "damage": "4",
+      "hp": "7",
+      "element": "solar",
+      "events": {
+        "onPlayed": [],
+        "everyRound": [],
+        "onDeath": [],
+        "onAttacked": [],
+        "onPlayedTarget": []
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620145003133
+      }
+    },
+    {
+      "id": "137",
+      "type": "targetSpell",
+      "name": "Obliterate",
+      "description": "$BDestroy a Unit$B",
+      "mana": "6",
+      "damage": "3",
+      "hp": "3",
+      "element": "nova",
+      "events": {
+        "action": [
+          {
+            "func": "damageTargetUnit",
+            "value": "999"
+          }
+        ]
+      },
+      "lastChange": {
+        "user": "Erikas",
+        "date": 1620145446094
       }
     }
   ],
-  "increment": 145,
+  "increment": 154,
   "users": [],
   "games": [],
   "tokens": [],

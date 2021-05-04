@@ -2,6 +2,7 @@
  * COSMIC game server, 2021 Olle Kaiser
  */
 
+const SERVER_VERSION = "2.4";
 const game_port = 8881;
 const website_port = 8882;
 
@@ -291,6 +292,7 @@ app.get("/api/users", (req, res) => {
         send.push({
             status: onlinePings[user.id] ? onlinePings[user.id].status : "offline",
             username: user.username,
+            admin: user.admin
         })
     }
 
@@ -373,6 +375,53 @@ function clearPings() {
             delete onlinePings[key];
     }
 }
+
+app.post("/api/deleteUser", (req, res) => {
+    if (req.loggedIn && req.user.admin) {
+        var user = getUserWithPassword(req.user.username)
+        comparePassword(req.body.password, user.password, (err, match) => {
+            if (match) {
+                var deleteUser = getUser(req.body.username)
+                if (deleteUser) {
+
+                    while (db.get("tokens").find({ user: deleteUser.id }).value()) {
+
+                        for (let i = 0; i < db.get("tokens").value().length; i++) {
+                            if (db.get("tokens").value()[i].user == deleteUser.id) {
+                                db.get("tokens").value().splice(i, 1)
+                                db.write()
+                            }
+                        }
+                    }
+
+                    for (var i = 0; i < db.get("users").value().length; i++) {
+                        if (db.get("users").value()[i].id == deleteUser.id) {
+                            db.get("users").value().splice(i, 1)
+                            db.write()
+                        }
+                    }
+
+                    console.log("Deleted user " + deleteUser.username)
+
+                }
+            }
+        });
+    }
+    res.end()
+})
+
+app.post("/api/admin", (req, res) => {
+
+    if (req.loggedIn && req.user.admin) {
+        var user = getUser(req.body.username)
+        if (user) {
+            db.get("users").find({ id: user.id }).value().admin = !user.admin
+            db.write()
+        }
+    }
+    res.end()
+
+})
 
 app.post("/api/loginPass", (req, res) => {
     var user = getUserWithPassword(req.body.username);
@@ -522,6 +571,7 @@ const MINION = {
     spawnRound: 0,
     canSacrifice: false,
     owner: null,
+    battlecryActive: false
 }
 
 // DELETE GUESTS
@@ -549,7 +599,10 @@ function createNewGame(user1, user2 = false) {
     game.players = [player1, player2]
     game.gameStarted = Date.now()
 
-    var deckID = "nZ4PTjcdSBf5AIMX3n0fi"
+
+    //var deckID = "dSuG_9Le2bJ1b-gtbgCuo"
+    var deckID = "dSuG_9Le2bJ1b-gtbgCuo"
+    //var deckID = "nZ4PTjcdSBf5AIMX3n0fi"
     var deck = db.get("decks").find({ id: deckID }).value()
 
     for (let key in deck.cards) {
@@ -685,8 +738,9 @@ function nextTurn(id) {
             attackingPlayer = player.id;
             // Give the attacking player a new card at the start of the round
             dealCards(id, player.id)
-            player.totalMana = game.round
-            player.manaLeft = game.round > 10 ? 10 : game.round
+            player.totalMana = game.round > 9 ? 9 : game.round
+            player.manaLeft = player.totalMana
+
         }
 
         player.isAttacking = player.turn
@@ -694,13 +748,22 @@ function nextTurn(id) {
             minion.isAttacking = player.turn;
             minion.hasAttacked = false;
             minion.hasBeenAttacked = false;
+            minion.battlecryActive = false;
+
+            if (player.turn) {
+                var minionCard = getCard(minion.origin)
+                if (minionCard.events.everyRound)
+                    for (let func of minionCard.events.everyRound) {
+                        runFunction(game, func, player)
+                        endOfAction(game.id)
+                    }
+            }
         }
     }
 
     addEvent(game, "next_turn", {
         "attacking_player": attackingPlayer
     })
-
     emitGameUpdate(game)
 
     if (attackingPlayerIsBot) {
@@ -745,7 +808,7 @@ function dealCards(game_id, player_id, amount = 1) {
                     // Delete the card from the players deck
                     player.deck.splice(0, 1)
                 } else {
-                    console.log("PLAYER HAS RUN OUT OF CARDS!")
+                    // PLAYER HAS RUN OUT OF CARDS TODO:
                 }
             }
         }
@@ -841,6 +904,207 @@ function getCard(cardId) {
     return cards.get("cards").find({ id: String(cardId) }).value()
 }
 
+function battlecry(gameId, userId, info) {
+
+    info = JSON.parse(info)
+    var game = getGame(gameId)
+    if (!game) return
+    var player = getCharacter(game, userId)
+    var origin = getCharacter(game, info.origin)
+    var target = getCharacter(game, info.target)
+
+    if (player && origin && target) {
+        if (origin.battlecryActive) {
+            origin.battlecryActive = false;
+            var originCard = getCard(origin.origin)
+            for (let func of originCard.events.onPlayedTarget) {
+                runFunction(game, func, target)
+                endOfAction(game.id)
+            }
+        }
+    }
+
+    endOfAction(game.id)
+    emitGameUpdate(game)
+}
+
+
+/**
+ * Run a card function from an event
+ * @param {*} game The game the function is run in
+ * @param {*} func The function
+ * @param {*} target The target character or if not a target function the player sending it.
+ */
+function runFunction(game, func, target = null) {
+    func.value = Number(func.value)
+    switch (func.func) {
+        case "increaseTargetAttack":
+            if (target.origin)
+                target.damage = Number(target.damage) + Number(func.value);
+            break;
+        case "damageTarget":
+            damage(game, target, func.value)
+            break;
+        case "damageRandomAlly":
+            var targetIndex = Math.floor(Math.random() * target.minions.length) - 1
+            var finalTarget = targetIndex == -1 ? target : target.minions[targetIndex]
+            damage(game, finalTarget, func.value)
+            break;
+        case "damageRandomAlly":
+            var opponent = getOpponent(game, target.id)
+            damage(game, opponent, func.value)
+            for (let minion of opponent.minions) {
+                damage(game, minion, func.value)
+            }
+            break;
+        case "healTarget":
+            heal(game, target, func.value)
+            break;
+        case "healRandomAlly":
+            var targetIndex = Math.floor(Math.random() * target.minions.length) - 1
+            var finalTarget = targetIndex == -1 ? target : target.minions[targetIndex]
+            heal(game, finalTarget, func.value)
+            break;
+        case "healEveryAlly":
+            heal(game, target, func.value)
+            for (let minion of target.minions) {
+                heal(game, minion, func.value)
+            }
+            break;
+        case "spawnMinion":
+            var card = getCard(func.value)
+            spawnMinion(game, card, target)
+            break;
+        case "gainMana":
+            target.manaLeft += func.value;
+            break;
+        case "drawAmountCards":
+            dealCards(game.id, target.id, func.value);
+            break;
+        case "drawCard":
+            target.cards.push(func.value)
+            addEvent(game, "player_deal_card", {
+                player: target.id,
+                card: func.value
+            })
+            break;
+    }
+
+    endOfAction(game.id)
+}
+
+
+function heal(game, target, hp) {
+    target.hp += hp;
+    addEvent(game, "heal", {
+        id: target.id,
+        hp
+    })
+}
+
+function damage(game, target, damage) {
+    target.hp -= damage;
+    if (target.origin) {
+        var card = getCard(target.origin)
+        if (card.events.onAttacked) for (let func of card.events.onAttacked) runFunction(game, func, target)
+    }
+    addEvent(game, "damage", {
+        id: target.id,
+        damage
+    })
+}
+
+function getCharacter(game, characterId) {
+    if (!game) return;
+    for (let player of game.players) {
+        if (player.id == characterId) return player;
+        for (let minion of player.minions) {
+            if (minion.id == characterId) return minion;
+        }
+    }
+}
+
+function getOpponent(game, playerId) {
+    for (let player of game.players) {
+        if (player.id != playerId) return player;
+    }
+}
+
+function playSpell(gameId, userId, info) {
+
+    info = JSON.parse(info)
+    var game = getGame(gameId)
+    if (!game) return
+    for (let player of game.players) {
+        if (player.id == userId) {
+            var card = getCard(player.cards[info.index])
+            if (!card || card.mana > player.manaLeft) return
+
+            if (card.type == "targetSpell") {
+                if (card.events.action) {
+                    var target = getCharacter(game, info.target)
+                    for (let func of card.events.action) {
+                        runFunction(game, func, target)
+                    }
+                }
+            } else {
+                // AOE spell 
+                if (card.events.action) {
+                    for (let func of card.events.action) {
+                        runFunction(game, func, player)
+                    }
+                }
+            }
+
+            player.manaLeft -= card.mana;
+            player.cards.splice(info.index, 1);
+
+
+            addEvent(game, "card_used", {
+                player: player.id,
+                index: info.index,
+                card: card.id
+            })
+            endOfAction(gameId)
+        }
+    }
+
+}
+
+function spawnMinion(game, card, owner) {
+    var minion = clone(MINION)
+
+    minion.id = nanoid()
+    minion.name = card.name
+    minion.owner = owner.id
+    minion.hp = card.hp
+    minion.damage = card.damage
+    minion.isAttacking = false
+    minion.hasAttacked = false
+    minion.hasBeenAttacked = false;
+    minion.spawnRound = game.round;
+    minion.origin = card.id
+    minion.element = card.element
+    minion.canSacrifice = false;
+
+    if (card.events.onPlayedTarget) {
+        if (Object.keys(card.events.onPlayedTarget).length > 0) minion.battlecryActive = true;
+    }
+
+    if (card.events.onPlayed) {
+        for (let func of card.events.onPlayed) {
+            runFunction(game, func, owner)
+            endOfAction(game.id)
+        }
+    }
+
+    owner.minions.push(minion)
+
+    addEvent(game, "minion_spawned", {
+        id: minion.id
+    })
+}
+
 function playMinion(gameId, userId, cardIndex) {
     var game = getGame(gameId)
 
@@ -852,30 +1116,13 @@ function playMinion(gameId, userId, cardIndex) {
 
                 // Player has card in their hand
                 if (player.manaLeft >= card.mana) {
-
+                    spawnMinion(game, card, player)
                     player.manaLeft = Number(player.manaLeft) - Number(card.mana);
                     player.cards.splice(cardIndex, 1)
-                    var minion = clone(MINION)
-
-                    minion.id = nanoid()
-                    minion.owner = player.id
-                    minion.hp = card.hp
-                    minion.damage = card.damage
-                    minion.isAttacking = false
-                    minion.hasAttacked = false
-                    minion.hasBeenAttacked = false;
-                    minion.spawnRound = game.round;
-                    minion.origin = card.id
-                    minion.element = card.element
-                    minion.canSacrifice = false;
-
-                    player.minions.push(minion)
                     addEvent(game, "card_used", {
                         player: player.id,
-                        index: cardIndex
-                    })
-                    addEvent(game, "minion_spawned", {
-                        id: minion.id
+                        index: cardIndex,
+                        card: card.id
                     })
                 }
 
@@ -902,6 +1149,8 @@ function attack(gameId, playerId, minionId, targetId) {
         }
     }
 
+    if (!target || !attacker) return
+
     var hasTaunt = false;
     for (let player of game.players) {
         if (player.id == target.id || player.id == target.owner) {
@@ -914,8 +1163,18 @@ function attack(gameId, playerId, minionId, targetId) {
     if (attacker.owner == playerId) {
         if (!hasTaunt || target.element == "taunt") {
             if (!attacker.hasAttacked && (attacker.spawnRound != game.round || attacker.element == "rush")) {
-                target.hp -= attacker.damage;
-                if (target.damage) attacker.hp -= target.damage;
+
+                addEvent(game, "attack", {
+                    from: attacker.id,
+                    to: target.id
+                })
+
+                damage(game, target, attacker.damage)
+
+                if (target.damage) {
+                    damage(game, attacker, target.damage)
+
+                }
                 attacker.hasAttacked = true;
             }
         }
@@ -924,6 +1183,8 @@ function attack(gameId, playerId, minionId, targetId) {
     endOfAction(gameId)
 }
 
+
+
 function endOfAction(gameId) {
     var game = getGame(gameId)
 
@@ -931,10 +1192,16 @@ function endOfAction(gameId) {
         for (let i = 0; i < player.minions.length; i++) {
             var minion = player.minions[i]
             if (minion.hp <= 0) {
+                var card = getCard(minion.origin)
+
                 addEvent(game, "minion_death", {
                     minion: minion.id
                 })
                 player.minions.splice(i, 1)
+
+                if (card.events.onDeath)
+                    for (let func of card.events.onDeath) runFunction(game, func, player)
+                endOfAction(game.id)
             }
         }
         if (player.hp <= 0) {
@@ -972,6 +1239,7 @@ function matchmake() {
 // Game server
 wss.on("connection", (ws, req) => {
     ws.id = req.headers['sec-websocket-key'];
+    ws.send(Pack("version", SERVER_VERSION))
     ws.on("close", () => {
         if (matchmaking[ws.id]) {
             delete matchmaking[ws.id]
@@ -1017,6 +1285,12 @@ wss.on("connection", (ws, req) => {
                 break;
             case "play_minion":
                 if (gameId) playMinion(gameId, userId, package.packet)
+                break;
+            case "play_spell":
+                if (gameId) playSpell(gameId, userId, package.packet)
+                break;
+            case "battlecry":
+                if (gameId) battlecry(gameId, userId, package.packet)
                 break;
             case "end_turn":
                 if (gameId) {

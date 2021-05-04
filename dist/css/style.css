@@ -581,20 +581,29 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
     position: relative;
 }
 
+#developer-icon-user-page {
+    position: absolute;
+    height: 30px;
+    left: 5px;
+    top: 4px;
+    fill: red;
+}
+
 #profile-tag {
     display: block;
     position: absolute;
     right: 20px;
     top: 20px;
-    border-radius: 7px;
+    border-radius: 5px;
     height: 40px;
-    width: 110px;
-    border: solid 1px var(--green);
-    color: var(--green);
+    width: 140px;
+    border: solid 2px var(--red);
+    color: var(--red);
     text-align: center;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 20px;
-    line-height: 36px;
+    line-height: 37px;
+    padding-left: 30px;
 }
 
 #warning-message {
@@ -861,6 +870,10 @@ textarea:focus, input:focus {
     width: calc(600px - 30px);
 }
 
+#events {
+    width: 400px;
+}
+
 #users-panel {
     float: right;
     width: 300px;
@@ -876,7 +889,7 @@ textarea:focus, input:focus {
 
 #users-list {
     overflow: auto;
-    height: 500px;
+    max-height: 500px;
     display: block;
     border-radius: 5px;
 }
@@ -939,6 +952,14 @@ textarea:focus, input:focus {
     position: absolute;
     top: 20px;
     left: 20px;
+}
+
+.user-list-admin {
+    fill: var(--red);
+    height: 20px;
+    position: relative;
+    top: 15px;
+    left: 40px;
 }
 
 .user-list-username {

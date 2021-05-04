@@ -120,7 +120,7 @@ onCardsReady = () => {
 
 var changesDone = 0;
 
-const MINON_EVENTS = ["onPlayed", "everyRound", "onDeath", "onAttacked"];
+const MINON_EVENTS = ["onPlayedTarget", "onPlayed", "everyRound", "onDeath", "onAttacked"];
 
 const SPELL_EVENTS = ["action"];
 
@@ -176,12 +176,23 @@ function loadEvents() {
     eventsEl.innerHTML = "";
 
     const cardFunctions = [
-        "damageEveryone",
-        "damageRandom",
-        "healEveryone",
-        "healRandom",
-        "spawn",
-    ];
+        "increaseTargetAttack",
+        "damageTarget",
+        "damageTargetUnit",
+        "damageTargetOpponent",
+        "damageRandomAlly",
+        "damageRandomOpponent",
+        "damageEveryOpponent",
+        "healTarget",
+        "healRandomAlly",
+        "healEveryAlly",
+        "spawnMinion",
+        "gainMana",
+        "drawAmountCards",
+        "drawCard",
+    ].sort();
+
+
 
     let functionsDropDown = "";
     for (let cardFunction of cardFunctions) {

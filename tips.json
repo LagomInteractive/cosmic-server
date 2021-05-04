@@ -1,0 +1,16 @@
+[
+    {
+        "title": "The tip title",
+        "category": "Beginner tips",
+        "body": "Sed ut perspiciatis <b>Bold text!</b>unde omnis iste ENTER RIGHT THERE --> \n <-- ENTER RIGHT THERE natus error sit voluptatem",
+        "content": "video_file.mp4",
+        "content-type": "video"
+    },
+    {
+        "title": "Another post",
+        "category": "Beginner tips",
+        "body": "Sed ut perspiciatis <b>Bold text!</b>unde omnis iste ENTER RIGHT THERE --> \n <-- ENTER RIGHT THERE natus error sit voluptatem",
+        "content": "image_name.png",
+        "content-type": "image"
+    }
+]
