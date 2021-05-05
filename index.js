@@ -2,7 +2,7 @@
  * COSMIC game server, 2021 Olle Kaiser
  */
 
-const SERVER_VERSION = "2.4";
+const SERVER_VERSION = "2.6";
 const game_port = 8881;
 const website_port = 8882;
 
@@ -96,6 +96,10 @@ for (let page of ["home", "cards", "download", "source", "login"]) {
         });
     });
 }
+
+app.get("/todo", (req, res) => {
+    res.end(fs.readFileSync("TODO.md"));
+})
 
 app.get("/cards/edit/*", (req, res) => {
     res.render("edit", {
@@ -548,7 +552,7 @@ const PLAYER = {
     minions: [],
     buff: {
         sacrifices: 0,
-        element: null
+        element: "nova"
     },
     isAttacking: false,
     hasAttacked: false,
@@ -600,19 +604,9 @@ function createNewGame(user1, user2 = false) {
     game.gameStarted = Date.now()
 
 
-    //var deckID = "dSuG_9Le2bJ1b-gtbgCuo"
-    var deckID = "dSuG_9Le2bJ1b-gtbgCuo"
-    //var deckID = "nZ4PTjcdSBf5AIMX3n0fi"
-    var deck = db.get("decks").find({ id: deckID }).value()
+    //var deckID = "LSg-i8pSnQrORTEnrFBb9" // Iszy
+    //var deckID = "99ZUTIj2CraDV-OOxPxte" // OLLES
 
-    for (let key in deck.cards) {
-        for (let i = 0; i < Number(deck.cards[key]); i++) {
-            for (let player of game.players) {
-                player.deck.push(Number(key))
-            }
-
-        }
-    }
 
     for (let player of game.players) {
         player.deck = shuffle(player.deck)
@@ -655,6 +649,7 @@ function startGame(id) {
     for (let player of game.players) {
         dealCards(id, player.id, 5);
         player.hp = 30;
+        player.maxHp = player.hp;
     }
 
     console.log("Starting game with " + game.players[0].name + " and " + game.players[1].name)
@@ -738,9 +733,33 @@ function nextTurn(id) {
             attackingPlayer = player.id;
             // Give the attacking player a new card at the start of the round
             dealCards(id, player.id)
-            player.totalMana = game.round > 9 ? 9 : game.round
+            player.totalMana = 9//game.round > 9 ? 9 : game.round
             player.manaLeft = player.totalMana
 
+            // Add buff
+            if (player.buff) {
+                if (player.buff.sacrifices >= 3) {
+                    switch (player.buff.element) {
+                        case "lunar":
+                            player.totalMana += 2;
+                            player.manaLeft += 2;
+                            break;
+                        case "solar":
+                            for (let minion of player.minions) {
+                                heal(game, minion, 2)
+                            }
+                            break;
+                        case "zenith":
+                            dealCards(game.id, player.id, 1)
+                            break;
+                        case "nova":
+                            for (let minion of player.minions) {
+                                changeAttackDamage(game, minion, 1)
+                            }
+                            break;
+                    }
+                }
+            }
         }
 
         player.isAttacking = player.turn
@@ -754,7 +773,7 @@ function nextTurn(id) {
                 var minionCard = getCard(minion.origin)
                 if (minionCard.events.everyRound)
                     for (let func of minionCard.events.everyRound) {
-                        runFunction(game, func, player)
+                        runFunction(game, func, false, player)
                         endOfAction(game.id)
                     }
             }
@@ -808,6 +827,7 @@ function dealCards(game_id, player_id, amount = 1) {
                     // Delete the card from the players deck
                     player.deck.splice(0, 1)
                 } else {
+                    console.log("Player has no cards left")
                     // PLAYER HAS RUN OUT OF CARDS TODO:
                 }
             }
@@ -869,20 +889,34 @@ function getGameIdFromUserId(user_id) {
     return null
 }
 
-function createBot() {
+function createBot(deck) {
     var bot = clone(PLAYER)
     // Player 1 will be attacking first.
     // When the round start, the attacking player is flipped
     bot.isBot = true;
     bot.name = "Bot"
     bot.id = nanoid()
+    addDeck(bot, deck)
     return bot;
+}
+
+function addDeck(player, deck) {
+
+    // If deck is missing
+    if (!deck) deck = db.get("decks").find({ id: '99ZUTIj2CraDV-OOxPxte' }).value()
+
+    for (let key in deck.cards) {
+        for (let i = 0; i < Number(deck.cards[key]); i++) {
+            player.deck.push(Number(key));
+        }
+    }
 }
 
 function createPlayer(user) {
 
     var player = clone(PLAYER)
 
+    addDeck(player, user.deck)
     player.name = user.profile.username
     player.id = user.profile.id
     player.profile = user.profile
@@ -904,6 +938,41 @@ function getCard(cardId) {
     return cards.get("cards").find({ id: String(cardId) }).value()
 }
 
+const ELEMENTS = ["lunar", "solar", "zenith", "nova"]
+
+function sacrifice(gameId, userId, minionId) {
+    var game = getGame(gameId)
+    if (!game) return
+    var player = getCharacter(game, userId)
+    var minion = getCharacter(game, minionId)
+
+
+    if (player.turn &&
+        // If the minion has ever attacked someone, it cannot be sacrificed
+        !minion.hasEverAttacked
+        // Only an elemental minion can be sacrificed
+        && ELEMENTS.indexOf(minion.element) != -1) {
+        addEvent(game, "minion_sacrificed", {
+            id: minion.id
+        })
+
+        // Delete the minion from the player.
+        for (let i = 0; i < player.minions.length; i++) {
+            if (player.minions[i].id == minionId) player.minions.splice(i, 1);
+        }
+
+        if (player.buff.element == minion.element) {
+            player.buff.sacrifices++;
+            if (player.buff.sacrifices > 5) player.buff.sacrifices = 5;
+        } else player.buff = {
+            element: minion.element,
+            sacrifices: 1
+        }
+    }
+
+    emitGameUpdate(game)
+}
+
 function battlecry(gameId, userId, info) {
 
     info = JSON.parse(info)
@@ -915,12 +984,16 @@ function battlecry(gameId, userId, info) {
 
     if (player && origin && target) {
         if (origin.battlecryActive) {
-            origin.battlecryActive = false;
+
             var originCard = getCard(origin.origin)
+            // Success is true if any of the functions run. If no functions run, the user 
+            // most likley did a mistake and no actions where done, so they get to try again.
+            var success = false;
             for (let func of originCard.events.onPlayedTarget) {
-                runFunction(game, func, target)
+                if (runFunction(game, func, target, player)) success = true;
                 endOfAction(game.id)
             }
+            if (success) origin.battlecryActive = false;
         }
     }
 
@@ -929,29 +1002,52 @@ function battlecry(gameId, userId, info) {
 }
 
 
+function changeAttackDamage(game, target, damageAmount) {
+    target.damage = Number(target.damage) + Number(damageAmount);
+    if (target.damage < 0) target.damage = 0;
+    addEvent(game, "damage_change", {
+        id: target.id,
+        change: damageAmount
+    })
+}
+
 /**
  * Run a card function from an event
  * @param {*} game The game the function is run in
  * @param {*} func The function
  * @param {*} target The target character or if not a target function the player sending it.
  */
-function runFunction(game, func, target = null) {
+function runFunction(game, func, target = null, player = null) {
+    console.log("Function run: " + func.func + " , val: " + func.value)
     func.value = Number(func.value)
     switch (func.func) {
-        case "increaseTargetAttack":
-            if (target.origin)
-                target.damage = Number(target.damage) + Number(func.value);
+        case "changeTargetAttack":
+            if (target.origin) {
+                changeAttackDamage(game, target, func.value)
+            }
             break;
         case "damageTarget":
             damage(game, target, func.value)
             break;
         case "damageRandomAlly":
-            var targetIndex = Math.floor(Math.random() * target.minions.length) - 1
-            var finalTarget = targetIndex == -1 ? target : target.minions[targetIndex]
-            damage(game, finalTarget, func.value)
+            var targetIndex = Math.floor(Math.random() * player.minions.length) - 1
+            var target = targetIndex == -1 ? player : player.minions[targetIndex]
+            damage(game, target, func.value)
             break;
-        case "damageRandomAlly":
-            var opponent = getOpponent(game, target.id)
+        case "changeAllyUnitsMaxHp":
+            for (let minion of player.minions) {
+                minion.maxHp = Number(minion.maxHp) + func.value;
+                heal(game, minion, func.value)
+            }
+            break;
+        case "damageRandomAllyUnit":
+            if (player.minions.length == 0) return false;
+            var targetIndex = Math.floor(Math.random() * player.minions.length)
+            var target = player.minions[targetIndex]
+            damage(game, target, func.value)
+            break;
+        case "damageEveryOpponent":
+            var opponent = getOpponent(game, player.id)
             damage(game, opponent, func.value)
             for (let minion of opponent.minions) {
                 damage(game, minion, func.value)
@@ -960,42 +1056,107 @@ function runFunction(game, func, target = null) {
         case "healTarget":
             heal(game, target, func.value)
             break;
+        case "changeTargetMaxHp":
+            target.maxHp = Number(target.maxHp) + func.value
+            heal(game, target, func.value);
+            break;
         case "healRandomAlly":
-            var targetIndex = Math.floor(Math.random() * target.minions.length) - 1
-            var finalTarget = targetIndex == -1 ? target : target.minions[targetIndex]
-            heal(game, finalTarget, func.value)
+            var targetIndex = Math.floor(Math.random() * player.minions.length) - 1
+            var target = targetIndex == -1 ? player : player.minions[targetIndex]
+            heal(game, target, func.value)
             break;
         case "healEveryAlly":
-            heal(game, target, func.value)
-            for (let minion of target.minions) {
+            heal(game, player, func.value)
+            for (let minion of player.minions) {
                 heal(game, minion, func.value)
             }
             break;
         case "spawnMinion":
             var card = getCard(func.value)
-            spawnMinion(game, card, target)
+            spawnMinion(game, card, player)
             break;
         case "gainMana":
-            target.manaLeft += func.value;
+            player.manaLeft += func.value;
             break;
         case "drawAmountCards":
-            dealCards(game.id, target.id, func.value);
+            dealCards(game.id, player.id, func.value);
             break;
         case "drawCard":
-            target.cards.push(func.value)
+            player.cards.push(func.value)
             addEvent(game, "player_deal_card", {
-                player: target.id,
+                player: player.id,
                 card: func.value
             })
+            break;
+        case "damageTargetUnit":
+            if (target.origin) {
+                damage(game, target, func.value)
+            } else return false;
+            break;
+        case "damageOpponent":
+            var opponent = getOpponent(game, player.id)
+            damage(game, opponent, func.value)
+            break;
+        case "damageRandomOpponent":
+            var opponent = getOpponent(game, player.id)
+            var targetIndex = Math.floor(Math.random() * opponent.minions.length) - 1
+            var target = targetIndex == -1 ? opponent : opponent.minions[targetIndex]
+            damage(game, target, func.value)
+            break;
+        case "damageRandomEnemyUnit":
+            var opponent = getOpponent(game, player.id)
+            if (opponent.minions.length == 0) return false;
+            var targetIndex = Math.floor(Math.random() * opponent.minions.length)
+            var target = opponent.minions[targetIndex]
+            damage(game, target, func.value)
+            break;
+        case "healPlayer":
+            player.hp += func.value
+            if (player.hp > 30) player.hp = 30;
+            break;
+        case "damageAllUnits":
+            var pool = []
+            for (let p of game.players) {
+                for (let minion of p.minions) {
+                    pool.push(minion)
+                }
+            }
+            for (let minion of pool) {
+                damage(game, minion, func.value)
+            }
+            break;
+        case "damageRandomAnything":
+            var pool = []
+            for (let player of game.players) {
+                pool.push(player)
+                for (let minion of player.minions) {
+                    pool.push(minion)
+                }
+            }
+            var target = pool[Math.floor(Math.random() * pool.length)]
+            damage(game, target, func.value)
+            break;
+        case "damageRandomUnit":
+            var allUnits = []
+            for (let player of game.players) {
+                for (let minion of player.minions) {
+                    allUnits.push(minion)
+                }
+            }
+            if (allUnits.length == 0) return false;
+            var target = allUnits[Math.floor(Math.random() * allUnits.length)]
+            damage(game, target, func.value)
             break;
     }
 
     endOfAction(game.id)
+    return true;
 }
 
 
 function heal(game, target, hp) {
     target.hp += hp;
+    if (target.hp > target.maxHp) target.hp = target.maxHp;
     addEvent(game, "heal", {
         id: target.id,
         hp
@@ -1003,15 +1164,22 @@ function heal(game, target, hp) {
 }
 
 function damage(game, target, damage) {
+    if (!target) return;
     target.hp -= damage;
-    if (target.origin) {
-        var card = getCard(target.origin)
-        if (card.events.onAttacked) for (let func of card.events.onAttacked) runFunction(game, func, target)
-    }
     addEvent(game, "damage", {
         id: target.id,
         damage
     })
+
+    var owner = target.owner ? getCharacter(game, target.owner) : target
+
+    endOfAction(game.id)
+    // emitGameUpdate(game)
+
+    if (target.origin) {
+        var card = getCard(target.origin)
+        if (card.events.onAttacked) for (let func of card.events.onAttacked) runFunction(game, func, target, owner)
+    }
 }
 
 function getCharacter(game, characterId) {
@@ -1025,8 +1193,14 @@ function getCharacter(game, characterId) {
 }
 
 function getOpponent(game, playerId) {
+    var character = getCharacter(game, playerId)
     for (let player of game.players) {
-        if (player.id != playerId) return player;
+        if (!character.origin && player.id != playerId) return player;
+        for (let minion of player.minions) {
+            if (minion.id == character.id) {
+                return getOpponent(game, player.id)
+            }
+        }
     }
 }
 
@@ -1040,22 +1214,6 @@ function playSpell(gameId, userId, info) {
             var card = getCard(player.cards[info.index])
             if (!card || card.mana > player.manaLeft) return
 
-            if (card.type == "targetSpell") {
-                if (card.events.action) {
-                    var target = getCharacter(game, info.target)
-                    for (let func of card.events.action) {
-                        runFunction(game, func, target)
-                    }
-                }
-            } else {
-                // AOE spell 
-                if (card.events.action) {
-                    for (let func of card.events.action) {
-                        runFunction(game, func, player)
-                    }
-                }
-            }
-
             player.manaLeft -= card.mana;
             player.cards.splice(info.index, 1);
 
@@ -1065,27 +1223,46 @@ function playSpell(gameId, userId, info) {
                 index: info.index,
                 card: card.id
             })
+
+            if (card.type == "targetSpell") {
+                if (card.events.action) {
+                    var target = getCharacter(game, info.target)
+                    for (let func of card.events.action) {
+                        runFunction(game, func, target, player)
+                    }
+                }
+            } else {
+                // AOE spell 
+                if (card.events.action) {
+                    for (let func of card.events.action) {
+                        runFunction(game, func, false, player)
+                    }
+                }
+            }
+
             endOfAction(gameId)
         }
     }
 
+    emitGameUpdate(game)
 }
 
 function spawnMinion(game, card, owner) {
     var minion = clone(MINION)
 
     minion.id = nanoid()
-    minion.name = card.name
-    minion.owner = owner.id
+    minion.name = card.name // Mostly used for logging and debugging
+    minion.owner = owner.id // The player of spawned this minion
     minion.hp = card.hp
+    minion.maxHp = card.hp;
     minion.damage = card.damage
     minion.isAttacking = false
     minion.hasAttacked = false
     minion.hasBeenAttacked = false;
     minion.spawnRound = game.round;
-    minion.origin = card.id
+    minion.origin = card.id // The original card of this minion
     minion.element = card.element
-    minion.canSacrifice = false;
+    minion.hasEverAttacked = false;
 
     if (card.events.onPlayedTarget) {
         if (Object.keys(card.events.onPlayedTarget).length > 0) minion.battlecryActive = true;
@@ -1093,7 +1270,7 @@ function spawnMinion(game, card, owner) {
 
     if (card.events.onPlayed) {
         for (let func of card.events.onPlayed) {
-            runFunction(game, func, owner)
+            runFunction(game, func, false, owner)
             endOfAction(game.id)
         }
     }
@@ -1106,6 +1283,7 @@ function spawnMinion(game, card, owner) {
 }
 
 function playMinion(gameId, userId, cardIndex) {
+
     var game = getGame(gameId)
 
     for (let player of game.players) {
@@ -1116,6 +1294,7 @@ function playMinion(gameId, userId, cardIndex) {
 
                 // Player has card in their hand
                 if (player.manaLeft >= card.mana) {
+                    console.log(player.name + " spawned minion " + card.name)
                     spawnMinion(game, card, player)
                     player.manaLeft = Number(player.manaLeft) - Number(card.mana);
                     player.cards.splice(cardIndex, 1)
@@ -1151,6 +1330,9 @@ function attack(gameId, playerId, minionId, targetId) {
 
     if (!target || !attacker) return
 
+    var player = getCharacter(game, playerId)
+    if (!player.turn) return
+
     var hasTaunt = false;
     for (let player of game.players) {
         if (player.id == target.id || player.id == target.owner) {
@@ -1176,6 +1358,7 @@ function attack(gameId, playerId, minionId, targetId) {
 
                 }
                 attacker.hasAttacked = true;
+                attacker.hasEverAttacked = true;
             }
         }
     }
@@ -1187,12 +1370,12 @@ function attack(gameId, playerId, minionId, targetId) {
 
 function endOfAction(gameId) {
     var game = getGame(gameId)
-
-    for (var player of game.players) {
+    if (!game) return
+    for (let player of game.players) {
         for (let i = 0; i < player.minions.length; i++) {
-            var minion = player.minions[i]
+            let minion = player.minions[i]
             if (minion.hp <= 0) {
-                var card = getCard(minion.origin)
+                let card = getCard(minion.origin)
 
                 addEvent(game, "minion_death", {
                     minion: minion.id
@@ -1200,7 +1383,7 @@ function endOfAction(gameId) {
                 player.minions.splice(i, 1)
 
                 if (card.events.onDeath)
-                    for (let func of card.events.onDeath) runFunction(game, func, player)
+                    for (let func of card.events.onDeath) runFunction(game, func, false, player)
                 endOfAction(game.id)
             }
         }
@@ -1212,6 +1395,12 @@ function endOfAction(gameId) {
     emitGameUpdate(game)
 }
 
+function getDeck(id) {
+    var deck = db.get("decks").value()[id]
+    if (deck) return deck;
+    return false;
+}
+
 function matchmake() {
 
     var player1 = null;
@@ -1219,13 +1408,15 @@ function matchmake() {
         if (!player1) player1 = {
             profile: getUserFromID(matchmaking[key].id),
             socket: matchmaking[key].ws,
-            socketid: key
+            socketid: key,
+            deck: matchmaking[key].deck
         }
         else {
 
             var player2 = {
                 profile: getUserFromID(matchmaking[key].id),
-                socket: matchmaking[key].ws
+                socket: matchmaking[key].ws,
+                deck: matchmaking[key].deck
             }
 
             createNewGame(player1, player2)
@@ -1240,6 +1431,7 @@ function matchmake() {
 wss.on("connection", (ws, req) => {
     ws.id = req.headers['sec-websocket-key'];
     ws.send(Pack("version", SERVER_VERSION))
+
     ws.on("close", () => {
         if (matchmaking[ws.id]) {
             delete matchmaking[ws.id]
@@ -1247,7 +1439,7 @@ wss.on("connection", (ws, req) => {
         if (unityClients[ws.id]) {
             let gameId = getGameIdFromUserId(unityClients[ws.id])
             if (gameId) {
-                terminateGame(gameId);
+                terminateGame(gameId, unityClients[ws.id]);
             }
             delete onlinePings[unityClients[ws.id]]
         }
@@ -1267,7 +1459,7 @@ wss.on("connection", (ws, req) => {
         switch (package.identifier) {
             case "start_matchmaking":
                 matchmaking[ws.id] = {
-                    ws, id: userId
+                    ws, id: userId, deck: getDeck(package.packet)
                 }
                 matchmake();
                 console.log("Matchmaking pool size " + Object.keys(matchmaking).length)
@@ -1292,6 +1484,9 @@ wss.on("connection", (ws, req) => {
             case "battlecry":
                 if (gameId) battlecry(gameId, userId, package.packet)
                 break;
+            case "sacrifice":
+                if (gameId) sacrifice(gameId, userId, package.packet)
+                break;
             case "end_turn":
                 if (gameId) {
                     var game = getGame(gameId)
@@ -1301,7 +1496,8 @@ wss.on("connection", (ws, req) => {
             case "start_test":
                 createNewGame({
                     profile: getUserFromToken(package.token),
-                    socket: ws
+                    socket: ws,
+                    deck: getDeck(package.packet)
                 }, false)
                 break;
             case "concede":

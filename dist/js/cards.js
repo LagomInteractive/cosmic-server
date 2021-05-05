@@ -65,7 +65,7 @@ function loadCards(search = false) {
                     -1 &&
                     card.element
                         .toLowerCase()
-                        .indexOf(searchWord.toLowerCase() == -1) &&
+                        .indexOf(searchWord.toLowerCase()) == -1 &&
                     card.type.toLowerCase().indexOf(searchWord.toLowerCase()) ==
                     -1
                 ) {
@@ -249,7 +249,28 @@ SPELL</tspan>	</textPath>
         }
     }
 
-
-
     return svg;
+}
+
+
+function checkForCardProblems() {
+    var problems = []
+    for (var card of cards) {
+        var hasFunctions = false;
+        for (let event in card.events) {
+            for (let func of card.events[event]) {
+                if (["drawCard", "spawnMinion"].indexOf(func) != -1) {
+                    if (!getCard(func.value)) problems.push(`CRITICAL! ${card.name}: Event ${event} func ${func.func} card with ID ${func.value} does not exsit!`)
+                }
+                hasFunctions = true;
+                if (event.toLowerCase().indexOf("target") == -1) {
+                    if (card.type != "targetSpell" && func.func.toLowerCase().indexOf("target") != -1) problems.push(`${card.name} (ID:${card.id}) event: ${event}, function: ${func.func}`)
+                }
+            }
+        }
+        if (card.type != "minion" && !hasFunctions) problems.push(`${card.name} (ID:${card.id}) Spell card has no functions`)
+    }
+    var message = "No problems! 🎉"
+    if (problems.length > 0) message = problems.join("\n")
+    alert(message)
 }

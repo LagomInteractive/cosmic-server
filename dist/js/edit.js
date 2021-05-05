@@ -176,10 +176,18 @@ function loadEvents() {
     eventsEl.innerHTML = "";
 
     const cardFunctions = [
-        "increaseTargetAttack",
+        "damageRandomAnything",
+        "changeTargetMaxHp",
+        "changeAllyUnitsMaxHp",
+        "damageRandomUnit",
+        "damageRandomAllyUnit",
+        "damageAllUnits",
+        "healPlayer",
+        "changeTargetAttack",
         "damageTarget",
         "damageTargetUnit",
-        "damageTargetOpponent",
+        "damageOpponent",
+        "damageRandomEnemyUnit",
         "damageRandomAlly",
         "damageRandomOpponent",
         "damageEveryOpponent",
@@ -191,8 +199,6 @@ function loadEvents() {
         "drawAmountCards",
         "drawCard",
     ].sort();
-
-
 
     let functionsDropDown = "";
     for (let cardFunction of cardFunctions) {

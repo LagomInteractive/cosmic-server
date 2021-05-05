@@ -14,6 +14,8 @@ var entriesEl = document.getElementById("deck-entries")
 var entries = {}
 var maxDeckSize = 30;
 
+var cardDisplay = document.getElementById("card-display")
+
 var everythingLoaded = false;
 
 function loadStep(str) {
@@ -30,6 +32,13 @@ function loadStep(str) {
 
 onCardsReady = loadStep;
 onLogin = loadStep;
+
+function drawPreviewCard(card) {
+    var card = drawCard(card)
+    cardDisplay.innerHTML = ""
+    cardDisplay.appendChild(card)
+    console.log("re")
+}
 
 function loadDeck() {
 
@@ -60,7 +69,7 @@ function loadDeck() {
         if (!isDeckOwner && deck.cards[id] == 0) continue;
 
         let card = getCard(id)
-        var cardEntry = createElementFromHTML(`<div class="deck-slot"><img class="deck-slot-image" src="/img/card-images/${id}.png" alt="">
+        let cardEntry = createElementFromHTML(`<div class="deck-slot"><img class="deck-slot-image" src="/img/card-images/${id}.png" alt="">
         <div class="cover-image-gradient"></div>
         <div class="card-mana-cost">${card.mana}</div>
         <div class="card-name">${card.name}${isDeckOwner ? `<span style="color:rgb(80,80,80);"> x ${me.cards[id]}</span>` : ''}</div>
@@ -70,7 +79,19 @@ function loadDeck() {
             <button id="plus" class="material-icons icon-btn" style="float:right;">add</button>` : ""}
             <div class="amount-number">-</div>
         </div>
-        </div>`)
+        </div>
+      `)
+        cardEntry.addEventListener("mouseover", e => {
+            var bound = cardEntry.getBoundingClientRect()
+            var y = (bound.top - 390.47 / 2) - document.body.getBoundingClientRect().top
+            console.log(bound.height)
+            cardDisplay.style.top = y + "px";
+            drawPreviewCard(card)
+        })
+
+        cardEntry.addEventListener("mouseleave", e => {
+            cardDisplay.innerHTML = ""
+        })
 
         if (isDeckOwner) {
             cardEntry.querySelector("#plus").onclick = () => {
@@ -96,6 +117,8 @@ function loadDeck() {
     }
 
     setDeckValues()
+
+    console.log(deck)
 }
 
 function deleteDeck() {

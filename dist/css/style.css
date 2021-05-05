@@ -84,7 +84,7 @@ body {
     margin: 0 auto;
 }
 
-#new-card-button, #download-assets-button {
+#check-for-problems, #new-card-button, #download-assets-button {
     fill: rgb(0, 0, 0);
     color: black;
     background-color: var(--green);
@@ -92,7 +92,7 @@ body {
     top: 0px;
 }
 
-#download-assets-button {
+#check-for-problems, #download-assets-button {
     background-color: var(--header);
     color: white;
     fill: white;
@@ -674,6 +674,17 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
     border-radius: 10px;
     position: relative;
     overflow: hidden;
+}
+
+#card-display {
+    display: block;
+    position: absolute;
+    width: 278.85px;
+    height: 390.47px;
+    right: calc(50% - 600px);
+    top: calc(50vh - 390.47px);
+    z-index: 100;
+    pointer-events: none;
 }
 
 .cover-image-gradient {
