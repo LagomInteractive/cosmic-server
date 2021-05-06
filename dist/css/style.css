@@ -1019,6 +1019,10 @@ textarea:focus, input:focus {
     margin-top: -5px;
 }
 
+.note-body>a {
+    text-decoration: underline;
+}
+
 .note-body {
     display: block;
     margin: 15px;
@@ -1029,4 +1033,56 @@ textarea:focus, input:focus {
     width: 100%;
     display: block;
     border-radius: 5px;
+}
+
+.download-block {
+    display: block;
+    width: 600px;
+    background: var(--header);
+    border-radius: 10px;
+    padding-bottom: 15px;
+    margin: 0 auto;
+    position: relative;
+    margin-top: 10px;
+}
+
+#download-title {
+    display: block;
+    width: 600px;
+    font-size: 30px;
+    margin: 0 auto;
+    position: relative;
+    margin-top: 35px;
+}
+
+.title-icon {
+    height: 30px;
+    fill: white;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.download-link:hover {
+    background-color: var(--background);
+}
+
+.download-link {
+    margin: 15px;
+    position: relative;
+    margin-top: 0px;
+    top: 15px;
+    font-size: 22px;
+    padding-bottom: 2px;
+    padding: 5px;
+    display: block;
+    border-radius: 10px;
+}
+
+.download-icon {
+    display: inline-block;
+    height: 30px;
+    fill: white;
+    position: relative;
+    top: -2px;
+    margin: 10px
 }

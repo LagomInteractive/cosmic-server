@@ -348,7 +348,7 @@ app.post("/api/login", (req, res) => {
 app.get("/api/assets", (req, res) => {
     var commands = ""
     for (let card of cards.get("cards").value()) {
-        commands += `curl https://cosmic.ygstr.com/img/card-images/${card.id}.png --output ${card.id}.png<br>`
+        commands += `curl https://outlaws.ygstr.com/img/card-images/${card.id}.png --output ${card.id}.png<br>`
     }
     res.send(commands)
 })
@@ -554,6 +554,8 @@ const PLAYER = {
         sacrifices: 0,
         element: "nova"
     },
+    passive: 0,
+    outlaw: null,
     isAttacking: false,
     hasAttacked: false,
     hasBeenAttacked: false,
@@ -577,6 +579,12 @@ const MINION = {
     owner: null,
     battlecryActive: false
 }
+
+const OUTLAWS = {
+    necromancer: "necromancer",
+    mercenary: "mercenary"
+}
+
 
 // DELETE GUESTS
 /* for (let i = 0; i < db.get("users").value().length; i++) {
@@ -655,9 +663,7 @@ function startGame(id) {
     console.log("Starting game with " + game.players[0].name + " and " + game.players[1].name)
     emitGameUpdate(game)
 
-    setTimeout(() => {
-        nextTurn(id)
-    }, 500)
+    nextTurn(id)
 }
 
 function runBot(gameid) {
@@ -666,10 +672,29 @@ function runBot(gameid) {
         if (player.turn && player.isBot) {
 
             // Check if bot can play any cards
+            var affordableCards = []
             for (var i = 0; i < player.cards.length; i++) {
                 var card = getCard(player.cards[i]);
-                if (card.mana <= player.manaLeft && card.type == "minion") {
-                    playMinion(gameid, player.id, i)
+                if (card.mana <= player.manaLeft) {
+                    affordableCards.push(i)
+                }
+            }
+
+            if (affordableCards.length > 0) {
+                var cardToPlay = affordableCards[Math.floor(Math.random() * affordableCards.length)];
+                var cardId = player.cards[cardToPlay];
+                var card = getCard(cardId)
+                if (card.type == "minion") {
+                    playMinion(game.id, player.id, cardToPlay);
+                    return;
+                } else if (card.type == "aoeSpell") {
+                    playSpell(game.id, player.id, { index: cardToPlay })
+                    return
+                } else if (card.type == "targetSpell") {
+                    var opponent = getOpponent(game, player.id)
+                    var target = opponent;
+                    if (opponent.minions.length > 0) target = opponent.minions[Math.floor(Math.random() * opponent.minions.length)]
+                    playSpell(game.id, player.id, { index: cardToPlay, target: target.id })
                     return
                 }
             }
@@ -729,11 +754,15 @@ function nextTurn(id) {
     for (let player of game.players) {
         player.turn = !player.turn
         if (player.turn) {
+            // If the player passive is 5, increasePassive will not add any passives but only check if they can give the player the passive reward.
+            // Otherwise it will try again next turn.
+            if (player.outlaw == OUTLAWS.mercenary || player.passive == 5) increasePassive(game, player)
+
             if (player.isBot) attackingPlayerIsBot = true;
             attackingPlayer = player.id;
             // Give the attacking player a new card at the start of the round
-            dealCards(id, player.id)
-            player.totalMana = 9//game.round > 9 ? 9 : game.round
+            if (game.round != 1) dealCards(id, player.id)
+            player.totalMana = game.round > 9 ? 9 : game.round
             player.manaLeft = player.totalMana
 
             // Add buff
@@ -817,15 +846,9 @@ function dealCards(game_id, player_id, amount = 1) {
                 // Get the card to deal to the player
                 if (player.deck.length > 0) {
                     var card = player.deck[0]
-                    if (player.cards.length < 8) {
-                        player.cards.push(card)
-                        addEvent(game, "player_deal_card", {
-                            player: player.id,
-                            card
-                        })
-                    }
+                    if (dealCard(game, player, card))
+                        player.deck.splice(0, 1)
                     // Delete the card from the players deck
-                    player.deck.splice(0, 1)
                 } else {
                     console.log("Player has no cards left")
                     // PLAYER HAS RUN OUT OF CARDS TODO:
@@ -834,6 +857,18 @@ function dealCards(game_id, player_id, amount = 1) {
         }
     }
 
+}
+
+function dealCard(game, player, cardId) {
+    if (player.cards.length < 8) {
+        player.cards.push(cardId)
+        addEvent(game, "player_deal_card", {
+            player: player.id,
+            card: cardId
+        })
+        return true
+    }
+    return false;
 }
 
 function addEvent(game, identifier, values = {}) {
@@ -846,6 +881,7 @@ function addEvent(game, identifier, values = {}) {
 // Emit the entire game info to all players in the game
 function emitGameUpdate(g) {
 
+    g.roundTimeLeft = ((g.roundLength * 1000) - (Date.now() - g.roundStarted)) / 1000
     for (let player of g.players) {
 
         // Dont send updates to bots
@@ -889,6 +925,10 @@ function getGameIdFromUserId(user_id) {
     return null
 }
 
+function getRandomOutlaw() {
+    return Object.keys(OUTLAWS)[Math.floor(Math.random() * Object.keys(OUTLAWS).length)]
+}
+
 function createBot(deck) {
     var bot = clone(PLAYER)
     // Player 1 will be attacking first.
@@ -896,6 +936,7 @@ function createBot(deck) {
     bot.isBot = true;
     bot.name = "Bot"
     bot.id = nanoid()
+    bot.outlaw = getRandomOutlaw();
     addDeck(bot, deck)
     return bot;
 }
@@ -912,6 +953,7 @@ function addDeck(player, deck) {
     }
 }
 
+
 function createPlayer(user) {
 
     var player = clone(PLAYER)
@@ -920,6 +962,7 @@ function createPlayer(user) {
     player.name = user.profile.username
     player.id = user.profile.id
     player.profile = user.profile
+    player.outlaw = getRandomOutlaw();
 
     let playerCards = []
     for (let key in player.profile.cards) {
@@ -936,6 +979,26 @@ function createPlayer(user) {
 
 function getCard(cardId) {
     return cards.get("cards").find({ id: String(cardId) }).value()
+}
+
+function increasePassive(game, player) {
+    player.passive++;
+    if (player.passive > 5) player.passive = 5;
+
+    console.log("Increased passive for " + player.name)
+
+    if (player.passive >= 5) {
+        if (player.cards.length < 8) {
+            player.passive = 0;
+            if (player.outlaw == OUTLAWS.necromancer) {
+                dealCard(game, player, 176)
+            }
+            if (player.outlaw == OUTLAWS.mercenary) {
+                dealCard(game, player, 177)
+            }
+        }
+
+    }
 }
 
 const ELEMENTS = ["lunar", "solar", "zenith", "nova"]
@@ -956,6 +1019,10 @@ function sacrifice(gameId, userId, minionId) {
             id: minion.id
         })
 
+        if (player.outlaw == OUTLAWS.necromancer) {
+            increasePassive(game, player)
+        }
+
         // Delete the minion from the player.
         for (let i = 0; i < player.minions.length; i++) {
             if (player.minions[i].id == minionId) player.minions.splice(i, 1);
@@ -970,6 +1037,7 @@ function sacrifice(gameId, userId, minionId) {
         }
     }
 
+    endOfAction(game.id)
     emitGameUpdate(game)
 }
 
@@ -1206,13 +1274,14 @@ function getOpponent(game, playerId) {
 
 function playSpell(gameId, userId, info) {
 
-    info = JSON.parse(info)
+    if (typeof info == "string") info = JSON.parse(info)
     var game = getGame(gameId)
     if (!game) return
     for (let player of game.players) {
         if (player.id == userId) {
             var card = getCard(player.cards[info.index])
-            if (!card || card.mana > player.manaLeft) return
+            if (!card || card.mana > player.manaLeft) break
+            if (!player.turn) break;
 
             player.manaLeft -= card.mana;
             player.cards.splice(info.index, 1);
@@ -1233,9 +1302,16 @@ function playSpell(gameId, userId, info) {
                 }
             } else {
                 // AOE spell 
+                if (card.id == 177) {
+                    var opponent = getOpponent(game, player.id)
+                    if (opponent.cards.length > 0) {
+                        var randomCard = opponent.cards[Math.floor(Math.random() * opponent.cards.length)]
+                        dealCard(game, player, randomCard)
+                    }
+                }
                 if (card.events.action) {
                     for (let func of card.events.action) {
-                        runFunction(game, func, false, player)
+                        runFunction(game, func, player, player)
                     }
                 }
             }
@@ -1263,6 +1339,9 @@ function spawnMinion(game, card, owner) {
     minion.origin = card.id // The original card of this minion
     minion.element = card.element
     minion.hasEverAttacked = false;
+
+    minion.riposte = card.events.onAttacked && card.events.onAttacked.length > 0;
+    minion.deathrattle = card.events.onDeath && card.events.onDeath.length > 0;
 
     if (card.events.onPlayedTarget) {
         if (Object.keys(card.events.onPlayedTarget).length > 0) minion.battlecryActive = true;
@@ -1294,15 +1373,16 @@ function playMinion(gameId, userId, cardIndex) {
 
                 // Player has card in their hand
                 if (player.manaLeft >= card.mana) {
-                    console.log(player.name + " spawned minion " + card.name)
-                    spawnMinion(game, card, player)
-                    player.manaLeft = Number(player.manaLeft) - Number(card.mana);
-                    player.cards.splice(cardIndex, 1)
+
                     addEvent(game, "card_used", {
                         player: player.id,
                         index: cardIndex,
                         card: card.id
                     })
+                    spawnMinion(game, card, player)
+                    player.manaLeft = Number(player.manaLeft) - Number(card.mana);
+                    player.cards.splice(cardIndex, 1)
+
                 }
 
             }
@@ -1355,7 +1435,6 @@ function attack(gameId, playerId, minionId, targetId) {
 
                 if (target.damage) {
                     damage(game, attacker, target.damage)
-
                 }
                 attacker.hasAttacked = true;
                 attacker.hasEverAttacked = true;
@@ -1381,6 +1460,11 @@ function endOfAction(gameId) {
                     minion: minion.id
                 })
                 player.minions.splice(i, 1)
+
+                var opponent = getOpponent(game, player.id)
+                if (opponent.outlaw == OUTLAWS.necromancer) {
+                    increasePassive(game, opponent)
+                }
 
                 if (card.events.onDeath)
                     for (let func of card.events.onDeath) runFunction(game, func, false, player)
@@ -1549,8 +1633,6 @@ wss.on("connection", (ws, req) => {
                     ws.send(Pack("new_token", token))
                 }
                 break;
-
-
         }
 
     })
