@@ -1,8 +1,10 @@
 /**
- * COSMIC game server, 2021 Olle Kaiser
+ * COSMIC server for Outlaws game and website, 2021 Olle Kaiser
  */
 
-const SERVER_VERSION = "2.6";
+const SERVER_VERSION = "2.8";
+const DEFAULT_DECK = "BCBMo6PXLEFqO5_rxv8Fh"
+
 const game_port = 8881;
 const website_port = 8882;
 
@@ -594,7 +596,7 @@ const OUTLAWS = {
         console.log("Deleted")
     }
 }
-*/
+ */
 
 
 // Create a new online or bot game
@@ -676,25 +678,24 @@ function runBot(gameid) {
             for (var i = 0; i < player.cards.length; i++) {
                 var card = getCard(player.cards[i]);
                 if (card.mana <= player.manaLeft) {
-                    affordableCards.push(i)
+                    affordableCards.push(card.id)
                 }
             }
 
             if (affordableCards.length > 0) {
-                var cardToPlay = affordableCards[Math.floor(Math.random() * affordableCards.length)];
-                var cardId = player.cards[cardToPlay];
+                var cardId = affordableCards[Math.floor(Math.random() * affordableCards.length)];
                 var card = getCard(cardId)
                 if (card.type == "minion") {
-                    playMinion(game.id, player.id, cardToPlay);
+                    playMinion(game.id, player.id, cardId);
                     return;
                 } else if (card.type == "aoeSpell") {
-                    playSpell(game.id, player.id, { index: cardToPlay })
+                    playSpell(game.id, player.id, { id: cardId })
                     return
                 } else if (card.type == "targetSpell") {
                     var opponent = getOpponent(game, player.id)
                     var target = opponent;
                     if (opponent.minions.length > 0) target = opponent.minions[Math.floor(Math.random() * opponent.minions.length)]
-                    playSpell(game.id, player.id, { index: cardToPlay, target: target.id })
+                    playSpell(game.id, player.id, { id: cardId, target: target.id })
                     return
                 }
             }
@@ -944,7 +945,7 @@ function createBot(deck) {
 function addDeck(player, deck) {
 
     // If deck is missing
-    if (!deck) deck = db.get("decks").find({ id: '99ZUTIj2CraDV-OOxPxte' }).value()
+    if (!deck) deck = db.get("decks").find({ id: DEFAULT_DECK }).value()
 
     for (let key in deck.cards) {
         for (let i = 0; i < Number(deck.cards[key]); i++) {
@@ -962,7 +963,7 @@ function createPlayer(user) {
     player.name = user.profile.username
     player.id = user.profile.id
     player.profile = user.profile
-    player.outlaw = getRandomOutlaw();
+    player.outlaw = user.outlaw;
 
     let playerCards = []
     for (let key in player.profile.cards) {
@@ -1090,7 +1091,7 @@ function runFunction(game, func, target = null, player = null) {
     func.value = Number(func.value)
     switch (func.func) {
         case "changeTargetAttack":
-            if (target.origin) {
+            if (target && target.origin) {
                 changeAttackDamage(game, target, func.value)
             }
             break;
@@ -1141,6 +1142,7 @@ function runFunction(game, func, target = null, player = null) {
             break;
         case "spawnMinion":
             var card = getCard(func.value)
+            console.log("Spawning " + card.name)
             spawnMinion(game, card, player)
             break;
         case "gainMana":
@@ -1157,7 +1159,7 @@ function runFunction(game, func, target = null, player = null) {
             })
             break;
         case "damageTargetUnit":
-            if (target.origin) {
+            if (target && target.origin) {
                 damage(game, target, func.value)
             } else return false;
             break;
@@ -1279,17 +1281,18 @@ function playSpell(gameId, userId, info) {
     if (!game) return
     for (let player of game.players) {
         if (player.id == userId) {
-            var card = getCard(player.cards[info.index])
+            var card = getCard(info.id)
             if (!card || card.mana > player.manaLeft) break
             if (!player.turn) break;
+            if (player.cards.indexOf(Number(info.id)) == -1) break;
 
             player.manaLeft -= card.mana;
-            player.cards.splice(info.index, 1);
+            player.cards.splice(player.cards.indexOf(Number(info.id)), 1);
 
 
             addEvent(game, "card_used", {
                 player: player.id,
-                index: info.index,
+
                 card: card.id
             })
 
@@ -1324,6 +1327,7 @@ function playSpell(gameId, userId, info) {
 }
 
 function spawnMinion(game, card, owner) {
+    if (owner.minions.length >= 7) return
     var minion = clone(MINION)
 
     minion.id = nanoid()
@@ -1354,6 +1358,8 @@ function spawnMinion(game, card, owner) {
         }
     }
 
+    console.log(("Minion successfully spawned! " + minion.name))
+
     owner.minions.push(minion)
 
     addEvent(game, "minion_spawned", {
@@ -1361,27 +1367,26 @@ function spawnMinion(game, card, owner) {
     })
 }
 
-function playMinion(gameId, userId, cardIndex) {
+function playMinion(gameId, userId, cardId) {
 
     var game = getGame(gameId)
 
     for (let player of game.players) {
         if (player.id == userId) {
-            var card = getCard(player.cards[Number(cardIndex)])
+            var card = getCard(cardId)
 
-            if (card.type == "minion") {
+            if (card.type == "minion" && player.cards.indexOf(Number(card.id)) != -1) {
 
                 // Player has card in their hand
-                if (player.manaLeft >= card.mana) {
+                if (player.manaLeft >= card.mana && player.minions.length < 7) {
 
                     addEvent(game, "card_used", {
                         player: player.id,
-                        index: cardIndex,
                         card: card.id
                     })
                     spawnMinion(game, card, player)
                     player.manaLeft = Number(player.manaLeft) - Number(card.mana);
-                    player.cards.splice(cardIndex, 1)
+                    player.cards.splice(player.cards.indexOf(Number(card.id)), 1)
 
                 }
 
@@ -1493,14 +1498,16 @@ function matchmake() {
             profile: getUserFromID(matchmaking[key].id),
             socket: matchmaking[key].ws,
             socketid: key,
-            deck: matchmaking[key].deck
+            outlaw: matchmaking[key].outlaw,
+            deck: getDeck(matchmaking[key].deck)
         }
         else {
 
             var player2 = {
                 profile: getUserFromID(matchmaking[key].id),
                 socket: matchmaking[key].ws,
-                deck: matchmaking[key].deck
+                outlaw: matchmaking[key].outlaw,
+                deck: getDeck(matchmaking[key].deck)
             }
 
             createNewGame(player1, player2)
@@ -1541,14 +1548,7 @@ wss.on("connection", (ws, req) => {
         var gameId = getGameIdFromUserId(userId)
 
         switch (package.identifier) {
-            case "start_matchmaking":
-                matchmaking[ws.id] = {
-                    ws, id: userId, deck: getDeck(package.packet)
-                }
-                matchmake();
-                console.log("Matchmaking pool size " + Object.keys(matchmaking).length)
-                break;
-            case "stop_matchmaking":
+            case "cancel_search":
                 if (matchmaking[ws.id]) delete matchmaking[ws.id]
                 console.log("Matchmaking pool size " + Object.keys(matchmaking).length)
                 break;
@@ -1577,12 +1577,26 @@ wss.on("connection", (ws, req) => {
                     for (let player of game.players) if (player.id == userId && player.turn) nextTurn(gameId)
                 }
                 break;
-            case "start_test":
-                createNewGame({
-                    profile: getUserFromToken(package.token),
-                    socket: ws,
-                    deck: getDeck(package.packet)
-                }, false)
+            case "search_game":
+                var searchOptions = JSON.parse(package.packet)
+
+                if (searchOptions.gameType == "Pvp") {
+                    matchmaking[ws.id] = {
+                        ws, id: userId, deck: searchOptions.deck, outlaw: searchOptions.outlaw
+                    }
+                    matchmake();
+                    console.log("Matchmaking pool size " + Object.keys(matchmaking).length)
+                } else {
+                    // Campaign search
+                    createNewGame({
+                        profile: getUserFromToken(package.token),
+                        socket: ws,
+                        deck: getDeck(searchOptions.deck),
+                        outlaw: searchOptions.outlaw
+                    }, false)
+                }
+
+
                 break;
             case "concede":
                 terminateGame(gameId, userId)
@@ -1595,7 +1609,15 @@ wss.on("connection", (ws, req) => {
                             var token = createLoginToken(user.id);
                             ws.send(Pack("new_token", token))
                         } else {
-                            ws.send(Pack("login_fail"))
+                            ws.send(Pack("login_fail", "Wrong password for " + user.username))
+                        }
+                    })
+                } else {
+                    createUser(package.packet, package.token, res => {
+                        if (res.success) {
+                            ws.send(Pack("new_token", res.token))
+                        } else {
+                            ws.send(Pack("login_fail", res.reason))
                         }
                     })
                 }
@@ -1603,34 +1625,14 @@ wss.on("connection", (ws, req) => {
             case "login_with_token":
                 var existingToken = db.get("tokens").find({ token: package.token }).value()
                 if (existingToken) {
-                    let user = getUserFromID(existingToken.user)
-                    if (unityClients[ws.id]) delete onlinePings[unityClients[ws.id]]
+                    let user = getUnityUser(existingToken.user)
+                    //if (unityClients[ws.id]) delete onlinePings[unityClients[ws.id]]
                     unityClients[ws.id] = user.id
                     pingUser(user.id, "game")
+
                     ws.send(Pack("user", JSON.stringify(userToUnity(user))))
                 } else {
-                    let id = nanoid()
-                    let user = {
-                        id: id,
-                        username: "Guest_" + id,
-                        password: nanoid(),
-                        level: 1,
-                        xp: 0,
-                        cards: {},
-                        admin: false,
-                        record: {
-                            wins: 0,
-                            losses: 0,
-                        },
-                    };
-
-                    for (let card of cards.get("cards").value()) {
-                        user.cards[card.id] = 10;
-                    }
-
-                    db.get("users").push(user).write();
-                    var token = createLoginToken(user.id);
-                    ws.send(Pack("new_token", token))
+                    ws.send(Pack("user_not_found"))
                 }
                 break;
         }
@@ -1643,6 +1645,19 @@ wss.on("connection", (ws, req) => {
     } */
 });
 
+function getUnityUser(id) {
+    let user = getUserFromID(id)
+    user.decks = []
+
+    for (let key in db.get("decks").value()) {
+        var deck = db.get("decks").value()[key]
+        if (deck.owner == user.id) {
+            user.decks.push(deck)
+        }
+    }
+
+    return user;
+}
 
 
 /* Gets all cards but in the format for Unity
@@ -1717,7 +1732,9 @@ function getUserFromToken(token) {
 }
 
 function getUserFromID(id) {
-    var userWithoutPass = clone(db.get("users").find({ id }).value());
+    var user = db.get("users").find({ id }).value()
+    if (!user) return null;
+    var userWithoutPass = clone(user);
 
     delete userWithoutPass.password;
     return userWithoutPass;

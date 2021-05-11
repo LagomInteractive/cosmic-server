@@ -27,7 +27,7 @@ var inputs = {
     hp: document.getElementById("hp-input"),
     damage: document.getElementById("damage-input"),
     element: document.getElementById("element-input"),
-
+    rarity: document.getElementById("rarity-input")
 };
 
 var cardPreviewEl = document.getElementById("card-preview");
@@ -278,6 +278,8 @@ function updateCardFromInput() {
     document.getElementById(
         "color-indecator"
     ).style.background = `var(--${element})`;
+
+    document.getElementById("color-rarity").style.background = `var(--${card.rarity})`;
 
     document.getElementById("last-edited").innerText =
         "Last edited: " +

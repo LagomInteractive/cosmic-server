@@ -43,7 +43,7 @@ function drawPreviewCard(card) {
 function loadDeck() {
 
 
-    isDeckOwner = (deck.owner == me.id)
+    isDeckOwner = me ? (deck.owner == me.id) : false;
     var cardEntries = Object.keys(isDeckOwner ? me.cards : deck.cards)
 
 

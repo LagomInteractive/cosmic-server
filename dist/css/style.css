@@ -12,6 +12,11 @@
     --taunt: rgb(230, 230, 230);
     --rush: rgb(22, 22, 22);
     --neutral: white;
+    --common: rgb(165, 165, 165);
+    --uncommon: rgb(100, 236, 107);
+    --rare: rgb(43, 142, 255);
+    --epic: rgb(255, 96, 229);
+    --celestial: rgb(255, 15, 47);
 }
 
 @font-face {
@@ -1085,4 +1090,27 @@ textarea:focus, input:focus {
     position: relative;
     top: -2px;
     margin: 10px
+}
+
+#downtime-warning {
+    width: 500px;
+    border-radius: 5px;
+    background-color: var(--red);
+    margin: 0 auto;
+    margin-top: 50px;
+    color: var(--background);
+    font-size: 20px;
+    font-weight: 500;
+    padding: 10px;
+    line-height: 20px;
+    position: relative;
+    left: 30px;
+}
+
+#warning-icon {
+    fill: var(--red);
+    left: -80px;
+    height: 50px;
+    top: 5px;
+    position: absolute;
 }

@@ -1,10 +1,11 @@
+Find the latest up to date version of this text at
+outlaws.ygstr.com/todo
+
 ## About TODO
 * [/] Not started
 * [*] In progress
 * [?] Done but not tested
 * [X] Done and working
-
-
 
 # General
 
@@ -27,11 +28,10 @@
 * [X] Sound effects for gameplay
 * [X] Let bot use Spell cards
 * [X] Show minion's origin card on battlefield
-* [/] Card hand layout (Circular)
-    * [/] Make dragging card sway
-* [/] Game menu
-    * [/] Login system
-    * [/] Generate set password link
+* [X] Complete rewrite of card hand layout (Circular)
+    * [X] Show enemy hand
+* [*] Game menu
+    * [*] Login system
     * [/] Start a game & Choose a deck
     * [/] Deck builder (Game)
     * [/] Show online users
@@ -40,8 +40,11 @@
 * [/] Rarities (Website, Card editor, Game)
 * [/] Tips (Website)
 * [/] Tips (Game)
+* [/] Make dragging card sway
+* [/] Show enemy hand animate when they view cards
 * [/] Mobile support
 * [/] XP progression
+* [/] Prevent player from joing a new game if they are in one on another device
 
 # Bugs
 * [X] Shelly: damageEveryOpponent 
