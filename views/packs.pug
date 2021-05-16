@@ -1,0 +1,19 @@
+extends website 
+block content 
+    #generate-codes 
+        #generate-codes-title Generate card pack codes
+        select(value="none" id="select-pack") 
+            option(value="none") --- Select a store item --- 
+        | Pack size
+        select(value="none" id="select-pack-size") 
+            option(value=1) x1
+            option(value=5) x5
+            option(value=10) x10
+            option(value=25) x25
+            option(value=100) x100
+        br
+        | Amount of codes to generate
+        input(type="number" value=10 id="amount-of-codes")
+        button#generate-codes-button.btn(onclick="requestCodes()") Generate codes
+block scripts 
+    script(src="/js/packs.js") 

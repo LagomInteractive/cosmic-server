@@ -6,6 +6,7 @@ const DEFAULT_CARD = {
     mana: 0,
     damage: 0,
     hp: 0,
+    rarity: "common",
     element: "lunar",
     events: {},
     lastChange: null,

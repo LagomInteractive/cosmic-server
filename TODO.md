@@ -30,21 +30,60 @@ outlaws.ygstr.com/todo
 * [X] Show minion's origin card on battlefield
 * [X] Complete rewrite of card hand layout (Circular)
     * [X] Show enemy hand
-* [*] Game menu
-    * [*] Login system
-    * [/] Start a game & Choose a deck
-    * [/] Deck builder (Game)
-    * [/] Show online users
-    * [/] Settings (Show password)
+* [X] Rarities
+    * [X] Editor
+    * [X] Website
+    * [X] Game
+* [X] Menu system
+    * [X] Login system
+    * [X] Main menu and features
+    * [X] Start a game & Choose a deck
+* [X] Searching game timer
+* [X] Remake AttackLine to not use hitboxes
+* [X] Basic Mobile support
+* [X] Make it so you can sacrifice units even if that have done damage.
+* [X] Deck builder (Game)
+* [X] Card packs
+  * [X] Key generator
+  * [X] In game redeem and store
+* [X] Redmeed card packs in store
+* [X] Round timer in game
+* [X] Make the correct character appear in gameplay
+* [X] Ability to restart after game end
+* [X] Game and Menu music
+* [X] Card opening
+* [X] Tips (Website)
+* [X] Tips (Game)
+* [*] XP progression and Pack rewards on level up
+* 
+* [X] Prevent players to matchmake with the same account on different clients
+* [/] Tab and Enter to help with Login
+* [/] [Maybe] Make dragging card sway
+* [/] [Maybe] Show online users ingame
+* [/] [Maybe] Show enemy hand animate when they view cards
 
-* [/] Rarities (Website, Card editor, Game)
-* [/] Tips (Website)
-* [/] Tips (Game)
-* [/] Make dragging card sway
-* [/] Show enemy hand animate when they view cards
-* [/] Mobile support
-* [/] XP progression
-* [/] Prevent player from joing a new game if they are in one on another device
+# XP System
+
+XP Rewards
+
+| Action                | XP Reward |
+|-----------------------|-----------|
+| Win a game            | 500       |
+| Round played          | 5         |
+| Kill a unit           | 30        |
+| Gain sacrifice buff   | 100       |
+| Achive passive reward | 25        |
+
+Level ladder
+
+| Level | XP to level up |
+|-------|----------------|
+| 1     | 100            |
+| 2     | 250            |
+| 3     | 500            |
+| 4     | 750            |
+| 5+    | 1000           |
+
 
 # Bugs
 * [X] Shelly: damageEveryOpponent 

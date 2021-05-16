@@ -16,7 +16,8 @@
     --uncommon: rgb(100, 236, 107);
     --rare: rgb(43, 142, 255);
     --epic: rgb(255, 96, 229);
-    --celestial: rgb(255, 15, 47);
+    --celestial: rgb(255, 103, 15);
+    --developer: rgb(255, 15, 47);
 }
 
 @font-face {
@@ -311,7 +312,6 @@ body {
 #profile-options {
     position: relative;
     width: 700px;
-    height: 50px;
     margin: 0 auto;
     display: block;
 }
@@ -319,6 +319,7 @@ body {
 .profile-button {
     background: var(--header);
     margin-right: 15px;
+    margin-bottom: 10px;
 }
 
 #gradient-bar {
@@ -884,6 +885,8 @@ textarea:focus, input:focus {
 
 #news {
     width: calc(600px - 30px);
+    height: calc(100vh - 115px);
+    overflow: auto;
 }
 
 #events {
@@ -1113,4 +1116,94 @@ textarea:focus, input:focus {
     height: 50px;
     top: 5px;
     position: absolute;
+}
+
+#generate-codes {
+    display: block;
+    position: relative;
+    margin: 0 auto;
+    margin-top: 30px;
+    background-color: var(--header);
+    border-radius: 10px;
+    padding: 20px;
+    width: 500px;
+}
+
+#generate-codes-title {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+#amount-of-codes {
+    margin: 5px;
+    padding: 5px;
+    width: 60px;
+    border-radius: 5px;
+}
+
+#select-pack, #select-pack-size {
+    color: black;
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+#select-pack-size {
+    margin-bottom: 0px;
+}
+
+#generate-codes-button {
+    display: block;
+    background: var(--green);
+    color: black;
+    margin-top: 10px;
+}
+
+.tip {
+    display: block;
+    position: relative;
+    max-width: 900px;
+    height: 350px;
+    margin: 0 auto;
+    margin-top: -40px;
+    top: 60px;
+}
+
+.tip-content {
+    display: block;
+    position: absolute;
+    right: 5px;
+    top: 40px;
+    width: 50%;
+}
+
+.tip-text {
+    position: absolute;
+    left: 0px;
+    width: calc(50% - 25px);
+    top: 100px;
+}
+
+.tip-category {
+    color: grey;
+    display: block;
+    font-size: 15px;
+    position: absolute;
+    top: 70px;
+}
+
+.tip-title {
+    display: block;
+    font-size: 30px;
+    position: absolute;
+    top: 20px;
+}
+
+.tip-number {
+    color: gray;
 }

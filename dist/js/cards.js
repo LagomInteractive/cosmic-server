@@ -2,8 +2,6 @@ var cardTemplates = {
     spell: null, minion: null, mask: null
 }
 
-
-
 for (let key in cardTemplates) {
     cardTemplates[key] = new Image()
     cardTemplates[key].onload = () => {
@@ -43,7 +41,6 @@ function sortCards(a, b) {
     var val = (order.indexOf(a.element) - order.indexOf(b.element))
     if (val != 0) return val
     return (a).mana - (b).mana
-
 }
 
 function loadCards(search = false) {
@@ -67,6 +64,8 @@ function loadCards(search = false) {
                         .toLowerCase()
                         .indexOf(searchWord.toLowerCase()) == -1 &&
                     card.type.toLowerCase().indexOf(searchWord.toLowerCase()) ==
+                    -1 &&
+                    card.rarity.toLowerCase().indexOf(searchWord.toLowerCase()) ==
                     -1
                 ) {
                     passed = false;
@@ -78,8 +77,12 @@ function loadCards(search = false) {
         }
 
         let el = drawCard(card);
-        el.onclick = () => (location.href = "/cards/edit/" + card.id);
-        cardsEl.appendChild(el);
+        //el.onclick = () => (location.href = "/cards/edit/" + card.id);
+        let link = document.createElement("a")
+        link.href = "/cards/edit/" + card.id
+        link.appendChild(el);
+
+        cardsEl.appendChild(link);
     }
 }
 
@@ -171,9 +174,10 @@ function drawCard(card, overwriteImage = false, animated = true) {
         <image style="overflow:visible;" width="677" height="948" xlink:href="/img/${card.type == "minion" ? 'minion'
             : 'spell'}-card.png" transform="matrix(0.8173 0 0 0.8173 20.9887 33.5545)">
         </image>
-</text>
-SPELL</tspan>	</textPath>
-
+        <image style="overflow:visible;" width="677" height="948" xlink:href="/img/rarities/${card.rarity}.png" transform="matrix(0.8173 0 0 0.8173 20.9887 33.5545)"></image>
+        </text>
+        SPELL</tspan>	</textPath>
+        
         <text transform="matrix(1 0 0 1 68.4662 112.9744)"
             style="fill:#FFFFFF; font-family:'Cosmic'; font-size:50.4159px;" x="15"
             text-anchor="middle">${card.mana}</text>

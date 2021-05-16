@@ -1,16 +1,58 @@
 [
     {
-        "title": "The tip title",
-        "category": "Beginner tips",
-        "body": "Sed ut perspiciatis <b>Bold text!</b>unde omnis iste ENTER RIGHT THERE --> \n <-- ENTER RIGHT THERE natus error sit voluptatem",
-        "content": "video_file.mp4",
+        "title": "Card Types",
+        "category": "General Information",
+        "body": "The different card types we have are <b>Units and Spells</b>.\nEach of these cards use Star Fragments to be used, have their own rarity values and elemental alignments.\n You may only have 2 copies of the same card in your deck aside from certain rarities and as for alignmnets, each card is of the following: Neutral, Lunar, Solar, Nova and Zenith.",
+        "content": "card-types",
         "content-type": "video"
     },
     {
-        "title": "Another post",
-        "category": "Beginner tips",
-        "body": "Sed ut perspiciatis <b>Bold text!</b>unde omnis iste ENTER RIGHT THERE --> \n <-- ENTER RIGHT THERE natus error sit voluptatem",
-        "content": "image_name.png",
-        "content-type": "image"
+        "title": "Star Fragments",
+        "category": "General Information",
+        "body": "The resource of which cards use are named <b>Star Fragments</b>.\nEach card uses a certain amount of these to summon units and cast spells. The higher the cost, the more impactful the card.\n Normally you would start off with 1 <b>Star Fragment</b> and gain one each turn up to 9. But certain circumstances allow you to exceed this and make the fragments glow a bright yellow.",
+        "content": "star-fragments",
+        "content-type": "video"
+    },
+    {
+        "title": "The Elements",
+        "category": "General Information",
+        "body": "The powerful elements that cover the galaxy are: <b>Lunar, Solar, Nova and Zenith</b>\nEach one has their own special spells and units aqcuainted with them where they reflect to what each one symbolises.\n <b>Lunar</b> focuses on manipulating star fragment, <b>Solar</b> is about survivabily, <b>Nova</b> brings destruction and <b>Zenith</b> controls the flow and state of the game.",
+        "content": "the-elements",
+        "content-type": "video"
+    },
+    {
+        "title": "Outlaw Passives",
+        "category": "General Information",
+        "body": "The Outlaws that you play as, each have their own spceial ability that make them stand out from the others.\n <b>Mercenary</b> has the ability to swipe and exact copy of a card in the opponents hand.\n Necromancer can summon 3/3 units from the corpses of fallen units. The other Outlaws passives are th-<b>//REDACTED//</b>",
+        "content": "outlaw-passives",
+        "content-type": "video"
+    },
+    {
+        "title": "Sacrifice",
+        "category": "General Information",
+        "body": "Units with elemental qualities are eligable to become <b>sacrificed</b> for immense power.\n Each element gives their own sacrificial buff that stays in affect for the rest of the game.\n Once 3 units of the same element are offered, you will gain their blessing but be careful not to mix elements together unless you want to start it all from the beginning.",
+        "content": "sacrifice",
+        "content-type": "video"
+    },
+    {
+        "title": "Elemental Blessings",
+        "category": "General Information",
+        "body": "Once you have offered enough units to apease the elements, you gain their blessings\n Each element has their own destinct effect that will last for the entirety of the game.\n Lunar gives you 2 Star Fragments every turn, Solar heals your units by 2 at the end of each turn, Nova strengthen units attack by 1 at the start of each turn and Zenith offers you an extra card draw every turn.",
+        "content": "elemental-blessings",
+        "content-type": "video"
+    },
+    {
+        "title": "Size Limits",
+        "category": "General Information",
+        "body": "Players share the same limitations for <b>Deck Size, Hand Size & Field Size</b> in every match.\n Every person gets to choose 30 cards to put inside their deck, with either 1 or 2 copies of each available card.\n The hand size has a limit of 8 where any cards above it don't get drawn whilest for the field size, the limit is 7 and any summons above that get destroyed.",
+        "content": "size-limits",
+        "content-type": "video"
+    },
+    {
+        "title": "Card Rarities",
+        "category": "General Information",
+        "body": "Each card has a rarity associated to them and will be seen take affect when drawing cards from packs.\n The current rarity hiarchy is: Developer <- Celestial <- Epic <- Rare <- Uncommon <- Common.\n Celestial cards only allow you to have 1 copy per deck and Developer cards replace slots for its Celestial equivilant <i>*Developer cards are only gained through special means*</i>",
+        "content": "card-rarities",
+        "content-type": "video"
     }
 ]

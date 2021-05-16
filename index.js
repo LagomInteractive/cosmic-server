@@ -2,7 +2,7 @@
  * COSMIC server for Outlaws game and website, 2021 Olle Kaiser
  */
 
-const SERVER_VERSION = "2.8";
+const SERVER_VERSION = "3.0";
 const DEFAULT_DECK = "BCBMo6PXLEFqO5_rxv8Fh"
 
 const game_port = 8881;
@@ -15,6 +15,7 @@ const adapter = new FileSync("db.json");
 const db = low(adapter);
 
 const cards = low(new FileSync("cards.json"));
+const codes = low(new FileSync("codes.json"));
 
 // file-system, used to read and write files to disk
 const fs = require("file-system");
@@ -63,10 +64,11 @@ const wss = new WebSocket.Server({ port: game_port });
 // Nanoid for generating IDs and tokens for players (Replacing UUIDv4)
 const { nanoid } = require("nanoid");
 
+const PACKS = JSON.parse(fs.readFileSync("packs.json"))
+const TIPS = JSON.parse(fs.readFileSync("tips.json"))
 
 var onlinePings = {}
 var matchmaking = {}
-
 
 app.use((req, res, next) => {
     req.loggedIn = false;
@@ -89,7 +91,7 @@ app.use((req, res, next) => {
 });
 
 // Website pages
-for (let page of ["home", "cards", "download", "source", "login"]) {
+for (let page of ["home", "cards", "wiki", "download", "source", "login"]) {
     app.get(page == "home" ? "/" : "/" + page, (req, res) => {
         res.render(page, {
             page_name: page,
@@ -99,9 +101,62 @@ for (let page of ["home", "cards", "download", "source", "login"]) {
     });
 }
 
+app.get("/api/packs", (req, res) => {
+    res.json(PACKS)
+})
+
+app.post("/api/generatePackCodes", (req, res) => {
+    if (req.loggedIn && req.user.admin) {
+        var response = ""
+        for (let i = 0; i < Number(req.body.amount); i++) {
+            var code = generateNewCode()
+
+            codes.get("codes").value()[code] = {
+                redeemed: false,
+                redeemedDate: -1,
+                redeemedUser: null,
+                size: Number(req.body.size),
+                pack: req.body.pack
+            }
+            codes.write()
+            response += code + "<br>"
+        }
+        res.send(response)
+    } else {
+        res.send("Permission denied.")
+    }
+})
+
+
+function generateNewCode() {
+    //8TBY-B44M-UXXG-U0QC
+    var code = []
+    var symbols = "abcdefghijklmnopqrstuvwxyz1234567890".toUpperCase();
+    for (let i = 0; i < 4; i++) {
+        code.push(getFourRandom())
+    }
+
+    return code.join("-");
+
+    function getFourRandom() {
+        var c = ""
+        for (let i = 0; i < 4; i++) {
+            c += symbols[Math.floor(Math.random() * symbols.length)]
+        }
+        return c;
+    }
+}
+
 app.get("/todo", (req, res) => {
     res.end(fs.readFileSync("TODO.md"));
 })
+
+app.get("/packs", (req, res) => {
+    res.render("packs", {
+        loggedIn: req.loggedIn,
+        user: req.user,
+    });
+});
 
 app.get("/cards/edit/*", (req, res) => {
     res.render("edit", {
@@ -160,12 +215,16 @@ app.get("/api/deck", (req, res) => {
     }
 })
 
+function deleteDeck(id) {
+    delete db.get("decks").value()[id]
+    db.write()
+}
+
 app.post("/api/deleteDeck", (req, res) => {
     var deck = db.get("decks").value()[req.body.id]
     if (deck) {
         if (req.loggedIn && (req.user.id == deck.owner)) {
-            delete db.get("decks").value()[deck.id]
-            db.write()
+            deleteDeck(deck.id)
         }
     }
     res.end()
@@ -202,15 +261,30 @@ app.post("/api/deck", (req, res) => {
     res.end()
 })
 
+function createNewDeck(owner) {
+    let id = nanoid()
+    db.get("decks").value()[id] = {
+        title: "Untitled deck",
+        cards: {},
+        owner: owner,
+        id
+    }
+    db.write()
+    return id;
+}
+
+function getTips() {
+    var tips = TIPS;
+    for (let i = 0; i < tips.length; i++) {
+        tips[i].number = i + 1;
+    }
+    return tips;
+}
+
+
 app.get("/api/newdeck", (req, res) => {
     if (req.loggedIn) {
-        let id = nanoid()
-        db.get("decks").value()[id] = {
-            title: "Untitled deck",
-            cards: {},
-            owner: req.user.id
-        }
-        db.write()
+        var id = createNewDeck(req.user.id)
         res.redirect(`/deck/${id}`)
     } else {
         res.send("You have to be logged in to do this.")
@@ -230,6 +304,10 @@ app.post("/api/give", (req, res) => {
     }
     res.end();
 });
+
+app.get("/api/tips", (req, res) => {
+    res.json(getTips())
+})
 
 function giveCard(user, card) {
     var inventory = db.get("users").find({ id: user }).value().cards
@@ -492,7 +570,14 @@ function createUser(username, password, callback) {
                 password: hash,
                 level: 1,
                 xp: 0,
-                cards: [],
+                cards: {},
+                packs: {
+                    "UCFK8h7yKvxJWSnhoTJnJ": 3,
+                    "TSOT6j7yKvxJWSnhoOJmJ": 1,
+                    "YhMqJSlgskG7JdpKWtTTq": 1,
+                    "2KIvfjJ85Je65AgpbLUTi": 1,
+                    "PpbpmK-I5sAROPP_eLrH5": 1
+                },
                 admin: false,
                 record: {
                     wins: 0,
@@ -501,12 +586,21 @@ function createUser(username, password, callback) {
                 joined: Date.now()
             };
 
+            for (var pack of getPacks()) {
+                if (pack.id != "7LjVkr2TS0baaZkJ_xmAy") {
+                    user.packs[pack.id] = 2;
+                }
+            }
+
+            console.log("Created new user " + user.username)
+
             db.get("users").push(user).write();
             var token = createLoginToken(user.id);
             callback({ success: true, token });
         });
     }
 }
+
 
 function filterUsername(username) {
     username = username.toLowerCase();
@@ -577,7 +671,6 @@ const MINION = {
     buff: null,
     origin: null,
     spawnRound: 0,
-    canSacrifice: false,
     owner: null,
     battlecryActive: false
 }
@@ -613,10 +706,8 @@ function createNewGame(user1, user2 = false) {
     game.players = [player1, player2]
     game.gameStarted = Date.now()
 
-
-    //var deckID = "LSg-i8pSnQrORTEnrFBb9" // Iszy
-    //var deckID = "99ZUTIj2CraDV-OOxPxte" // OLLES
-
+    db.get("stats").value().played_games++
+    db.write();
 
     for (let player of game.players) {
         player.deck = shuffle(player.deck)
@@ -634,10 +725,28 @@ function terminateGame(id, loserId) {
         delete roundCountdowns[id]
     }
     var winner;
+    var loser;
     for (let player of game.players) {
-        if (player.id != loserId) winner = player.id
+        if (player.id != loserId) winner = player
+        else loser = player;
     }
-    addEvent(game, "game_over", { winner })
+
+    winner.xp += 500;
+
+
+    // Calculate XP for players
+    for (let player of game.players) {
+        if (!player.isBot) {
+            var levels = [100, 250, 500, 750, 1000]
+            var user = getDatabaseUser(player.id)
+            var xpGoal = levels[user.level - 1] ? levels[user.level - 1] : levels[level.length - 1]
+
+            console.log({ xpGoal })
+
+        }
+    }
+
+    addEvent(game, "game_over", { winner: winner.id })
     emitGameUpdate(game)
 
     for (let i = 0; i < games.length; i++) {
@@ -689,7 +798,9 @@ function runBot(gameid) {
                     playMinion(game.id, player.id, cardId);
                     return;
                 } else if (card.type == "aoeSpell") {
-                    playSpell(game.id, player.id, { id: cardId })
+                    // Do not play the Mercenary Passive card if the hand is full (Will loop)
+                    if (card.id != 177 || player.cards.length < 8)
+                        playSpell(game.id, player.id, { id: cardId })
                     return
                 } else if (card.type == "targetSpell") {
                     var opponent = getOpponent(game, player.id)
@@ -753,6 +864,7 @@ function nextTurn(id) {
     var attackingPlayer = ""
     var attackingPlayerIsBot = false;
     for (let player of game.players) {
+        player.xp += 5;
         player.turn = !player.turn
         if (player.turn) {
             // If the player passive is 5, increasePassive will not add any passives but only check if they can give the player the passive reward.
@@ -762,7 +874,7 @@ function nextTurn(id) {
             if (player.isBot) attackingPlayerIsBot = true;
             attackingPlayer = player.id;
             // Give the attacking player a new card at the start of the round
-            if (game.round != 1) dealCards(id, player.id)
+            if (game.turn != 1) dealCards(id, player.id)
             player.totalMana = game.round > 9 ? 9 : game.round
             player.manaLeft = player.totalMana
 
@@ -867,6 +979,7 @@ function dealCard(game, player, cardId) {
             player: player.id,
             card: cardId
         })
+        addStat(db.get("stats").value().card_draws, cardId);
         return true
     }
     return false;
@@ -935,6 +1048,7 @@ function createBot(deck) {
     // Player 1 will be attacking first.
     // When the round start, the attacking player is flipped
     bot.isBot = true;
+    bot.xp = 0;
     bot.name = "Bot"
     bot.id = nanoid()
     bot.outlaw = getRandomOutlaw();
@@ -964,15 +1078,17 @@ function createPlayer(user) {
     player.id = user.profile.id
     player.profile = user.profile
     player.outlaw = user.outlaw;
+    player.isBot = false;
+    player.xp = 0;
 
-    let playerCards = []
-    for (let key in player.profile.cards) {
-        for (let i = 0; i < Number(player.profile.cards[key]); i++) {
-            playerCards.push(Number(key));
-        }
-    }
-
-    player.profile.cards = playerCards;
+    /*  let playerCards = []
+     for (let key in player.profile.cards) {
+         for (let i = 0; i < Number(player.profile.cards[key]); i++) {
+             playerCards.push(Number(key));
+         }
+     }
+ 
+     player.profile.cards = playerCards; */
 
     player.socket = user.socket
     return player
@@ -982,8 +1098,68 @@ function getCard(cardId) {
     return cards.get("cards").find({ id: String(cardId) }).value()
 }
 
+function openPack(userId, packId) {
+    var user = getDatabaseUser(userId)
+    var pack = getPack(packId)
+    if (user.packs[pack.id]) {
+        if (user.packs[pack.id] > 0) {
+
+            user.packs[pack.id]--;
+
+            let drop = []
+            if (pack.id == '7LjVkr2TS0baaZkJ_xmAy') {
+                drop = pack.cards
+            } else {
+
+                for (let i = 0; i < 5; i++) {
+
+                    var rarities = ["common", "uncommon", "rare", "epic", "celestial", "developer"]
+                    var sortedPackByRarity = []
+
+
+                    for (let cardId of pack.cards) {
+                        if (!getCard(cardId)) console.log(cardId)
+                        var rarityIndex = rarities.indexOf(getCard(cardId).rarity)
+                        if (!sortedPackByRarity[rarityIndex]) sortedPackByRarity[rarityIndex] = []
+                        sortedPackByRarity[rarityIndex].push(cardId);
+                    }
+
+                    var rarityIndexDrawn = 0;
+                    var rand = Math.random();
+                    if (.35 < rand) rarityIndexDrawn = 1
+                    if (.6 < rand) rarityIndexDrawn = 2
+                    if (.8 < rand) rarityIndexDrawn = 3
+                    if (.95 < rand) rarityIndexDrawn = 4
+
+                    var eligableCards = sortedPackByRarity[rarityIndexDrawn]
+
+                    // This is just to make sure if there is not card of this rarity it will choose a lower rarity
+                    // There will always be cards of Common (the lowest) rarity in all packs (except for
+                    // the dev pack, but that one is handled differently from all other packs)
+                    while (!eligableCards) eligableCards = sortedPackByRarity[--rarityIndexDrawn];
+
+                    var drawnCard = eligableCards[Math.floor(Math.random() * eligableCards.length)]
+                    drop.push(drawnCard)
+                }
+            }
+
+            for (let id of drop) {
+                if (user.cards[id]) user.cards[id]++
+                else user.cards[id] = 1;
+            }
+            db.write();
+            return drop;
+        }
+    }
+}
+
+
+
 function increasePassive(game, player) {
     player.passive++;
+    if (player.passive == 5) {
+        player.xp += 25;
+    }
     if (player.passive > 5) player.passive = 5;
 
     console.log("Increased passive for " + player.name)
@@ -1012,13 +1188,14 @@ function sacrifice(gameId, userId, minionId) {
 
 
     if (player.turn &&
-        // If the minion has ever attacked someone, it cannot be sacrificed
-        !minion.hasEverAttacked
+        !minion.hasAttacked &&
         // Only an elemental minion can be sacrificed
-        && ELEMENTS.indexOf(minion.element) != -1) {
+        ELEMENTS.indexOf(minion.element) != -1) {
         addEvent(game, "minion_sacrificed", {
             id: minion.id
         })
+
+        addStat(db.get("stats").value().sacrifices, minion.origin);
 
         if (player.outlaw == OUTLAWS.necromancer) {
             increasePassive(game, player)
@@ -1031,7 +1208,10 @@ function sacrifice(gameId, userId, minionId) {
 
         if (player.buff.element == minion.element) {
             player.buff.sacrifices++;
-            if (player.buff.sacrifices > 5) player.buff.sacrifices = 5;
+            if (player.buff.sacrifice == 3) {
+                player.xp += 100
+            }
+            if (player.buff.sacrifices > 3) player.buff.sacrifices = 3;
         } else player.buff = {
             element: minion.element,
             sacrifices: 1
@@ -1292,9 +1472,10 @@ function playSpell(gameId, userId, info) {
 
             addEvent(game, "card_used", {
                 player: player.id,
-
                 card: card.id
             })
+
+            addStat(db.get("stats").value().card_playes, card.id);
 
             if (card.type == "targetSpell") {
                 if (card.events.action) {
@@ -1384,6 +1565,9 @@ function playMinion(gameId, userId, cardId) {
                         player: player.id,
                         card: card.id
                     })
+
+                    addStat(db.get("stats").value().card_playes, card.id);
+
                     spawnMinion(game, card, player)
                     player.manaLeft = Number(player.manaLeft) - Number(card.mana);
                     player.cards.splice(player.cards.indexOf(Number(card.id)), 1)
@@ -1471,6 +1655,11 @@ function endOfAction(gameId) {
                     increasePassive(game, opponent)
                 }
 
+
+                // Kill a unit XP Reward
+                opponent.xp += 30
+
+
                 if (card.events.onDeath)
                     for (let func of card.events.onDeath) runFunction(game, func, false, player)
                 endOfAction(game.id)
@@ -1502,19 +1691,79 @@ function matchmake() {
             deck: getDeck(matchmaking[key].deck)
         }
         else {
+            if (player1.id != matchmaking[key].id) {
+                var player2 = {
+                    profile: getUserFromID(matchmaking[key].id),
+                    socket: matchmaking[key].ws,
+                    outlaw: matchmaking[key].outlaw,
+                    deck: getDeck(matchmaking[key].deck)
+                }
 
-            var player2 = {
-                profile: getUserFromID(matchmaking[key].id),
-                socket: matchmaking[key].ws,
-                outlaw: matchmaking[key].outlaw,
-                deck: getDeck(matchmaking[key].deck)
+                createNewGame(player1, player2)
+
+                delete matchmaking[key]
+                delete matchmaking[player1.key]
             }
-
-            createNewGame(player1, player2)
-
-            delete matchmaking[key]
-            delete matchmaking[player1.key]
         }
+    }
+}
+
+function modifyCardInDeck(info, userId) {
+    var info = JSON.parse(info)
+    var deck = getDeck(info.deck)
+    var add = info.add == "True"
+
+    var user = getUserFromID(userId)
+    if (deck && deck.owner == user.id) {
+        var amountInInventory = user.cards[info.card]
+        var amountInDeck = deck.cards[info.card]
+
+        if (!amountInDeck) amountInDeck = 0;
+        if (!amountInInventory) amountInInventory = 0;
+
+        // Try to add or increase the card in the deck
+
+        if (add) {
+            if (amountInDeck < 2) {
+                if (amountInInventory - amountInDeck > 0) {
+                    // Can be added to deck
+                    if (deck.cards[info.card]) deck.cards[info.card]++;
+                    else deck.cards[info.card] = 1;
+                }
+            }
+        } else {
+            // Try to remove one of these cards from the deck
+            if (amountInDeck > 0) {
+                deck.cards[info.card]--;
+                if (deck.cards[info.card] == 0) delete deck.cards[info.card]
+            }
+        }
+
+        db.write();
+    }
+}
+
+function getPack(id) {
+    for (let name in PACKS) {
+        var pack = PACKS[name]
+        pack.name = name;
+        if (pack.id == id) return pack;
+    }
+}
+
+function getPacks() {
+    var packs = []
+    for (let name in PACKS) {
+        var pack = PACKS[name]
+        pack.name = name;
+        packs.push(pack)
+    }
+    return packs;
+}
+
+function getDatabaseUser(userId) {
+    for (let user of db.get("users").value()) {
+        if (user.id == userId) return user;
     }
 }
 
@@ -1548,6 +1797,57 @@ wss.on("connection", (ws, req) => {
         var gameId = getGameIdFromUserId(userId)
 
         switch (package.identifier) {
+            case "open_pack":
+                var drop = openPack(userId, package.packet);
+                ws.send(Pack("pack_opened", JSON.stringify(drop)))
+                sendUnityProfileUpdate(userId, ws)
+                break;
+            case "redeem_code":
+                if (userId) {
+                    var user = getUserFromID(userId)
+                    var code = codes.get("codes").value()[package.packet]
+                    if (code) {
+                        if (!code.redeemed) {
+                            // Redeem code
+                            code.redeemed = true;
+                            code.redeemedDate = Date.now()
+                            code.redeemedUser = user.username;
+                            var pack = getPack(code.pack)
+
+                            var dbUser = getDatabaseUser(user.id)
+                            if (dbUser.packs[pack.id]) dbUser.packs[pack.id] += code.size
+                            else dbUser.packs[pack.id] = code.size;
+
+                            codes.write()
+                            db.write()
+
+                            console.log(user.username + " redeemed " + pack.name + " x" + code.size)
+
+                            ws.send(Pack("code_redeemed", JSON.stringify(
+                                {
+                                    success: true,
+                                    message: `Redeemed ${code.size}x ${pack.name}!`
+                                }
+                            )))
+                            sendUnityProfileUpdate(user.id, ws)
+                        } else {
+                            ws.send(Pack("code_redeemed", JSON.stringify(
+                                {
+                                    success: false,
+                                    message: "This code has already been redeemed by " + code.redeemedUser + "."
+                                }
+                            )))
+                        }
+                    } else {
+                        ws.send(Pack("code_redeemed", JSON.stringify(
+                            {
+                                success: false,
+                                message: "This code does not exist."
+                            }
+                        )))
+                    }
+                }
+                break;
             case "cancel_search":
                 if (matchmaking[ws.id]) delete matchmaking[ws.id]
                 console.log("Matchmaking pool size " + Object.keys(matchmaking).length)
@@ -1595,8 +1895,33 @@ wss.on("connection", (ws, req) => {
                         outlaw: searchOptions.outlaw
                     }, false)
                 }
-
-
+                break;
+            case "new_deck":
+                if (!userId) return;
+                var id = createNewDeck(userId);
+                sendUnityProfileUpdate(userId, ws)
+                break;
+            case "delete_deck":
+                if (!userId) return;
+                var deck = getDeck(package.packet)
+                if (deck && deck.owner == userId) {
+                    deleteDeck(deck.id)
+                }
+                sendUnityProfileUpdate(userId, ws)
+                break;
+            case "rename_deck":
+                var info = JSON.parse(package.packet)
+                var deck = getDeck(info.deck)
+                if (deck.owner == userId) {
+                    if (info.name.length > 0) {
+                        deck.title = info.name
+                        db.write()
+                    }
+                }
+                break;
+            case "modify_card_in_deck":
+                modifyCardInDeck(package.packet, userId)
+                sendUnityProfileUpdate(userId, ws)
                 break;
             case "concede":
                 terminateGame(gameId, userId)
@@ -1625,12 +1950,10 @@ wss.on("connection", (ws, req) => {
             case "login_with_token":
                 var existingToken = db.get("tokens").find({ token: package.token }).value()
                 if (existingToken) {
-                    let user = getUnityUser(existingToken.user)
-                    //if (unityClients[ws.id]) delete onlinePings[unityClients[ws.id]]
-                    unityClients[ws.id] = user.id
-                    pingUser(user.id, "game")
+                    unityClients[ws.id] = existingToken.user
+                    pingUser(existingToken.user, "game")
 
-                    ws.send(Pack("user", JSON.stringify(userToUnity(user))))
+                    sendUnityProfileUpdate(existingToken.user, ws);
                 } else {
                     ws.send(Pack("user_not_found"))
                 }
@@ -1639,11 +1962,17 @@ wss.on("connection", (ws, req) => {
 
     })
 
+    // Send all users that connect the tips, all card packs (what they contain and their names)
+    // and the database of all cards
+    ws.send(Pack("tips", JSON.stringify(getTips())))
+    ws.send(Pack("packs", JSON.stringify(getPacks())))
     ws.send(Pack("cards", getUnityCards()))
-    /* for (var card of getUnityCards()) {
-        ws.send(Pack("cards", JSON.stringify(card)))
-    } */
 });
+
+function sendUnityProfileUpdate(userId, socket) {
+    let user = getUnityUser(userId)
+    socket.send(Pack("user", JSON.stringify(user)))
+}
 
 function getUnityUser(id) {
     let user = getUserFromID(id)
@@ -1665,6 +1994,16 @@ function getUnityUser(id) {
    Converts the Bold and Italics styles to Unity rich text */
 function getUnityCards() {
     var unityCards = clone(cards.get("cards").value())
+
+    function sortCards(a, b) {
+        var order = ["rush", "taunt", "lunar", "nova", "solar", "zenith"]
+        var val = (order.indexOf(a.element) - order.indexOf(b.element))
+        if (val != 0) return val
+        return (a).mana - (b).mana
+    }
+
+    unityCards.sort(sortCards);
+
     for (let card of unityCards) {
         delete card.events
         delete card.lastChange
@@ -1710,13 +2049,27 @@ Game started on port ${game_port}`);
 
 cards.defaults({ cards: [], increment: 0 }).write();
 
+codes.defaults({ codes: {} }).write()
+
 db.defaults({
     users: [],
     games: [],
     tokens: [],
     decks: {},
+    stats: {
+        played_games: 0,
+        card_playes: {},
+        card_draws: {},
+        sacrifices: {},
+    },
     filtered_usernames: [],
 }).write();
+
+function addStat(stat, card) {
+    if (stat[card]) stat[card]++;
+    else stat[card] = 1;
+    db.write();
+}
 
 function getUserFromToken(token) {
     var existingToken = db.get("tokens").find({ token }).value()
@@ -1740,17 +2093,6 @@ function getUserFromID(id) {
     return userWithoutPass;
 }
 
-function userToUnity(user) {
-    let userCards = []
-    for (let id in user.cards) {
-        for (let i = 0; i < user.cards[id]; i++) {
-            userCards.push(id)
-        }
-    }
-    user.cards = userCards;
-    return user;
-
-}
 
 function getUserWithPassword(username) {
     for (let user of db.get("users").value()) {
@@ -1771,6 +2113,7 @@ function getUser(username) {
         return userWithoutPass;
     }
 }
+
 
 function shuffle(arr) {
     var len = arr.length;

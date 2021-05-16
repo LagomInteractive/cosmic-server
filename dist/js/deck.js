@@ -18,34 +18,30 @@ var cardDisplay = document.getElementById("card-display")
 
 var everythingLoaded = false;
 
-function loadStep(str) {
 
+function loadStep(str) {
     if (everythingLoaded || !token) {
         axios.get("/api/deck?id=" + deck_id).then(res => {
             deck = res.data
-            loadDeck()
-
+            loadDeck();
         })
     }
     everythingLoaded = true;
 }
 
-onCardsReady = loadStep;
+onCardsReady = loadStep
 onLogin = loadStep;
 
 function drawPreviewCard(card) {
     var card = drawCard(card)
     cardDisplay.innerHTML = ""
     cardDisplay.appendChild(card)
-    console.log("re")
 }
 
 function loadDeck() {
 
-
     isDeckOwner = me ? (deck.owner == me.id) : false;
     var cardEntries = Object.keys(isDeckOwner ? me.cards : deck.cards)
-
 
     cardEntries.sort((a, b) => {
         if (getCard(b).element < getCard(a).element) return -1
@@ -84,7 +80,6 @@ function loadDeck() {
         cardEntry.addEventListener("mouseover", e => {
             var bound = cardEntry.getBoundingClientRect()
             var y = (bound.top - 390.47 / 2) - document.body.getBoundingClientRect().top
-            console.log(bound.height)
             cardDisplay.style.top = y + "px";
             drawPreviewCard(card)
         })
@@ -117,8 +112,6 @@ function loadDeck() {
     }
 
     setDeckValues()
-
-    console.log(deck)
 }
 
 function deleteDeck() {

@@ -14,7 +14,9 @@ block content
 
     #profile-options 
         if loggedIn && user.admin
-            button.btn.header-button.profile-button(onclick="javascript:giveCards('" + pageUser.username + "')") Give 10 cards
+            //button.btn.header-button.profile-button(onclick="javascript:giveCards('" + pageUser.username + "')") Give 10 cards
+            a(href="/packs") 
+                button.btn.header-button.profile-button() Generate pack codes
             button.btn.header-button.profile-button(onclick="javascript:toggleAdmin('" + pageUser.username + "')") #{pageUser.admin ? "Remove from" : "Add to"} Developer
             button.btn.header-button.profile-button(onclick="javascript:deleteUser('" + pageUser.username + "')") Delete user
         if pageUser.id == user.id 
@@ -27,8 +29,8 @@ block content
     #decks
         
         
-    #page-title Inventory
-    #inventory
+    //#page-title Inventory
+    //#inventory
 
 block scripts 
     script(src="/js/user.js") 
