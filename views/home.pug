@@ -1,5 +1,9 @@
 extends website.pug 
 block content 
+    style(type='text/css').
+            body {
+                    overflow: hidden;
+                }
     img#poster-background(src="/img/website-side-banner.png", alt="")
     #wrap 
        
@@ -9,9 +13,15 @@ block content
 
 
             .patch-note 
-                .note-title Gold!
+                .note-title Leaderboard has been added
+                .note-date 17 May
+                .note-body You can now find a <a href="/leaderboard">leaderboard</a> on the website, in the header!
+
+            .patch-note 
+                .note-title(style="color:rgb(255, 203, 60);") Gold!
                 .note-date 16 May
                 .note-body V3.1c is now up! It's our gold build, we now have XP leveling, card packs, a smarter bot and more!
+               
             .patch-note 
                 .note-title How to play!
                 .note-date 16 May

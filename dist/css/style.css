@@ -1218,3 +1218,71 @@ textarea:focus, input:focus {
 .tip-number {
     color: gray;
 }
+
+#box-art {
+    display: block;
+    position: relative;
+    height: 600px;
+    margin: 0 auto;
+}
+
+.leaderboard-sort {
+    width: 50%;
+    text-align: center;
+    background-color: rgb(39, 39, 39);
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 20px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+.leaderboard-selected {
+    background-color: var(--header);
+}
+
+#leaderboard-wrap {
+    display: block;
+    width: 500px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#leaderboard-title {
+    font-size: 30px;
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+#leaderboard {
+    padding-bottom: 15px;
+}
+
+.leaderboard-user {
+    display: block;
+    background-color: var(--header);
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+.leaderboard-username, .leaderboard-wins, .leaderboard-level {
+    display: inline-block;
+    width: 30%;
+}
+
+.leaderboard-username {
+    width: 45%;
+}
+
+.leaderboard-level {
+    text-align: right;
+    float: right;
+    width: 20%;
+}
+
+.golden {
+    color: rgb(255, 203, 60);
+}

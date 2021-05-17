@@ -1,0 +1,14 @@
+extends website 
+block content
+    #leaderboard-wrap
+        #leaderboard-title Leaderboard
+        button#sort-wins.leaderboard-sort.leaderboard-selected(style="border-radius: 5px 0px 0px 5px;") Wins
+        button#sort-level.leaderboard-sort(style="border-radius: 0px 5px 5px 0px;") Level
+
+        #leaderboard 
+        //    .leaderboard-user
+                .leaderboard-username Username
+                .leaderboard-wins 5 Wins
+                .leaderboard-level 10 Lvl
+block scripts 
+    script(src="/js/leaderboard.js") 

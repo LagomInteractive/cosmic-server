@@ -117,7 +117,7 @@ app.use((req, res, next) => {
 });
 
 // Website pages
-for (let page of ["home", "cards", "wiki", "download", "source", "login"]) {
+for (let page of ["home", "cards", "leaderboard", "wiki", "download", "source", "login"]) {
     app.get(page == "home" ? "/" : "/" + page, (req, res) => {
         res.render(page, {
             page_name: page,
@@ -190,6 +190,18 @@ app.get("/deck/*", (req, res) => {
 // REST api for the packs index
 app.get("/api/packs", (req, res) => {
     res.json(PACKS)
+})
+
+app.get("/api/leaderboard", (req, res) => {
+    var users = []
+    for (let user of db.get("users").value()) {
+        users.push({
+            username: user.username,
+            level: user.level,
+            wins: user.record.wins
+        })
+    }
+    res.json(users)
 })
 
 // REST api for generating store codes
@@ -503,7 +515,7 @@ app.post("/api/deleteUser", (req, res) => {
                         }
                     }
 
-                    console.log("Deleted user " + deleteUser.username)
+                    console.log("> Deleted user " + deleteUser.username)
                 }
             }
         });
@@ -613,7 +625,7 @@ function createUser(username, password, callback) {
                 joined: Date.now()
             };
 
-            console.log("Created new user " + user.username)
+            console.log("> Created new user " + user.username)
 
             db.get("users").push(user).write();
             var token = createLoginToken(user.id);
@@ -796,7 +808,7 @@ function terminateGame(id, loserId) {
                     if (!user.packs["UCFK8h7yKvxJWSnhoTJnJ"]) user.packs["UCFK8h7yKvxJWSnhoTJnJ"] = 1
                     else user.packs["UCFK8h7yKvxJWSnhoTJnJ"]++
 
-                    console.log(user.username + " leveled up to Level " + user.level + "!")
+                    console.log("> " + user.username + " leveled up to Level " + user.level + "!")
                 } else {
                     canLevelUp = false;
                 }
@@ -826,8 +838,7 @@ function terminateGame(id, loserId) {
         }
     }
 
-    //console.log("Terminating game " + id + " total active games: " + games.length)
-    console.log(`Ending game
+    console.log(`--- Ending game (${games.length} active games) ---
 (Won) ${winner.name} vs. ${loser.name}
 Total rounds: ${game.round}, total time ${Math.floor((Date.now() - game.gameStarted) / 1000 / 60)}m`)
 }
@@ -844,7 +855,8 @@ function startGame(id) {
         player.maxHp = player.hp;
     }
 
-    console.log("Starting game with " + game.players[0].name + " and " + game.players[1].name + ", total active games: " + games.length)
+    console.log(`--- Starting game (${games.length} active games) --- 
+${game.players[0].name} vs. ${game.players[1].name}`)
     emitGameUpdate(game)
 
     nextTurn(id)
@@ -1218,6 +1230,8 @@ function openPack(userId, packId) {
         if (user.packs[pack.id] > 0) {
 
             user.packs[pack.id]--;
+
+            console.log("> " + user.username + " opened a " + pack.name)
 
             let drop = []
             if (pack.id == '7LjVkr2TS0baaZkJ_xmAy') {
@@ -1931,7 +1945,7 @@ wss.on("connection", (ws, req) => {
                             codes.write()
                             db.write()
 
-                            console.log(user.username + " redeemed " + pack.name + " x" + code.size)
+                            console.log("> " + user.username + " redeemed " + pack.name + " x" + code.size)
 
                             ws.send(Pack("code_redeemed", JSON.stringify(
                                 {
@@ -1960,7 +1974,7 @@ wss.on("connection", (ws, req) => {
                 break;
             case "cancel_search":
                 if (matchmaking[ws.id]) delete matchmaking[ws.id]
-                console.log("Matchmaking pool size " + Object.keys(matchmaking).length)
+                console.log("> Matchmaking pool size " + Object.keys(matchmaking).length)
                 break;
             case "ping":
                 ws.send(Pack("ping"))
@@ -1995,7 +2009,7 @@ wss.on("connection", (ws, req) => {
                         ws, id: userId, deck: searchOptions.deck, outlaw: searchOptions.outlaw
                     }
                     matchmake();
-                    console.log("Matchmaking pool size " + Object.keys(matchmaking).length)
+                    console.log("> Matchmaking pool size " + Object.keys(matchmaking).length)
                 } else {
                     // Campaign search
                     createNewGame({
@@ -2157,8 +2171,7 @@ function Pack(identifier, packet) {
     })
 }
 
-console.log(`Website started on port ${website_port}
-Game started on port ${game_port}`);
+console.log(`--- Server started (Website ${website_port}, Game ${game_port}) ---`);
 
 cards.defaults({ cards: [], increment: 0 }).write();
 

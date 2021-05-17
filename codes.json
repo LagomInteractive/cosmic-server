@@ -239,9 +239,9 @@
       "pack": "UCFK8h7yKvxJWSnhoTJnJ"
     },
     "2KO4-CIS4-VOW1-Y8FC": {
-      "redeemed": false,
-      "redeemedDate": -1,
-      "redeemedUser": null,
+      "redeemed": true,
+      "redeemedDate": 1621245343653,
+      "redeemedUser": "Showcase",
       "size": 1,
       "pack": "7LjVkr2TS0baaZkJ_xmAy"
     },
@@ -258,6 +258,20 @@
       "redeemedUser": "Olle2",
       "size": 1,
       "pack": "7LjVkr2TS0baaZkJ_xmAy"
+    },
+    "PVZ6-SOIE-QOR4-Y7CC": {
+      "redeemed": false,
+      "redeemedDate": -1,
+      "redeemedUser": null,
+      "size": 100,
+      "pack": "UCFK8h7yKvxJWSnhoTJnJ"
+    },
+    "4THG-V4MB-NP6Z-E5X0": {
+      "redeemed": true,
+      "redeemedDate": 1621244719323,
+      "redeemedUser": "Olle",
+      "size": 5,
+      "pack": "2KIvfjJ85Je65AgpbLUTi"
     }
   }
 }
