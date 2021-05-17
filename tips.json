@@ -1,58 +1,128 @@
 [
-    {
-        "title": "Card Types",
-        "category": "General Information",
-        "body": "The different card types we have are <b>Units and Spells</b>.\nEach of these cards use Star Fragments to be used, have their own rarity values and elemental alignments.\n You may only have 2 copies of the same card in your deck aside from certain rarities and as for alignmnets, each card is of the following: Neutral, Lunar, Solar, Nova and Zenith.",
-        "content": "card-types",
-        "content-type": "video"
-    },
-    {
-        "title": "Star Fragments",
-        "category": "General Information",
-        "body": "The resource of which cards use are named <b>Star Fragments</b>.\nEach card uses a certain amount of these to summon units and cast spells. The higher the cost, the more impactful the card.\n Normally you would start off with 1 <b>Star Fragment</b> and gain one each turn up to 9. But certain circumstances allow you to exceed this and make the fragments glow a bright yellow.",
-        "content": "star-fragments",
-        "content-type": "video"
-    },
-    {
-        "title": "The Elements",
-        "category": "General Information",
-        "body": "The powerful elements that cover the galaxy are: <b>Lunar, Solar, Nova and Zenith</b>\nEach one has their own special spells and units aqcuainted with them where they reflect to what each one symbolises.\n <b>Lunar</b> focuses on manipulating star fragment, <b>Solar</b> is about survivabily, <b>Nova</b> brings destruction and <b>Zenith</b> controls the flow and state of the game.",
-        "content": "the-elements",
-        "content-type": "video"
-    },
-    {
-        "title": "Outlaw Passives",
-        "category": "General Information",
-        "body": "The Outlaws that you play as, each have their own spceial ability that make them stand out from the others.\n <b>Mercenary</b> has the ability to swipe and exact copy of a card in the opponents hand.\n Necromancer can summon 3/3 units from the corpses of fallen units. The other Outlaws passives are th-<b>//REDACTED//</b>",
-        "content": "outlaw-passives",
-        "content-type": "video"
-    },
-    {
-        "title": "Sacrifice",
-        "category": "General Information",
-        "body": "Units with elemental qualities are eligable to become <b>sacrificed</b> for immense power.\n Each element gives their own sacrificial buff that stays in affect for the rest of the game.\n Once 3 units of the same element are offered, you will gain their blessing but be careful not to mix elements together unless you want to start it all from the beginning.",
-        "content": "sacrifice",
-        "content-type": "video"
-    },
-    {
-        "title": "Elemental Blessings",
-        "category": "General Information",
-        "body": "Once you have offered enough units to apease the elements, you gain their blessings\n Each element has their own destinct effect that will last for the entirety of the game.\n Lunar gives you 2 Star Fragments every turn, Solar heals your units by 2 at the end of each turn, Nova strengthen units attack by 1 at the start of each turn and Zenith offers you an extra card draw every turn.",
-        "content": "elemental-blessings",
-        "content-type": "video"
-    },
-    {
-        "title": "Size Limits",
-        "category": "General Information",
-        "body": "Players share the same limitations for <b>Deck Size, Hand Size & Field Size</b> in every match.\n Every person gets to choose 30 cards to put inside their deck, with either 1 or 2 copies of each available card.\n The hand size has a limit of 8 where any cards above it don't get drawn whilest for the field size, the limit is 7 and any summons above that get destroyed.",
-        "content": "size-limits",
-        "content-type": "video"
-    },
-    {
-        "title": "Card Rarities",
-        "category": "General Information",
-        "body": "Each card has a rarity associated to them and will be seen take affect when drawing cards from packs.\n The current rarity hiarchy is: Developer <- Celestial <- Epic <- Rare <- Uncommon <- Common.\n Celestial cards only allow you to have 1 copy per deck and Developer cards replace slots for its Celestial equivilant <i>*Developer cards are only gained through special means*</i>",
-        "content": "card-rarities",
-        "content-type": "video"
-    }
+  {
+    "title": "<b>Midas</b>",
+    "category": "Lore and Backstory",
+    "body": "Our galaxy Midas is quite aptly named for its richness of resources and life across all of its sectors in the universe.\n\nFor around a millennia ago, this galaxy was taken aback by a strange occurrence that reshaped the whole ecosystem of where gazillions of different lifeforms had grown accustomed to.\n\nThis was when some planets mysteriously became filled with new resources that were later called: Lunar, Solar, Zenith & Nova…",
+    "content": "midas",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>The Outlaws</b>",
+    "category": "Lore and Backstory",
+    "body": "You play as a fugitive, a scavenger, an Outlaw. This group of people have no part to follow society and be a dog to the powerful rulers schemes.\n\nYou are here to be free and fulfill the true purpose you’d set out to do. You would stop for no planet, no ruler, nothing.\n\nThe more you advance, the more the rulers’ powers weaken while yours only seem to be getting stronger and stronger! Enough to be recognized as a threat to the entire galaxy of Midas!",
+    "content": "the-outlaws",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Card Types</b>",
+    "category": "Basic Information",
+    "body": "There are two different card types that you play with: Units and Spells.\n\nEach card requires a resource called Star Fragments to be used, each card has their own rarity and each card has a single elemental affinity.\n\nYou may have a maximum of 2 copies of the same card in your deck *aside from certain rarities* and each card is one of the following affinities: Neutral, Lunar, Solar, Nova and Zenith.",
+    "content": "card-types",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Star Fragments</b>",
+    "category": "Basic Information",
+    "body": "The resource of which cards are used with is called Star Fragments.\n\nEvery card uses a different amount of these to summon units and cast spells. The higher the cost, the more impactful the card is.\n\nNormally you would start off the game with 1 Star Fragment and gain one each turn up to a total of 9. However, certain circumstances allow you to exceed this value and make the fragments turn a bright yellow.",
+    "content": "star-fragments",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Attack & Health</b>",
+    "category": "Basic Information",
+    "body": "Unit cards have an attack value and a health value attached to them.\n\nThey can kill and die just like anyone else. When their health reaches 0, they get instantly removed from the field.\n\nEvery time a unit attacks another unit, they clash. They both inflict their corresponding damage to each other which is defined by how much attack each one has.",
+    "content": "attack-health",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Your Goal</b>",
+    "category": "Basic Information",
+    "body": "Every match you play, you will get one simple mission: Defeat your opponent!\n\nTo do so, you will need to reduce the opponents health to 0, but be careful, your enemy has the exact same objective against you.\n\nPlay smart, place units at the right time, remove harmful threats and aim for victory or else, you will suffer a devastating defeat.",
+    "content": "goal",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>The Elements</b>",
+    "category": "Advanced Information",
+    "body": "The 4 powerful elements that cover the galaxy are: Lunar, Solar, Nova and Zenith.\n\nEach one of these have their own exclusive spells and units that reflect what each one symbolizes.\n\nLunar focuses on the manipulation of star fragments, Solar is about survivability, Nova brings destruction and Zenith controls the flow and state of the game.",
+    "content": "the-elements",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Outlaw Passives</b>",
+    "category": "Advanced Information",
+    "body": "Each Outlaw that you play as, have their own special ability that makes them stand out from one another.\n\nThe Mercenary has the ability to steal an exact copy of a card in the opponents hand every five turns.\n\nThe Necromancer can summon a 3/3 unit from the corpses of 5 fallen units either through death or Sacrifice.\n\nthe other Outlaws hav-//REDACTED//",
+    "content": "outlaw-passives",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Sacrifice</b>",
+    "category": "Advanced Information",
+    "body": "Units with elemental qualities are eligible to become sacrificed so that your Outlaw can absorb their immense powers.\n\nEach element gives their own sacrificial buff that stays in effect for the entirety of the match.\n\nOnce 3 units of the same element are offered, you will gain their blessing. BUT be careful not to mix elements together unless you want to reset your progress to the very beginning.",
+    "content": "sacrifice",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>The Blessings</b>",
+    "category": "Advanced Information",
+    "body": "Once you have offered enough units to appease the elements, you gain their blessings.\n\nEach element has their own distinct effect that affect either yourself or your units.\n\nLunar gives you 2 Star Fragments every turn, Solar heals your units by 2 at the end of every turn, Nova strengthen units attack by 1 at the start of every turn and Zenith offers you an extra card drawn every turn.",
+    "content": "elemental-blessings",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Size Limits</b>",
+    "category": "Advanced Information",
+    "body": "All players share the same limitations for Deck Size, Hand Size & Field Size for every match.\n\nEvery person gets to choose 30 cards to put inside their deck, with either 1 or 2 copies of each available card.\n\nThe hand size has a limit of 8 where any cards above it simply do not get drawn. Whilst for the field size, the limit is 7 so if any summon is done through keywords, then they will be destroyed on play.",
+    "content": "size-limits",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Card Rarities</b>",
+    "category": "Advanced Information",
+    "body": "Each card has a rarity value associated with them and will be seen take affect when you draw cards from packs.\n\nThe hierarchy for rarity goes from: Common -> Uncommon -> Rare -> Epic -> Celestial -> Developer.\n\nCelestial cards only allow you to have 1 copy of itself per deck and Developer cards replace slots for its equivalent copy *Developer cards are only gained through special events*",
+    "content": "card-rarities",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Rush</b>",
+    "category": "Unit Keywords",
+    "body": "Units with Rush in their description allows them to act as soon as they gets placed onto the field.\n\nThe most efficient use for them is to take out big threatening targets, deny sacrifices or set up for a finishing blow.\n\nThey excel in buff heavy decks with their insane damage or in control decks to take care of low health units.",
+    "content": "rush",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Taunt</b>",
+    "category": "Unit Keywords",
+    "body": "Units with Taunt in their description make enemy units focus them before all else on the field.\n\nThey stop and delay any push that enemies attempt and let you set up a board of units without fear of them being taken out.\n\nCommon strategies are buffing their health and damage numbers, so they last longer while also being able to take out smaller threats along the way.",
+    "content": "taunt",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Deathrattle</b>",
+    "category": "Unit Keywords",
+    "body": "Units with Deathrattle in their description trigger an effect upon their own death.\n\nContinuously threatening the opponent so they trigger the unit’s affect is key, think a few steps ahead before you decide to off the units so that you find the best opportunity to use them.\n\nThe common goal is to have them die through any means possible, even if you have to use your own spells to kill them and cause a bigger reaction.",
+    "content": "deathrattle",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Battlecry</b>",
+    "category": "Unit Keywords",
+    "body": "Units with Battlecry in their description trigger an effect once they have entered onto the field.\n\nThey are great utility for clearing oppositions, filling boards, and giving the player more versatility.\n\nThey excel in most decks and often trigger their effects instantaneously, but sometimes you will need to manually select the unit and tell them who to target. *indicated with a yellow outline on the unit*",
+    "content": "battlecry",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>On Damaged</b>",
+    "category": "Unit Keywords",
+    "body": "Units with On Damaged in their description trigger every time they are inflicted with any form of damage.\n\nThese units have more prominent effects when they get inflicted with low damaging attacks.\n\nHaving them as healthy as possible is highly recommended so that they do not flinch when getting hit by weak attacks. You will lose a lot of their value if they get taken out with a single attack.",
+    "content": "on-damaged",
+    "content-type": "video"
+  },
+  {
+    "title": "<b>Every Round</b>",
+    "category": "Unit Keywords",
+    "body": "Units with Beginning of Every Round in their description trigger after the enemy has ended their turn and the unit is left alive.\n\nThese units are very prominent when you have control of the board but placing them without any afterthought is very risky.\n\nCombine them with units that take the pressure away or curve it elsewhere, it is also important to make sure that those units trigger their effects to the fullest, timing is key.",
+    "content": "evr-round",
+    "content-type": "video"
+  }
 ]

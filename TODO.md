@@ -54,13 +54,9 @@ outlaws.ygstr.com/todo
 * [X] Card opening
 * [X] Tips (Website)
 * [X] Tips (Game)
-* [*] XP progression and Pack rewards on level up
-* 
+* [X] XP progression and Pack rewards on level up
 * [X] Prevent players to matchmake with the same account on different clients
-* [/] Tab and Enter to help with Login
-* [/] [Maybe] Make dragging card sway
-* [/] [Maybe] Show online users ingame
-* [/] [Maybe] Show enemy hand animate when they view cards
+* [X] Tab and Enter to help with Login
 
 # XP System
 

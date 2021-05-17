@@ -50,7 +50,7 @@ function loadDeck() {
     })
 
 
-    document.getElementById("deck-username").innerText = deck.owner_username
+    document.getElementById("deck-username").innerText = deck.owner_username ? deck.owner_username : "Cannot find, user has never edited this deck."
     document.getElementById("deck-title").value = deck.title
     document.getElementById("deck-title").oninput = (e) => {
         var title = e.target.value

@@ -2,13 +2,22 @@
  * COSMIC server for Outlaws game and website, 2021 Olle Kaiser
  */
 
-const SERVER_VERSION = "3.0";
-const DEFAULT_DECK = "BCBMo6PXLEFqO5_rxv8Fh"
+// This version is sent to the game clients and if they dont match
+// a warning is displayed and the user is told to update their game.
+const SERVER_VERSION = "3.1";
 
+// The default deck is the starter deck in the game. It is also
+// the deck that our bot uses
+// View the full deck here https://outlaws.ygstr.com/deck/zlPbJl-PDN2wR1FzJPFkJ
+const DEFAULT_DECK = "zlPbJl-PDN2wR1FzJPFkJ"
+
+// The game port is how the Unity clients connect
+// the URL is api.cosmic.ygstr.com
 const game_port = 8881;
 const website_port = 8882;
 
 // Lowdb, the database https://github.com/typicode/lowdb
+// Used for users, cards, decks, tokens, store codes and inventory
 const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
 const adapter = new FileSync("db.json");
@@ -40,7 +49,7 @@ function comparePassword(plainPass, hashword, callback) {
     });
 }
 
-// Express for hosting the website
+// Express for hosting the website and REST api
 const http = require("http");
 const express = require("express");
 const app = express();
@@ -64,12 +73,29 @@ const wss = new WebSocket.Server({ port: game_port });
 // Nanoid for generating IDs and tokens for players (Replacing UUIDv4)
 const { nanoid } = require("nanoid");
 
+// Packs is the list of Packs for the store and inventory
+// This is the Index and not actual packs owned by users
 const PACKS = JSON.parse(fs.readFileSync("packs.json"))
+
+// Tips are displayed on the website at https://outlaws.ygstr.com/wiki
+// and also in game in the main menu
 const TIPS = JSON.parse(fs.readFileSync("tips.json"))
 
+// Online pings for all users (On the website and in game)
+// This allowes us to show who is online right now
+// Its currently only showed on the website
 var onlinePings = {}
+
+// This is the matchmaking pool. When a user searches for a PVP game
+// they get put in this object. Every time a user joins the pool
+// they will try to matchmake and create a game. This could be a single
+// object: the waiting user, since no more than one person will ever be in this
+// object at the same time, but if we want to implement a system that tries to match 
+// skill or level this is a good foundation for that. 
 var matchmaking = {}
 
+// This is a filter for the Website routes. It makes it so that every request
+// will be logged in if a token is provided through cookies.
 app.use((req, res, next) => {
     req.loggedIn = false;
     req.user = null;
@@ -101,10 +127,73 @@ for (let page of ["home", "cards", "wiki", "download", "source", "login"]) {
     });
 }
 
+
+// A way to share Olle's todo in real time
+app.get("/todo", (req, res) => {
+    res.end(fs.readFileSync("TODO.md"));
+})
+
+// Generate packs page
+app.get("/packs", (req, res) => {
+    res.render("packs", {
+        loggedIn: req.loggedIn,
+        user: req.user,
+    });
+});
+
+// Edit cards page
+app.get("/cards/edit/*", (req, res) => {
+    res.render("edit", {
+        loggedIn: req.loggedIn,
+        user: req.user,
+    });
+});
+
+// Create new cards link
+app.get("/new", (req, res) => {
+    if (req.loggedIn) {
+        if (req.user.admin) {
+            res.redirect("/cards/edit/" + cards.get("increment").value());
+            cards.update("increment", (n) => n + 1).write();
+            return;
+        }
+    }
+    res.redirect("/");
+});
+
+// User pages
+app.get("/user/*", (req, res) => {
+    var pageUsername = req.path.substr(req.path.lastIndexOf("/") + 1);
+    var pageUser = getUser(pageUsername);
+    if (pageUser) {
+        res.render("user", {
+            pageUser,
+            loggedIn: req.loggedIn,
+            user: req.user,
+            pageUser,
+        });
+    } else {
+        res.send("User not found :(");
+    }
+});
+
+// Deck editing and viewing page
+app.get("/deck/*", (req, res) => {
+    res.render("deck", {
+        loggedIn: req.loggedIn,
+        user: req.user,
+    })
+})
+
+
+
+// REST api for the packs index
 app.get("/api/packs", (req, res) => {
     res.json(PACKS)
 })
 
+// REST api for generating store codes
+// Tool for admins.
 app.post("/api/generatePackCodes", (req, res) => {
     if (req.loggedIn && req.user.admin) {
         var response = ""
@@ -129,7 +218,7 @@ app.post("/api/generatePackCodes", (req, res) => {
 
 
 function generateNewCode() {
-    //8TBY-B44M-UXXG-U0QC
+    //Generates a code, like so: 8TBY-B44M-UXXG-U0QC
     var code = []
     var symbols = "abcdefghijklmnopqrstuvwxyz1234567890".toUpperCase();
     for (let i = 0; i < 4; i++) {
@@ -147,62 +236,12 @@ function generateNewCode() {
     }
 }
 
-app.get("/todo", (req, res) => {
-    res.end(fs.readFileSync("TODO.md"));
-})
-
-app.get("/packs", (req, res) => {
-    res.render("packs", {
-        loggedIn: req.loggedIn,
-        user: req.user,
-    });
-});
-
-app.get("/cards/edit/*", (req, res) => {
-    res.render("edit", {
-        loggedIn: req.loggedIn,
-        user: req.user,
-    });
-});
-
-app.get("/new", (req, res) => {
-    if (req.loggedIn) {
-        if (req.user.admin) {
-            res.redirect("/cards/edit/" + cards.get("increment").value());
-            cards.update("increment", (n) => n + 1).write();
-            return;
-        }
-    }
-    res.redirect("/");
-});
-
-app.get("/user/*", (req, res) => {
-    var pageUsername = req.path.substr(req.path.lastIndexOf("/") + 1);
-    var pageUser = getUser(pageUsername);
-    if (pageUser) {
-        res.render("user", {
-            pageUser,
-            loggedIn: req.loggedIn,
-            user: req.user,
-            pageUser,
-        });
-    } else {
-        res.send("User not found :(");
-    }
-});
-
-app.get("/deck/*", (req, res) => {
-    res.render("deck", {
-        loggedIn: req.loggedIn,
-        user: req.user,
-    })
-})
-
-// Website REST API
+// Get a JSON of all cards (REST)
 app.get("/api/cards", (req, res) => {
     res.json(cards.get("cards").value());
 });
 
+// Get a deck from it's ID (REST)
 app.get("/api/deck", (req, res) => {
     var deck = db.get("decks").value()[req.query.id]
     if (deck) {
@@ -215,10 +254,6 @@ app.get("/api/deck", (req, res) => {
     }
 })
 
-function deleteDeck(id) {
-    delete db.get("decks").value()[id]
-    db.write()
-}
 
 app.post("/api/deleteDeck", (req, res) => {
     var deck = db.get("decks").value()[req.body.id]
@@ -261,27 +296,10 @@ app.post("/api/deck", (req, res) => {
     res.end()
 })
 
-function createNewDeck(owner) {
-    let id = nanoid()
-    db.get("decks").value()[id] = {
-        title: "Untitled deck",
-        cards: {},
-        owner: owner,
-        id
-    }
-    db.write()
-    return id;
-}
-
-function getTips() {
-    var tips = TIPS;
-    for (let i = 0; i < tips.length; i++) {
-        tips[i].number = i + 1;
-    }
-    return tips;
-}
 
 
+
+// Create a new deck (REST)
 app.get("/api/newdeck", (req, res) => {
     if (req.loggedIn) {
         var id = createNewDeck(req.user.id)
@@ -291,37 +309,24 @@ app.get("/api/newdeck", (req, res) => {
     }
 })
 
-app.post("/api/give", (req, res) => {
-    if (req.loggedIn && req.user.admin) {
-        let allCards = cards.get("cards").value();
-        let username = req.body.username;
-        for (var i = 0; i < 10; i++) {
-            let card = allCards[Math.floor(Math.random() * allCards.length)];
-            giveCard(getUser(username).id, card.id)
-            //db.get("users").find({ username }).value().cards.push();
-            //db.write();
-        }
+// Get all the tips and insert a number for their index
+// Helpfull for Unity
+function getTips() {
+    var tips = TIPS;
+    for (let i = 0; i < tips.length; i++) {
+        tips[i].number = i + 1;
     }
-    res.end();
-});
+    return tips;
+}
 
+
+
+// Get tips in JSON (REST)
 app.get("/api/tips", (req, res) => {
     res.json(getTips())
 })
 
-function giveCard(user, card) {
-    var inventory = db.get("users").find({ id: user }).value().cards
-    if (inventory[card]) inventory[card]++
-    else inventory[card] = 1
-    db.write()
-}
-
-function removeCard(user, card) {
-    var inventory = db.get("users").find({ id: user }).value().cards
-    if (inventory[card] && inventory[card] > 0) inventory[card]--;
-    db.write()
-}
-
+// Delete a card from the game (REST, Admin)
 app.post("/api/delete", (req, res) => {
     if (req.loggedIn && req.user.admin) {
         cards
@@ -336,10 +341,12 @@ app.post("/api/delete", (req, res) => {
     res.end();
 });
 
+// Download a backup of the cards
 app.get("/backup", (req, res) => {
     res.download(__dirname + "/cards.json");
 });
 
+// Upload an image for a card (REST, Admin)
 app.post("/api/upload", (req, res) => {
     if (req.loggedIn && req.user.admin) {
         req.body.image = req.body.image.replace(/^data:image\/png;base64,/, "");
@@ -352,6 +359,7 @@ app.post("/api/upload", (req, res) => {
     res.end();
 });
 
+// Update a card from the card editor (REST, Admin)
 app.post("/api/card", (req, res) => {
     if (req.loggedIn && req.user.admin) {
         cards
@@ -368,10 +376,11 @@ app.post("/api/card", (req, res) => {
     res.end();
 });
 
+// Get all users (Username, Online status, Admin status) REST
 app.get("/api/users", (req, res) => {
     var users = db.get("users").value()
     var send = []
-    clearPings()
+    clearPings() // Clear old pings
     for (let user of users) {
         send.push({
             status: onlinePings[user.id] ? onlinePings[user.id].status : "offline",
@@ -379,7 +388,7 @@ app.get("/api/users", (req, res) => {
             admin: user.admin
         })
     }
-
+    // Sort users by ping prioriy, basically Gamers highest then Online via Website, last Offline. (All alphabetically)
     send.sort((a, b) => {
         if (PING_PRIORITY.indexOf(a.status) - PING_PRIORITY.indexOf(b.status) != 0) return PING_PRIORITY.indexOf(a.status) - PING_PRIORITY.indexOf(b.status)
         if (a.username > b.username) return 1;
@@ -390,6 +399,7 @@ app.get("/api/users", (req, res) => {
     res.json(send)
 })
 
+// Get user info REST
 app.get("/api/user", (req, res) => {
     let user = getUser(req.query.username);
     if (user) {
@@ -408,11 +418,13 @@ app.get("/api/user", (req, res) => {
     }
 });
 
+// Logout via clearing token cookie REST
 app.post("/api/logout", (req, res) => {
     res.cookie("cosmic_login_token", { expires: Date.now() });
     res.end();
 });
 
+// Login with a token REST
 app.post("/api/login", (req, res) => {
     var token = db.get("tokens").find({ token: req.body.token }).value();
     if (token) {
@@ -425,6 +437,8 @@ app.post("/api/login", (req, res) => {
     }
 });
 
+// Get a CURL script to download all images from the website.
+// This is a quick way for anyone to updated the card images
 app.get("/api/assets", (req, res) => {
     var commands = ""
     for (let card of cards.get("cards").value()) {
@@ -433,11 +447,13 @@ app.get("/api/assets", (req, res) => {
     res.send(commands)
 })
 
+// All website users ping the server every few seconds to keep their online status
 app.post("/api/ping", (req, res) => {
     res.end()
     if (req.loggedIn) pingUser(req.user.id, "website")
 })
 
+// The priority of users in the online list, and also if they are logged in on both a game client and the website.
 const PING_PRIORITY = ["game", "website", "offline"]
 
 function pingUser(id, status) {
@@ -446,12 +462,13 @@ function pingUser(id, status) {
     // Only replace online status if the priority is higher (replace website online if also online in game 
     if (onlinePings[id] && PING_PRIORITY.indexOf(onlinePings[id].status) < PING_PRIORITY.indexOf(status)) return
     onlinePings[id] = {
+        // Save the time of when they last pinged
         date: Math.round(Date.now() / 1000),
         status: status
     }
 }
 
-// Clear all pings that would be considered offline now (3 > seconds old)
+// Clear all pings that would be considered offline now ( > 3 seconds old)
 function clearPings() {
     for (let key in onlinePings) {
         if (onlinePings[key].status != "game" && (Date.now() / 1000) - onlinePings[key].date > 3)
@@ -460,6 +477,7 @@ function clearPings() {
     }
 }
 
+// Delete a user from the Game and Website (REST, Admin)
 app.post("/api/deleteUser", (req, res) => {
     if (req.loggedIn && req.user.admin) {
         var user = getUserWithPassword(req.user.username)
@@ -467,9 +485,8 @@ app.post("/api/deleteUser", (req, res) => {
             if (match) {
                 var deleteUser = getUser(req.body.username)
                 if (deleteUser) {
-
+                    // Delete all the users tokens
                     while (db.get("tokens").find({ user: deleteUser.id }).value()) {
-
                         for (let i = 0; i < db.get("tokens").value().length; i++) {
                             if (db.get("tokens").value()[i].user == deleteUser.id) {
                                 db.get("tokens").value().splice(i, 1)
@@ -478,6 +495,7 @@ app.post("/api/deleteUser", (req, res) => {
                         }
                     }
 
+                    // Delete the user
                     for (var i = 0; i < db.get("users").value().length; i++) {
                         if (db.get("users").value()[i].id == deleteUser.id) {
                             db.get("users").value().splice(i, 1)
@@ -486,7 +504,6 @@ app.post("/api/deleteUser", (req, res) => {
                     }
 
                     console.log("Deleted user " + deleteUser.username)
-
                 }
             }
         });
@@ -494,6 +511,7 @@ app.post("/api/deleteUser", (req, res) => {
     res.end()
 })
 
+// Toggle a users admin status (REST, Admin)
 app.post("/api/admin", (req, res) => {
 
     if (req.loggedIn && req.user.admin) {
@@ -507,9 +525,11 @@ app.post("/api/admin", (req, res) => {
 
 })
 
+// Login with a password / Create a new account
 app.post("/api/loginPass", (req, res) => {
     var user = getUserWithPassword(req.body.username);
     if (user) {
+        // User exists, try to log them in
         comparePassword(req.body.password, user.password, (err, match) => {
             if (match) {
                 var token = createLoginToken(user.id);
@@ -533,6 +553,7 @@ app.post("/api/loginPass", (req, res) => {
 
     }
 });
+
 
 function createUser(username, password, callback) {
     if (username.length > 12) {
@@ -570,8 +591,10 @@ function createUser(username, password, callback) {
                 password: hash,
                 level: 1,
                 xp: 0,
+                // The inventory
                 cards: {},
                 packs: {
+                    // Give the user the starter packs (1x of each element, 3x All packs)
                     "UCFK8h7yKvxJWSnhoTJnJ": 3,
                     "TSOT6j7yKvxJWSnhoOJmJ": 1,
                     "YhMqJSlgskG7JdpKWtTTq": 1,
@@ -583,14 +606,12 @@ function createUser(username, password, callback) {
                     wins: 0,
                     losses: 0,
                 },
+                // If this is false, the user will get a greeting message first time logging in on the game
+                // This is not saved locally in the game because the user may switch platform and may create new
+                // users on the same platform, so this we found was the best solution
+                hasLoggedInViaGameClient: false,
                 joined: Date.now()
             };
-
-            for (var pack of getPacks()) {
-                if (pack.id != "7LjVkr2TS0baaZkJ_xmAy") {
-                    user.packs[pack.id] = 2;
-                }
-            }
 
             console.log("Created new user " + user.username)
 
@@ -601,11 +622,15 @@ function createUser(username, password, callback) {
     }
 }
 
-
+// This filters usernames that try to sign up
+// If the filter catches a name, it will be saved so we
+// can see if the block was justified. We did not make the list
+// so we may want to modify it.
 function filterUsername(username) {
     username = username.toLowerCase();
     for (var bad_word of profanity_filter) {
         if (username.indexOf(bad_word) != -1) {
+            // Save the filtered username to the database
             db.get("filtered_usernames")
                 .push({ username, bad_word, date: Date.now() })
                 .write();
@@ -615,18 +640,20 @@ function filterUsername(username) {
     return true;
 }
 
+// Creates a token that is used to login on both the game and the website.
 function createLoginToken(userID) {
     var token = nanoid();
     db.get("tokens").push({ token, user: userID, created: Date.now() }).write();
     return token;
 }
 
-var games = [
+// Current active games right now
+var games = []
 
-]
-
+// List of timeouts indexed by game id, so the game will auto turn after 60 seconds.
 var roundCountdowns = {}
 
+// Template for an active Game
 const GAME = {
     id: nanoid(),
     players: [],
@@ -638,6 +665,7 @@ const GAME = {
     events: []
 }
 
+// Template for a playing player in a game (includes Bot)
 const PLAYER = {
     id: nanoid(),
     socket: null,
@@ -662,6 +690,7 @@ const PLAYER = {
     turn: false,
 }
 
+// Template for an active Unit
 const MINION = {
     id: nanoid(),
     hp: 0,
@@ -675,44 +704,43 @@ const MINION = {
     battlecryActive: false
 }
 
+// Enum of outlaws
 const OUTLAWS = {
     necromancer: "necromancer",
     mercenary: "mercenary"
 }
 
-
-// DELETE GUESTS
-/* for (let i = 0; i < db.get("users").value().length; i++) {
-    if (db.get("users").value()[i].username.indexOf("Guest_") != -1) {
-        db.get("users").value().splice(i, 1)
-        db.write()
-        console.log("Deleted")
-    }
-}
+/**
+ * Create a new online or bot game
+ * @param {*} user1 The first user to be added, they will start the round
+ * @param {*} user2 The seconds player, or if left empty a bot.
  */
-
-
-// Create a new online or bot game
 function createNewGame(user1, user2 = false) {
 
+    // Create a new game from the template and give it a new ID
     var game = clone(GAME)
     game.id = nanoid()
 
     var player1 = createPlayer(user1)
     var player2 = user2 ? createPlayer(user2) : createBot();
 
+    // On the first turn this will be flipped, so it's actually player 1
+    // that starts the game.
     player2.turn = true;
 
     game.players = [player1, player2]
     game.gameStarted = Date.now()
 
+    // Update stats used for analytics
     db.get("stats").value().played_games++
     db.write();
 
+    // Shuffle player decks
     for (let player of game.players) {
         player.deck = shuffle(player.deck)
     }
 
+    // Add the game to the active games list and start the game.
     games.push(game)
     startGame(game.id)
 }
@@ -734,15 +762,57 @@ function terminateGame(id, loserId) {
     winner.xp += 500;
 
 
-    // Calculate XP for players
+    // Calculate xp level up for the two players
     for (let player of game.players) {
         if (!player.isBot) {
+
+            // XP requerements for the first 5 levels and on
+            // More info about the XP system here: 
+            // https://github.com/LagomInteractive/cosmic-server/blob/master/TODO.md#xp-system
             var levels = [100, 250, 500, 750, 1000]
             var user = getDatabaseUser(player.id)
-            var xpGoal = levels[user.level - 1] ? levels[user.level - 1] : levels[level.length - 1]
 
-            console.log({ xpGoal })
+            // Add win/loss stats
+            if (player.id == winner.id) user.record.wins++;
+            else user.record.losses++
 
+
+            // Transfer match XP gained to the user
+            var xpFrom = user.xp;
+            var xpRange;
+            var xpGained = player.xp
+            user.xp += player.xp;
+
+            var canLevelUp = true;
+
+            while (canLevelUp) {
+                var xpGoal = levels[user.level - 1] ? levels[user.level - 1] : levels[levels.length - 1]
+                xpRange = xpGoal;
+                if (xpGoal < user.xp) {
+                    user.xp -= xpGoal;
+                    user.level++;
+
+                    // Reward the user with one All pack for leveling up.
+                    if (!user.packs["UCFK8h7yKvxJWSnhoTJnJ"]) user.packs["UCFK8h7yKvxJWSnhoTJnJ"] = 1
+                    else user.packs["UCFK8h7yKvxJWSnhoTJnJ"]++
+
+                    console.log(user.username + " leveled up to Level " + user.level + "!")
+                } else {
+                    canLevelUp = false;
+                }
+            }
+
+            // If xpFrom is lower than xpTo the user has leveled up at least once, so
+            // show it coming from xp = 0 to visualize correctly
+            var xpTo = user.xp;
+            if (xpTo < xpFrom) xpFrom = 0;
+            db.write();
+
+            sendUnityProfileUpdate(player.id, player.socket)
+
+            player.socket.send(Pack("xp_update", JSON.stringify({
+                xpFrom, xpTo, xpRange, level: user.level, xpGained
+            })))
         }
     }
 
@@ -756,7 +826,10 @@ function terminateGame(id, loserId) {
         }
     }
 
-    console.log("Terminating game " + id + " total active games: " + games.length)
+    //console.log("Terminating game " + id + " total active games: " + games.length)
+    console.log(`Ending game
+(Won) ${winner.name} vs. ${loser.name}
+Total rounds: ${game.round}, total time ${Math.floor((Date.now() - game.gameStarted) / 1000 / 60)}m`)
 }
 
 
@@ -771,10 +844,14 @@ function startGame(id) {
         player.maxHp = player.hp;
     }
 
-    console.log("Starting game with " + game.players[0].name + " and " + game.players[1].name)
+    console.log("Starting game with " + game.players[0].name + " and " + game.players[1].name + ", total active games: " + games.length)
     emitGameUpdate(game)
 
     nextTurn(id)
+}
+
+function isElemental(element) {
+    return ELEMENTS.indexOf(element) != -1;
 }
 
 function runBot(gameid) {
@@ -795,17 +872,21 @@ function runBot(gameid) {
                 var cardId = affordableCards[Math.floor(Math.random() * affordableCards.length)];
                 var card = getCard(cardId)
                 if (card.type == "minion") {
-                    playMinion(game.id, player.id, cardId);
-                    return;
+                    if (player.minions.length < 7) {
+                        playMinion(game.id, player.id, cardId);
+                        return;
+                    }
                 } else if (card.type == "aoeSpell") {
                     // Do not play the Mercenary Passive card if the hand is full (Will loop)
-                    if (card.id != 177 || player.cards.length < 8)
+                    if (card.id != 177 || player.cards.length < 8) {
                         playSpell(game.id, player.id, { id: cardId })
-                    return
+                        return
+                    }
                 } else if (card.type == "targetSpell") {
                     var opponent = getOpponent(game, player.id)
                     var target = opponent;
                     if (opponent.minions.length > 0) target = opponent.minions[Math.floor(Math.random() * opponent.minions.length)]
+
                     playSpell(game.id, player.id, { id: cardId, target: target.id })
                     return
                 }
@@ -814,7 +895,22 @@ function runBot(gameid) {
             var attacker;
             var target;
             for (let minion of player.minions) {
-                if (!minion.hasAttacked && (minion.spawnRound != game.round || minion.element == "rush")) {
+                if (!minion.hasAttacked && minion.spawnRound != game.round) {
+                    var origin = getCard(minion.origin)
+                    var willSacrifice = false;
+                    if (origin.hp > minion.hp) willSacrifice = Math.random() < .7;
+                    else if (origin.hp == minion.hp) willSacrifice = Math.random() < .3;
+                    else if (origin.hp < minion.hp) willSacrifice = false;
+
+                    if (player.buff.sacrifices > 0 && player.buff.element != origin.element) willSacrifice = false;
+                    if (player.buff.sacrifices >= 3) willSacrifice = false;
+
+                    if (willSacrifice && isElemental(origin.element)) {
+                        sacrifice(game.id, player.id, minion.id)
+                    } else {
+                        attacker = minion
+                    }
+                } else if (minion.element == "rush" && !minion.hasAttacked) {
                     attacker = minion;
                     break;
                 }
@@ -827,23 +923,22 @@ function runBot(gameid) {
                         var opponentHasTaunt = false;
                         for (let minion of opponent.minions) if (minion.element == "taunt") opponentHasTaunt = true;
 
-                        for (let minion of opponent.minions) {
+                        var targets = []
 
+                        for (let minion of opponent.minions) {
                             if (!opponentHasTaunt || minion.element == "taunt") {
-                                target = minion;
+                                targets.push(minion)
                                 break;
                             }
                         }
 
-                        if (target == null) target = opponent
-                    }
+                        if (!opponentHasTaunt) targets.push(opponent)
 
-                    attack(game.id, player.id, attacker.id, target.id)
-                    return
+                        attack(game.id, player.id, attacker.id, targets[Math.floor(Math.random() * targets.length)].id)
+                        return
+                    }
                 }
             }
-
-
         }
     }
 
@@ -851,7 +946,6 @@ function runBot(gameid) {
 }
 
 function nextTurn(id) {
-
     if (roundCountdowns[id]) clearTimeout(roundCountdowns[id])
     var game = getGame(id)
     if (!game) return
@@ -859,6 +953,7 @@ function nextTurn(id) {
     if (game.turn % 2 == 0) game.round++;
     game.turn++;
     game.roundStarted = Date.now()
+
 
     // Change turn
     var attackingPlayer = ""
@@ -963,8 +1058,8 @@ function dealCards(game_id, player_id, amount = 1) {
                         player.deck.splice(0, 1)
                     // Delete the card from the players deck
                 } else {
-                    console.log("Player has no cards left")
-                    // PLAYER HAS RUN OUT OF CARDS TODO:
+                    // Player has run out of cards
+                    // we might do something here
                 }
             }
         }
@@ -1069,6 +1164,24 @@ function addDeck(player, deck) {
 }
 
 
+function createNewDeck(owner) {
+    let id = nanoid()
+    db.get("decks").value()[id] = {
+        title: "Untitled deck",
+        cards: {},
+        owner: owner,
+        id
+    }
+    db.write()
+    return id;
+}
+
+function deleteDeck(id) {
+    delete db.get("decks").value()[id]
+    db.write()
+}
+
+
 function createPlayer(user) {
 
     var player = clone(PLAYER)
@@ -1118,7 +1231,6 @@ function openPack(userId, packId) {
 
 
                     for (let cardId of pack.cards) {
-                        if (!getCard(cardId)) console.log(cardId)
                         var rarityIndex = rarities.indexOf(getCard(cardId).rarity)
                         if (!sortedPackByRarity[rarityIndex]) sortedPackByRarity[rarityIndex] = []
                         sortedPackByRarity[rarityIndex].push(cardId);
@@ -1151,6 +1263,7 @@ function openPack(userId, packId) {
             return drop;
         }
     }
+    return [];
 }
 
 
@@ -1161,8 +1274,6 @@ function increasePassive(game, player) {
         player.xp += 25;
     }
     if (player.passive > 5) player.passive = 5;
-
-    console.log("Increased passive for " + player.name)
 
     if (player.passive >= 5) {
         if (player.cards.length < 8) {
@@ -1267,7 +1378,7 @@ function changeAttackDamage(game, target, damageAmount) {
  * @param {*} target The target character or if not a target function the player sending it.
  */
 function runFunction(game, func, target = null, player = null) {
-    console.log("Function run: " + func.func + " , val: " + func.value)
+    //console.log("Function run: " + func.func + " , val: " + func.value)
     func.value = Number(func.value)
     switch (func.func) {
         case "changeTargetAttack":
@@ -1322,7 +1433,6 @@ function runFunction(game, func, target = null, player = null) {
             break;
         case "spawnMinion":
             var card = getCard(func.value)
-            console.log("Spawning " + card.name)
             spawnMinion(game, card, player)
             break;
         case "gainMana":
@@ -1428,7 +1538,7 @@ function damage(game, target, damage) {
 
     if (target.origin) {
         var card = getCard(target.origin)
-        if (card.events.onAttacked) for (let func of card.events.onAttacked) runFunction(game, func, target, owner)
+        if (card.events.onAttacked && damage > 0) for (let func of card.events.onAttacked) runFunction(game, func, target, owner)
     }
 }
 
@@ -1539,7 +1649,6 @@ function spawnMinion(game, card, owner) {
         }
     }
 
-    console.log(("Minion successfully spawned! " + minion.name))
 
     owner.minions.push(minion)
 
@@ -1688,7 +1797,8 @@ function matchmake() {
             socket: matchmaking[key].ws,
             socketid: key,
             outlaw: matchmaking[key].outlaw,
-            deck: getDeck(matchmaking[key].deck)
+            deck: getDeck(matchmaking[key].deck),
+            key
         }
         else {
             if (player1.id != matchmaking[key].id) {
@@ -1699,10 +1809,10 @@ function matchmake() {
                     deck: getDeck(matchmaking[key].deck)
                 }
 
-                createNewGame(player1, player2)
-
                 delete matchmaking[key]
                 delete matchmaking[player1.key]
+
+                createNewGame(player1, player2)
             }
         }
     }
@@ -1799,7 +1909,7 @@ wss.on("connection", (ws, req) => {
         switch (package.identifier) {
             case "open_pack":
                 var drop = openPack(userId, package.packet);
-                ws.send(Pack("pack_opened", JSON.stringify(drop)))
+                if (drop.length > 0) ws.send(Pack("pack_opened", JSON.stringify(drop)))
                 sendUnityProfileUpdate(userId, ws)
                 break;
             case "redeem_code":
@@ -1950,10 +2060,13 @@ wss.on("connection", (ws, req) => {
             case "login_with_token":
                 var existingToken = db.get("tokens").find({ token: package.token }).value()
                 if (existingToken) {
+                    if (onlinePings[unityClients[ws.id]]) delete onlinePings[unityClients[ws.id]]
                     unityClients[ws.id] = existingToken.user
-                    pingUser(existingToken.user, "game")
 
+                    pingUser(existingToken.user, "game")
                     sendUnityProfileUpdate(existingToken.user, ws);
+                    getDatabaseUser(existingToken.user).hasLoggedInViaGameClient = true;
+                    db.write()
                 } else {
                     ws.send(Pack("user_not_found"))
                 }

@@ -230,6 +230,34 @@
       "redeemedUser": "Olle",
       "size": 100,
       "pack": "PpbpmK-I5sAROPP_eLrH5"
+    },
+    "CNMQ-KZ98-FODZ-V522": {
+      "redeemed": true,
+      "redeemedDate": 1621176422633,
+      "redeemedUser": "Erikas",
+      "size": 100,
+      "pack": "UCFK8h7yKvxJWSnhoTJnJ"
+    },
+    "2KO4-CIS4-VOW1-Y8FC": {
+      "redeemed": false,
+      "redeemedDate": -1,
+      "redeemedUser": null,
+      "size": 1,
+      "pack": "7LjVkr2TS0baaZkJ_xmAy"
+    },
+    "FTOX-RHR0-0T40-7SWB": {
+      "redeemed": false,
+      "redeemedDate": -1,
+      "redeemedUser": null,
+      "size": 1,
+      "pack": "7LjVkr2TS0baaZkJ_xmAy"
+    },
+    "LU6Y-SF39-V0US-W2H8": {
+      "redeemed": true,
+      "redeemedDate": 1621237241453,
+      "redeemedUser": "Olle2",
+      "size": 1,
+      "pack": "7LjVkr2TS0baaZkJ_xmAy"
     }
   }
 }
